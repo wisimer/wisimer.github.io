@@ -15,14 +15,13 @@ before_install:
   - eval $(ssh-agent)
   - ssh-add ~/.ssh/id_rsa
   - cp .travis/ssh_config ~/.ssh/config
-  - npm install -g hexo-cli # 安装 hexo
-  #- git clone -b mod https://github.com/wisimer/wisimer.github.io.git themes/icarus
+  - git config --global user.name "wisimer"
+  - git config --global user.email "wisimer@163.com"
+
 install:
+  - npm install -g hexo-cli # 安装 hexo
   - npm install # 安装 package.json 中的插件
 script:
-  - hexo generate
-after_success:
-  - git config --global user.name "wisimer"
-  - git config --global user.email "wisimer2163.com"
-  - sed -i'' "/^ *repo/s~github\.com~${githubToken}@github.com~" _config.yml
-  - hexo deploy
+  - hexo clean
+  - hexo g
+  - hexo d

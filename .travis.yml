@@ -1,28 +1,30 @@
 language: node_js
 node_js: stable
-# assign build branches
 branches:
   only:
-    - source
-# cache this directory
+  - source
 cache:
   directories:
-    - node_modules
-# S: Build Lifecycle
+  - node_modules
 before_install:
-  - openssl aes-256-cbc -K $encrypted_d76e2cf77261_key -iv $encrypted_d76e2cf77261_iv -in ./.travis/id_rsa.enc -out ~/.ssh/id_rsa -d
-  - chmod 600 ~/.ssh/id_rsa
-  - eval $(ssh-agent)
-  - ssh-add ~/.ssh/id_rsa
-  - cp .travis/ssh_config ~/.ssh/config
-  - npm install -g hexo-cli # 安装 hexo
-  #- git clone -b mod https://github.com/wisimer/wisimer.github.io.git themes/icarus
+- openssl aes-256-cbc -K $encrypted_d76e2cf77261_key -iv $encrypted_d76e2cf77261_iv
+  -in ./.travis/id_rsa.enc -out ~/.ssh/id_rsa -d
+- chmod 600 ~/.ssh/id_rsa
+- eval $(ssh-agent)
+- ssh-add ~/.ssh/id_rsa
+- cp .travis/ssh_config ~/.ssh/config
+- npm install -g hexo-cli
 install:
-  - npm install # 安装 package.json 中的插件
+- npm install
 script:
-  - hexo generate
+- hexo generate
 after_success:
-  - git config --global user.name "wisimer"
-  - git config --global user.email "wisimer2163.com"
-  - sed -i'' "/^ *repo/s~github\.com~${githubToken}@github.com~" _config.yml
-  - hexo deploy
+- git config --global user.name "wisimer"
+- git config --global user.email "wisimer2163.com"
+- sed -i'' "/^ *repo/s~github\.com~${githubToken}@github.com~" _config.yml
+- hexo deploy
+env:
+  global:
+  - secure: egJUl9AdacZYxo6V9r5hCHjHxyOSQkBXrLJC/RUUKREWtBduFJucd6KfVzmeCaTYAM75mX+q8ofugOKivDvN/PowKvs+QeHjPkPNPC2iseDSQb1whlVgdQSabWfdwW2Hrx9FhVuDtM9jT3WX50KlrCnv68KtOBP19nE58JAqLB2+zNkJ4j6Qzg68Vds2GWUYRCMw5QuzFq5cn7gEtbU9XMfPBsezGWXR+XTA6GgYmJkVjtN9T1Mmg3XXyORpRJiELBUn2HWRDUZdB8iGsAunvQNn1dkxtKLTYOsTVMgyzbUqyBk/YFt2+srxD/cAA/BGrqeWN5uIJH9rt4dxKW+oMjD1z62unvSt9HckPklqeVYW1ZZFKZIif0JvX7i0DHTJ9UYjBol8XS9ycah+QAZGACDv67FW8fxBZpKTUByZDAijcCIe5ZAqOqZ96mosy0WwZC3QPfj0rVp1w8G6TqS9lGU6o2N/Whrep8mo5J4C8himUxMmQQAHSowgF+zfvRPsumOin6B7/BltIQJKAO5PpzE8X9Ookc6Lv3bkoWov18CDPXNQ2+KeM6RdHkQuqIr5nzU7X60CljwcNRwv/UBt5ydv+YOz71rqf8p9tvd+a0BxbKSqYi2K8DsjeUnUqqT3shchswjN+02C10BHKX8rOQhDQsO9v6UOj4XxmtEfpBs=
+  - secure: GN9rsdaXFfND+3YQzbmtRd9wYmQYsl3jnP+KG94qnNCjBaR+PbfDGLe98xbJ3Aa9Pr/aUocIxIlT0vWp0ZV5nWWO5om7SCs/VwNRPeyCHtt3Yx3fTR089dArznsJqFeU9stl4aF5z7BgjUM9auTV5LP9IX8jv0dod66ftZnGOW+Ul4AU64EwiNPSNiWYIHUqaAF52UpooUsKd9FiSU4YobI0Ek5X3tVVtgatb8HEk/Z+urDhxIq9DnPzx+Pjp+v1Ft+e16ejEaf3XejdP0DixVHWJR31sDOsqc6hNxq7otTUp0BO/3hwoED5iqHRjFgJiFFpPqH2Xe5W6wt54wTmDRUMh3KBV62ei2bHsn1/PcjlBpkR8rWay3fgXbq5yv39JeJiLXPazO4kggfciYUcuXtRSviV9FTPaLI3U9UfGQEC2YL7wudPZT6V1/yV0ItukE0pajc6hqnmXeY0+K+uAolpudgg82hFKV4DWRR/PQaVl6BF4pPksUuHnK2KvW7km6hLaN+fAn9M31MNGWgOFFkZEHP2fN0qTdeF7SI1MTJkwTTBeJryqfISHQd7y6wr+wJ6T2RTwT6PEpvF/FC7T3QSxwCiqyYf5vrottYdACna0FnbeGD47lRxHP5K4h616ddOR2+LVZFu7f5WHUUMGPITF/VXvDD7q2thOoaYl5o=
+  - secure: Mn7a5iL9W3VPaLkITmPQjo6bCEuvpqoR5nTlEbGA9JoY7zCyJKTqMsWAbm4N8JPH0zTDYQy5uVkO1tS5hEd9260KKy7XmnP+m5soZTWa+lz7U6QGcenCUkUUL6JzY9pFcUyYgFFK7cTDTJ9gwE44v9PI5FLKm/c5D8kVsNigNS2uzMfh0Dw7+Bjtv+E7+zx1L33LOawmG4lJlfivjpx68BCxj4VhwFS6xihaCkFZ6IflBnJobBGxawA4rvdP5XKs7AoHIVdwAafdzPA8C5VlLgDeq6Tg5pWzMoJy5m+a4+wecCHT0AxzfTGYU8RRyC2QiOOrEiacfHJdGhWtHr1/rAlpffxiype+xQqTGuDwKk2RWnda4Ry2WflWSfMQ1DYVR0GcwHY4Idi9+em7NW59PBnYbWFSbYj4cfAfHbncMdfay0q5ki1ZRh/MaeU4lGeh6Ac8Y28tRMOo625DL8VaSP4ZaWlMCzhpJZffPis46Bw7PlPjIjPhsAAHZUouCCsGjOzF7bo+/U2LgRpVS4FKE90m7Skxl4mEo+/BO+N+K5uU/9a/pElfXrp4EDrSkhKPLlWIZJIg+44u8hVpZpV02hx1WNAAE4cBGmRqzJ/THqVptRZ/axwYe41z4tJhrlj0Z8eREZgcWIbvZsJ5ZNFIg4U01l0SZ/AqkQIjCJ2r2bE=

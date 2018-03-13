@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Print all sub-array with 0 sum | Math</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="1234567891011121314151617Given an array of integers, print all subarrays having 0 sum.For example,Input:  &amp;#123; 4, 2, -3, -1, 0, 4 &amp;#125;Sub-arrays with 0 sum are&amp;#123; -3, -1, 0, 4 &amp;#125;&amp;#123; 0 &amp;#">
+<meta name="keywords" content="Alogrithm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Print all sub-array with 0 sum">
+<meta property="og:url" content="http://math.wisim.me/2017/04/17/2017-04-19-AlogrithmPrintSubarray /index.html">
+<meta property="og:site_name" content="Math">
+<meta property="og:description" content="1234567891011121314151617Given an array of integers, print all subarrays having 0 sum.For example,Input:  &amp;#123; 4, 2, -3, -1, 0, 4 &amp;#125;Sub-arrays with 0 sum are&amp;#123; -3, -1, 0, 4 &amp;#125;&amp;#123; 0 &amp;#">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://math.wisim.me/src/imgs/1704/0419_print_subarray.png">
+<meta property="og:updated_time" content="2017-04-24T15:27:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Print all sub-array with 0 sum">
+<meta name="twitter:description" content="1234567891011121314151617Given an array of integers, print all subarrays having 0 sum.For example,Input:  &amp;#123; 4, 2, -3, -1, 0, 4 &amp;#125;Sub-arrays with 0 sum are&amp;#123; -3, -1, 0, 4 &amp;#125;&amp;#123; 0 &amp;#">
+<meta name="twitter:image" content="http://math.wisim.me/src/imgs/1704/0419_print_subarray.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Math</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">Wisimer</h2>
+            <h3 id="title">Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="http://weibo.com/u/5566941825/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                23
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                14
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://weibo.com/u/5566941825/" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://ox0p9pctg.bkt.clouddn.com/BANK_MATH.jpg" target="_blank" title="weixin" class=tooltip>
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="default-2017-04-19-AlogrithmPrintSubarray " class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Print all sub-array with 0 sum
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/17/2017-04-19-AlogrithmPrintSubarray /">
+            <time datetime="2017-04-16T16:00:00.000Z" itemprop="datePublished">2017-04-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/blog/">blog</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Alogrithm/">Alogrithm</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Given an array of integers, print all subarrays having 0 sum.</div><div class="line"></div><div class="line">For example,</div><div class="line"></div><div class="line">Input:  &#123; 4, 2, -3, -1, 0, 4 &#125;</div><div class="line">Sub-arrays with 0 sum are</div><div class="line">&#123; -3, -1, 0, 4 &#125;</div><div class="line">&#123; 0 &#125;</div><div class="line"> </div><div class="line">Input:  &#123; 3, 4, -7, 3, 1, 3, 1, -4, -2, -2 &#125;</div><div class="line">Sub-arrays with 0 sum are</div><div class="line">&#123; 3, 4, -7 &#125;</div><div class="line">&#123; 4, -7, 3 &#125;</div><div class="line">&#123; -7, 3, 1, 3 &#125;</div><div class="line">&#123; 3, 1, -4 &#125;</div><div class="line">&#123; 3, 1, 3, 1, -4, -2, -2 &#125;</div><div class="line">&#123; 3, 4, -7, 3, 1, 3, 1, -4, -2, -2 &#125;</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>意思就是给定一个数组，找到所有和为0的子数组。</p>
+<h4 id="解法1：暴力求解"><a href="#解法1：暴力求解" class="headerlink" title="解法1：暴力求解"></a>解法1：暴力求解</h4><p>双重循环，从当前数组开始往后遍历，找到和为0的子数组。时间复杂度是O(n^3)，其中O(n^2)用于遍历出子数组，O(n)用于计算和。</p>
+<h4 id="解法2：使用HashMap来解决"><a href="#解法2：使用HashMap来解决" class="headerlink" title="解法2：使用HashMap来解决"></a>解法2：使用HashMap来解决</h4><p>构造一个 <code>Map&lt;Integer, ArrayList&gt; hashMap</code> 用来存放<br>遍历数组，以当前位置（包含当前位置）之前的所有元素之和sum为key，如果hashMap中不存在这个key，则将这个key插入到hashMap中，并将这个元素所在位置插入到对应的ArrayList中。如果hashMap中已经存在这个key，则遍历key对应的ArrayList，以ArrayList中(每个元素所在位置+1)为起始值，当前元素所在位置为结束值，这之间的子数组的和就是0，接着还是要把当前位置插入到已经存在的key所对应的ArrayList中。</p>
+<h5 id="举个例子：数组-3-4-7-3-1-3-1-4-2-2"><a href="#举个例子：数组-3-4-7-3-1-3-1-4-2-2" class="headerlink" title="举个例子：数组{ 3, 4, -7, 3, 1, 3, 1, -4, -2, -2 }"></a>举个例子：数组{ 3, 4, -7, 3, 1, 3, 1, -4, -2, -2 }</h5><p>我们来一步一步的分析：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">(1)首先初始化的时候插入key为0，对应的ArrayList中插入-1，这样以后如果找到子数组就是从位置0开始了。插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1]&#125;</div><div class="line"></div><div class="line">(2)位置0的元素为3，hashMap中不含(0+3=3)。插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1]&#125;,</div><div class="line">&#123;3,[0]&#125;</div><div class="line"></div><div class="line">(3)位置1的元素是4,hashMap中不含(3+4=7)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1]&#125;,</div><div class="line">&#123;3,[0]&#125;,</div><div class="line">&#123;7,[1]&#125;</div><div class="line"></div><div class="line">(4)位置2的元素是-7,hashMap包含(-7+7=0)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1,2]&#125;,</div><div class="line">&#123;3,[0]&#125;,</div><div class="line">&#123;7,[1]&#125;</div><div class="line">并且此时有一个满足条件的子数组，对应的位置序列：</div><div class="line">[0,1,2]</div><div class="line"></div><div class="line">(5)位置3的元素是3,hashMap包含(0+3=3)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1,2]&#125;,</div><div class="line">&#123;3,[0,3]&#125;,</div><div class="line">&#123;7,[1]&#125;</div><div class="line">并且此时有一个满足条件的子数组，对应的位置序列：</div><div class="line">[1,2,3]</div><div class="line"></div><div class="line">(6)位置4的元素是1,hashMap不含(1+3=4)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1,2]&#125;,</div><div class="line">&#123;3,[0,3]&#125;,</div><div class="line">&#123;7,[1]&#125;,</div><div class="line">&#123;4,[4]&#125;</div><div class="line"></div><div class="line">(7)位置5的元素是3,hashMap包含(4+3=7)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1,2]&#125;,</div><div class="line">&#123;3,[0,3]&#125;,</div><div class="line">&#123;7,[1,5]&#125;,</div><div class="line">&#123;4,[4]&#125;</div><div class="line">并且此时有一个满足条件的子数组，对应的位置序列：</div><div class="line">[2,3,4,5]</div><div class="line"></div><div class="line">(8)位置6的元素是1,hashMap不含(7+1=8)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1,2]&#125;,</div><div class="line">&#123;3,[0,3]&#125;,</div><div class="line">&#123;7,[1,5]&#125;,</div><div class="line">&#123;4,[4]&#125;,</div><div class="line">&#123;8,[6]&#125;</div><div class="line"></div><div class="line">(9)位置7的元素是-4,hashMap包含(-4+8=4)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1,2]&#125;,</div><div class="line">&#123;3,[0,3]&#125;,</div><div class="line">&#123;7,[1,5]&#125;,</div><div class="line">&#123;4,[4,7]&#125;,</div><div class="line">&#123;8,[6]&#125;</div><div class="line">并且此时有一个满足条件的子数组，对应的位置序列：</div><div class="line">[5,6,7]</div><div class="line"></div><div class="line">(10)位置8的元素是-2,hashMap包含(-2+4=2)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1,2]&#125;,</div><div class="line">&#123;3,[0,3]&#125;,</div><div class="line">&#123;7,[1,5]&#125;,</div><div class="line">&#123;4,[4,7]&#125;,</div><div class="line">&#123;8,[6]&#125;,</div><div class="line">&#123;2,[8]&#125;</div><div class="line"></div><div class="line">(11)位置9的元素是-2,hashMap包含(-2+2=0)，插入之后hashMap的内容是：</div><div class="line">&#123;0,[-1,2,9]&#125;,</div><div class="line">&#123;3,[0,3]&#125;,</div><div class="line">&#123;7,[1,5]&#125;,</div><div class="line">&#123;4,[4,7]&#125;,</div><div class="line">&#123;8,[6]&#125;,</div><div class="line">&#123;2,[8]&#125;</div><div class="line">并且此时有两个满足条件的子数组，对应的位置序列：</div><div class="line">[0,1,2,3,4,5,6,7,8,9]</div><div class="line">[3,4,5,6,7,8,9]</div></pre></td></tr></table></figure>
+<blockquote>
+<p>来总结一下这种解法的:这种解法的时间复杂度是O(n)。<br>初始化的时候向hashMap中插入了key为0的一个元素，这一步很重要。之后从数组中遍历出的元素累加，每次累加得到的结果肯定会发生变化。如果发现某一次累加之后的值之前已经出现过一次，说明什么，说明在第一次出现这个值之后中间的累加操作一定会使得第一次之后（不包含第一次）到第二次（包含第二次）的和的值为0。</p>
+</blockquote>
+<p>￼￼结合下面这张折线图来看一下：<br><img src="/src/imgs/1704/0419_print_subarray.png" alt="rint_subarray"></p>
+<p>从-1位置开始，初始sum为0，经过了0，1，2三个位置的元素累加之后，sum又重新变为0。这期间发生了什么呢，依次发生了+3，+4，-7的操作，所以一旦发现两次的累加的和相等的话，表明这之间一定经过了和为0的加减操作。同理，其他几个位置的变化也是如此。</p>
+<h4 id="我们再用数学公式抽象一下："><a href="#我们再用数学公式抽象一下：" class="headerlink" title="我们再用数学公式抽象一下："></a>我们再用数学公式抽象一下：</h4><p>设从 0 到 i 位置的累加和为 Si且i位置的元素为e[i]，从 0 到 n 位置的累加和为 Sn且n位置的元素为e[n]，Si = Sn。</p>
+<p>从累加的定义我们知道：</p>
+<script type="math/tex; mode=display">S_{i} + e[i+1] = S_{i+1}</script><p>于是可以得到：</p>
+<script type="math/tex; mode=display">S_i + e[i+1] + e[i+2] + ... + e[n] = S_n</script><p>又有：<script type="math/tex">S_i = S_n</script></p>
+<p>所以 <code>e[i+1] + e[i+2] + ... + e[n]  = 0</code> 。<br>也就是从 i+1 开始到 n 的子数组之和为0</p>
+<hr>
+<p>Link : <a href="http://www.techiedelight.com/find-sub-array-with-0-sum/" target="_blank" rel="external">find-sub-array-with-0-sum</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+    <div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_qzone">QQ空间</a>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_tqq">腾讯微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+    <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<style>
+    .jiathis_style div:first-child:not(.jiadiv_01) {
+        width: auto !important;
+        border: none !important;
+    }
+    .jiathis_style .jiadiv_01 {
+        margin: 10px 0;
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .jiathis_style .jiadiv_01 div:first-child {
+        display: none;
+    }
+    .jiathis_style .jiadiv_02 {
+        padding: 7px 0 !important;
+    }
+    .jiathis_style .jiadiv_02 .jiatitle {
+        width: 85px;
+        border: none;
+        height: auto;
+        margin: 3px 10px;
+        padding: 6px 10px;
+        border-radius: 4px;
+    }
+    .jiathis_style .jiadiv_02 .jiatitle:hover {
+        border: none;
+    }
+    .jiathis_style .jiadiv_02 .jiatitle:nth-child(even) {
+        margin-left: 0;
+    }
+    .jiathis_style .jtico:hover {
+        opacity: 1;
+    }
+    .jiathis_style .ckepopBottom,
+    .jiathis_style .centerBottom {
+        width: auto !important;
+        padding: 5px;
+        background: #f7f7f7;
+    }
+</style>
+
+
+
+</div>
+
+            
+    
+        <a href="http://math.wisim.me/2017/04/17/2017-04-19-AlogrithmPrintSubarray /#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/04/17/2017-04-17-AlogrithmSunday/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Sunday 算法
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/03/05/2017-03-05-MachineLearningFAQ/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">学习MachineLearning过程中的一些问题</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="uyan_frame"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/02/25/2018-02-24_chatbot/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/2018/02/25/2018-02-24_chatbot/" class="title">机器学习构建chatbot</a></p>
+                            <p class="item-date"><time datetime="2018-02-24T16:00:00.000Z" itemprop="datePublished">2018-02-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/02/24/2018-02-25_nltk/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/2018/02/24/2018-02-25_nltk/" class="title">NLP基础</a></p>
+                            <p class="item-date"><time datetime="2018-02-23T16:00:00.000Z" itemprop="datePublished">2018-02-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/02/23/2018-02-23_knn/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/2018/02/23/2018-02-23_knn/" class="title">KNN</a></p>
+                            <p class="item-date"><time datetime="2018-02-22T16:00:00.000Z" itemprop="datePublished">2018-02-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/02/19/2018-02-19_perceptron/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/2018/02/19/2018-02-19_perceptron/" class="title">感知机</a></p>
+                            <p class="item-date"><time datetime="2018-02-18T16:00:00.000Z" itemprop="datePublished">2018-02-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/2017-12-25/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/线性代数/">线性代数</a></p>
+                            <p class="item-title"><a href="/2017/12/25/2017-12-25/" class="title">线性代数陌生公式</a></p>
+                            <p class="item-date"><time datetime="2017-12-24T16:00:00.000Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MATH/">MATH</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/leetcode/">leetcode</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/中值定理/">中值定理</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/定积分/">定积分</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微分不等式/">微分不等式</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/线性代数/">线性代数</a><span class="category-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/">Alogrithm</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KNN/">KNN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MachineLearning/">MachineLearning</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLTK/">NLTK</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TOOLS/">TOOLS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公式/">公式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/定积分的精确定义/">定积分的精确定义</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感知机/">感知机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉格朗日定理/">拉格朗日定理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰勒公式/">泰勒公式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线性代数/">线性代数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/罗尔定理/">罗尔定理</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Alogrithm/" style="font-size: 15px;">Alogrithm</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/KNN/" style="font-size: 10px;">KNN</a> <a href="/tags/LeetCode/" style="font-size: 20px;">LeetCode</a> <a href="/tags/MachineLearning/" style="font-size: 10px;">MachineLearning</a> <a href="/tags/NLTK/" style="font-size: 10px;">NLTK</a> <a href="/tags/TOOLS/" style="font-size: 10px;">TOOLS</a> <a href="/tags/公式/" style="font-size: 10px;">公式</a> <a href="/tags/定积分的精确定义/" style="font-size: 10px;">定积分的精确定义</a> <a href="/tags/感知机/" style="font-size: 10px;">感知机</a> <a href="/tags/拉格朗日定理/" style="font-size: 10px;">拉格朗日定理</a> <a href="/tags/泰勒公式/" style="font-size: 10px;">泰勒公式</a> <a href="/tags/线性代数/" style="font-size: 10px;">线性代数</a> <a href="/tags/罗尔定理/" style="font-size: 10px;">罗尔定理</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://webdemo.myscript.com/views/math.html#">MathPad</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://leetcode.com/problems">LeetCode</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://portal.qiniu.com/">QiNiu</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2145474"></script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

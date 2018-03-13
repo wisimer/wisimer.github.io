@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习MachineLearning过程中的一些问题 | Math</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="环境相关 python  Anaconda  Anaconda 本质上是一个软件发行版 ，包含了 conda、Python 等 180 多个科学包及其依赖项。   pydot  pydot是用python实现的绘制graphviz的接口。   graphviz  Graphviz的是AT&amp;amp;T Labs Research开发的图形绘制工具软件如果运行过程中报出 Exception: &amp;quo">
+<meta name="keywords" content="MachineLearning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习MachineLearning过程中的一些问题">
+<meta property="og:url" content="http://math.wisim.me/2017/03/05/2017-03-05-MachineLearningFAQ/index.html">
+<meta property="og:site_name" content="Math">
+<meta property="og:description" content="环境相关 python  Anaconda  Anaconda 本质上是一个软件发行版 ，包含了 conda、Python 等 180 多个科学包及其依赖项。   pydot  pydot是用python实现的绘制graphviz的接口。   graphviz  Graphviz的是AT&amp;amp;T Labs Research开发的图形绘制工具软件如果运行过程中报出 Exception: &amp;quo">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-04-24T15:27:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="学习MachineLearning过程中的一些问题">
+<meta name="twitter:description" content="环境相关 python  Anaconda  Anaconda 本质上是一个软件发行版 ，包含了 conda、Python 等 180 多个科学包及其依赖项。   pydot  pydot是用python实现的绘制graphviz的接口。   graphviz  Graphviz的是AT&amp;amp;T Labs Research开发的图形绘制工具软件如果运行过程中报出 Exception: &amp;quo">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Math</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">Wisimer</h2>
+            <h3 id="title">Software Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="http://weibo.com/u/5566941825/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                23
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                14
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://weibo.com/u/5566941825/" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://ox0p9pctg.bkt.clouddn.com/BANK_MATH.jpg" target="_blank" title="weixin" class=tooltip>
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="default-2017-03-05-MachineLearningFAQ" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习MachineLearning过程中的一些问题
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/03/05/2017-03-05-MachineLearningFAQ/">
+            <time datetime="2017-03-04T16:00:00.000Z" itemprop="datePublished">2017-03-05</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/blog/">blog</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/MachineLearning/">MachineLearning</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="环境相关"><a href="#环境相关" class="headerlink" title="环境相关"></a>环境相关</h4><ol>
+<li><p><a href="https://app.yinxiang.com/shard/s13/nl/621958455/54409a58-c91d-4d22-b457-6e5fbb721a3c/" target="_blank" rel="external">python</a></p>
+</li>
+<li><p><a href="https://www.continuum.io/downloads/" target="_blank" rel="external">Anaconda</a></p>
+<blockquote>
+<p>Anaconda 本质上是一个软件发行版 ，包含了 conda、Python 等 180 多个科学包及其依赖项。</p>
+</blockquote>
+</li>
+<li><p><a href="https://pypi.python.org/pypi/pydot" target="_blank" rel="external">pydot</a></p>
+<blockquote>
+<p>pydot是用python实现的绘制graphviz的接口。</p>
+</blockquote>
+</li>
+<li><p><a href="http://www.graphviz.org/" target="_blank" rel="external">graphviz</a></p>
+<blockquote>
+<p>Graphviz的是AT&amp;T Labs Research开发的图形绘制工具软件<br>如果运行过程中报出 <code>Exception: &quot;dot&quot; not found in path.</code> 则需要安装 <code>graphviz</code>，如果已经安装了Anacoda，直接执行 <code>conda install graphviz</code>。</p>
+</blockquote>
+</li>
+</ol>
+<a id="more"></a>
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>问题</p>
+<ul>
+<li>分类</li>
+<li>聚类</li>
+<li>回归</li>
+<li>异常检测</li>
+<li>关联规则</li>
+<li>强化学习</li>
+<li>结构预测</li>
+<li>特征学习</li>
+<li>在线学习</li>
+<li>半监督学习</li>
+<li><p>语法归纳</p>
+<hr>
+</li>
+</ul>
+<p>监督学习</p>
+<ul>
+<li>分类 ： 输出值如果是不连续的监督学习算法称为分类器（classifier）。</li>
+<li>回归 ： 输出值连续的监督学习算法称为回归函数（regression function）。</li>
+</ul>
+<hr>
+<p>线性回归</p>
+<ul>
+<li>代价函数 ：</li>
+</ul>
+<blockquote>
+<script type="math/tex; mode=display">J(\theta)=\frac{1}{2m}\sum_{i=1}^m{({h_\theta }({x^{(i)}})-{y^{(i)}})^{2}}</script><p>向量化实现 : <script type="math/tex">J(\theta)=\frac{1}{2m}(X*\theta-\vec{y})^{T} (X*\theta-\vec{y})</script></p>
+</blockquote>
+<ul>
+<li>归一化 : </li>
+</ul>
+<blockquote>
+<script type="math/tex; mode=display">y_{i}=\frac{x_{i}-\overline{x}}{s(x)}</script></blockquote>
+<ul>
+<li>梯度下降算法 : </li>
+</ul>
+<blockquote>
+<p>代价函数对  <script type="math/tex">\theta_j</script> 求偏导得到 : </p>
+<script type="math/tex; mode=display">\frac{\partial{J(\theta)}}{\partial{\theta_j}} = \frac{1}{m}\sum\limits_{i = 1}^m {[({h_\theta }({x^{(i)}})-{y^{(i)}})x_j^{(i)}]}</script><p>所以对 <script type="math/tex">\theta</script> 的更新可以写为 : <script type="math/tex">{\theta_j}={\theta_j}-\alpha\frac{1}{m}\sum\limits_{i=1}^m {[({h_\theta }({x^{(i)}})-{y^{(i)}})x_j^{(i)}]}</script></p>
+<p>向量化实现 : <script type="math/tex">{\theta_j} = {\theta_j}-{\alpha\frac{1}{m}(X^T(X*{\theta- \vec{y}}))}</script></p>
+</blockquote>
+<p>分类器</p>
+<ul>
+<li>人工神经网络</li>
+<li>支持向量机（support vector machine）</li>
+<li>最邻近法</li>
+<li>高斯混合模型</li>
+<li>朴素贝叶斯法</li>
+<li>决策树（decision tree）</li>
+<li>径向量函数分类</li>
+</ul>
+<p>解决步骤</p>
+<ol>
+<li>决定训练的样本类型</li>
+<li>搜集训练集</li>
+<li>决定学习函数的特征表示</li>
+<li>决定学习函数的结构以及对应的学习算法</li>
+<li>完成设计</li>
+<li>评价学习函数的准确性</li>
+</ol>
+<hr>
+<ul>
+<li>决策树</li>
+<li>表征（装袋, 提升，随机森林）</li>
+<li>k-NN</li>
+<li>线性回归</li>
+<li>朴素贝叶斯</li>
+<li>神经网络</li>
+<li>逻辑回归</li>
+<li>感知器</li>
+<li>支持向量机（SVM）</li>
+<li>相关向量机（RVM）</li>
+</ul>
+<p>聚类</p>
+<ul>
+<li>BIRCH</li>
+<li>层次</li>
+<li>k平均</li>
+<li><p>期望最大化（EM）</p>
+</li>
+<li><p>DBSCAN</p>
+</li>
+<li>OPTICS</li>
+<li>均值飘移</li>
+</ul>
+<p>降维</p>
+<ul>
+<li>因子分析</li>
+<li>CCA</li>
+<li>ICA</li>
+<li>LDA</li>
+<li>NMF</li>
+<li>PCA</li>
+<li>LASSO</li>
+<li>t-SNE</li>
+</ul>
+<p>结构预测</p>
+<ul>
+<li>概率图模型（贝叶斯网络，CRF, HMM）</li>
+</ul>
+<p>异常检测</p>
+<ul>
+<li>k-NN</li>
+<li>局部离群因子</li>
+</ul>
+<p>神经网络</p>
+<ul>
+<li>自编码</li>
+<li>深度学习</li>
+<li>多层感知机</li>
+<li>RNN</li>
+<li>受限玻尔兹曼机</li>
+<li>SOM</li>
+<li>CNN</li>
+</ul>
+<p>理论</p>
+<ul>
+<li>偏差/方差偏置(Bias-Variance Tradeoff)：一般而言高偏差意味着欠拟合，高方差意味着过拟合</li>
+<li>计算学习理论</li>
+<li>经验风险最小化</li>
+<li>PAC学习</li>
+<li>统计学习</li>
+<li>VC理论</li>
+</ul>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+    <div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_qzone">QQ空间</a>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_tqq">腾讯微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+    <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<style>
+    .jiathis_style div:first-child:not(.jiadiv_01) {
+        width: auto !important;
+        border: none !important;
+    }
+    .jiathis_style .jiadiv_01 {
+        margin: 10px 0;
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .jiathis_style .jiadiv_01 div:first-child {
+        display: none;
+    }
+    .jiathis_style .jiadiv_02 {
+        padding: 7px 0 !important;
+    }
+    .jiathis_style .jiadiv_02 .jiatitle {
+        width: 85px;
+        border: none;
+        height: auto;
+        margin: 3px 10px;
+        padding: 6px 10px;
+        border-radius: 4px;
+    }
+    .jiathis_style .jiadiv_02 .jiatitle:hover {
+        border: none;
+    }
+    .jiathis_style .jiadiv_02 .jiatitle:nth-child(even) {
+        margin-left: 0;
+    }
+    .jiathis_style .jtico:hover {
+        opacity: 1;
+    }
+    .jiathis_style .ckepopBottom,
+    .jiathis_style .centerBottom {
+        width: auto !important;
+        padding: 5px;
+        background: #f7f7f7;
+    }
+</style>
+
+
+
+</div>
+
+            
+    
+        <a href="http://math.wisim.me/2017/03/05/2017-03-05-MachineLearningFAQ/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/04/17/2017-04-19-AlogrithmPrintSubarray /" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Print all sub-array with 0 sum
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2016/08/21/2016-08-21-LeetCodeClimbingStairs/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">LeetCode:70. Climbing Stairs</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="uyan_frame"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/02/25/2018-02-24_chatbot/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/2018/02/25/2018-02-24_chatbot/" class="title">机器学习构建chatbot</a></p>
+                            <p class="item-date"><time datetime="2018-02-24T16:00:00.000Z" itemprop="datePublished">2018-02-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/02/24/2018-02-25_nltk/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/2018/02/24/2018-02-25_nltk/" class="title">NLP基础</a></p>
+                            <p class="item-date"><time datetime="2018-02-23T16:00:00.000Z" itemprop="datePublished">2018-02-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/02/23/2018-02-23_knn/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/2018/02/23/2018-02-23_knn/" class="title">KNN</a></p>
+                            <p class="item-date"><time datetime="2018-02-22T16:00:00.000Z" itemprop="datePublished">2018-02-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/02/19/2018-02-19_perceptron/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/2018/02/19/2018-02-19_perceptron/" class="title">感知机</a></p>
+                            <p class="item-date"><time datetime="2018-02-18T16:00:00.000Z" itemprop="datePublished">2018-02-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/2017-12-25/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/线性代数/">线性代数</a></p>
+                            <p class="item-title"><a href="/2017/12/25/2017-12-25/" class="title">线性代数陌生公式</a></p>
+                            <p class="item-date"><time datetime="2017-12-24T16:00:00.000Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MATH/">MATH</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/leetcode/">leetcode</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/中值定理/">中值定理</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/定积分/">定积分</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微分不等式/">微分不等式</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/线性代数/">线性代数</a><span class="category-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Alogrithm/">Alogrithm</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KNN/">KNN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MachineLearning/">MachineLearning</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLTK/">NLTK</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TOOLS/">TOOLS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公式/">公式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/定积分的精确定义/">定积分的精确定义</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感知机/">感知机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拉格朗日定理/">拉格朗日定理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰勒公式/">泰勒公式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线性代数/">线性代数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/罗尔定理/">罗尔定理</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Alogrithm/" style="font-size: 15px;">Alogrithm</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/KNN/" style="font-size: 10px;">KNN</a> <a href="/tags/LeetCode/" style="font-size: 20px;">LeetCode</a> <a href="/tags/MachineLearning/" style="font-size: 10px;">MachineLearning</a> <a href="/tags/NLTK/" style="font-size: 10px;">NLTK</a> <a href="/tags/TOOLS/" style="font-size: 10px;">TOOLS</a> <a href="/tags/公式/" style="font-size: 10px;">公式</a> <a href="/tags/定积分的精确定义/" style="font-size: 10px;">定积分的精确定义</a> <a href="/tags/感知机/" style="font-size: 10px;">感知机</a> <a href="/tags/拉格朗日定理/" style="font-size: 10px;">拉格朗日定理</a> <a href="/tags/泰勒公式/" style="font-size: 10px;">泰勒公式</a> <a href="/tags/线性代数/" style="font-size: 10px;">线性代数</a> <a href="/tags/罗尔定理/" style="font-size: 10px;">罗尔定理</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://webdemo.myscript.com/views/math.html#">MathPad</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://leetcode.com/problems">LeetCode</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://portal.qiniu.com/">QiNiu</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2145474"></script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

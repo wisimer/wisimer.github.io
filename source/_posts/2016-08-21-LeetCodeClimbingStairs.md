@@ -2,7 +2,7 @@
 date: 2016-08-21
 title: LeetCode:70. Climbing Stairs
 tags: LeetCode
-category: leetcode
+category: Alogrithm
 layout: default
 ---
 

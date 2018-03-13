@@ -2,7 +2,7 @@
 date: 2016-08-11
 title: LeetCode:383. Ransom Note
 tags: LeetCode
-category: leetcode
+category: Alogrithm
 layout: default
 ---
 
@@ -63,7 +63,7 @@ public class Solution {
             return true;
         }
         List<Character> ransomNodeChars = new ArrayList<>();
-        List<Character> magazineChars = new ArrayList<>();  
+        List<Character> magazineChars = new ArrayList<>();
         for(int i = 0 ; i < ransomNote.length() ; i++) {
             ransomNodeChars.add(ransomNote.charAt(i));
         }

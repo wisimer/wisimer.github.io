@@ -2,8 +2,8 @@
 title: Sunday 算法
 date: 2017-04-17
 layout: default
-category: blog
-tags: Alogrithm
+category: Alogrithm
+tags: 字符串匹配
 ---
 
 [KMP](https://app.yinxiang.com/shard/s13/nl/2429525/637318f2-3d6a-4c51-833e-350c51081347)算法和[BM](https://app.yinxiang.com/shard/s13/nl/2429525/377ef8db-d58d-435f-bb4c-89b8a01321f1)算法，这两个算法在最坏情况下均具有线性的查找时间。但实际上，KMP算法并不比最简单的c库函数strstr()快多少，而BM算法虽然通常比KMP算法快，但BM算法也还不是现有字符串查找算法中最快的算法，有一种比BM算法更快的查找算法即Sunday算法。

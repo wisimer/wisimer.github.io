@@ -2,7 +2,7 @@
 date: 2016-08-13
 title: LeetCode:378. Kth Smallest Element in a Sorted Matrix
 tags: LeetCode
-category: leetcode
+category: Alogrithm
 layout: default
 ---
 

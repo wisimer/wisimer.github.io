@@ -2,7 +2,7 @@
 date: 2017-03-05
 title: 学习MachineLearning过程中的一些问题
 tags: MachineLearning
-category: blog
+category: MachineLearning
 layout: default
 ---
 
@@ -52,13 +52,13 @@ layout: default
 
 > 向量化实现 : $$J(\theta)=\frac{1}{2m}(X*\theta-\vec{y})^{T} (X*\theta-\vec{y})$$
 
--  归一化 : 
+-  归一化 :
 
 > $$y_{i}=\frac{x_{i}-\overline{x}}{s(x)}$$
 
--  梯度下降算法 : 
+-  梯度下降算法 :
 
-> 代价函数对  $$\theta_j$$ 求偏导得到 : 
+> 代价函数对  $$\theta_j$$ 求偏导得到 :
 $$\frac{\partial{J(\theta)}}{\partial{\theta_j}} = \frac{1}{m}\sum\limits_{i = 1}^m {[({h_\theta }({x^{(i)}})-{y^{(i)}})x_j^{(i)}]}$$
 
 > 所以对 $$\theta$$ 的更新可以写为 : $${\theta_j}={\theta_j}-\alpha\frac{1}{m}\sum\limits_{i=1}^m {[({h_\theta }({x^{(i)}})-{y^{(i)}})x_j^{(i)}]}$$

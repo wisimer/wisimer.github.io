@@ -2,7 +2,7 @@
 date: 2016-08-18
 title: LeetCode:385. Mini Parser
 tags: LeetCode
-category: leetcode
+category: Alogrithm
 layout: default
 ---
 

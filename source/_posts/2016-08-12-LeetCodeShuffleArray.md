@@ -2,7 +2,7 @@
 date: 2016-08-12
 title: LeetCode:384. Shuffle an Array
 tags: LeetCode
-category: leetcode
+category: Alogrithm
 layout: default
 ---
 

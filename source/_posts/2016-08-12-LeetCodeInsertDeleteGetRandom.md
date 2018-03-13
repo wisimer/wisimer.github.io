@@ -2,7 +2,7 @@
 date: 2016-08-12
 title: LeetCode:381. Insert Delete GetRandom O(1)
 tags: LeetCode
-category: leetcode
+category: Alogrithm
 layout: default
 ---
 

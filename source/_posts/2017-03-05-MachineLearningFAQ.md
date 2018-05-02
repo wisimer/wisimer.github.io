@@ -1,8 +1,8 @@
 ---
 date: 2017-03-05
 title: 学习MachineLearning过程中的一些问题
-tags: MachineLearning
-category: MachineLearning
+tags: 机器学习
+category: 机器学习
 layout: default
 ---
 

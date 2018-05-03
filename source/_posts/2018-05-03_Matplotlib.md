@@ -47,7 +47,7 @@ plt.show()
 ```python
 x = np.linspace(0, 2 * np.pi, 50)
 y = np.sin(x)
-plt.scatter(x,y) #通过 plot 命令并将线的样式设置为 'bo' 也可以实现同样的效果。
+plt.scatter(x,y) #通过 plot 命令并将线的样式设置为 'bo' 也可以实现同样的效果。实际设置'o'就可以，'bo'表示蓝色的点。
 plt.show()
 ```
 

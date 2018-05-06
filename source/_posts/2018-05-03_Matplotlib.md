@@ -18,7 +18,9 @@ plt.plot(x, np.sin(x),
 plt.show() # 显示图形
 ```
 
-![0503_simple]('/src/imgs/1805/0503_simple.png')
+![0503_simple](/src/imgs/1805/0503_simple.png)
+
+<!--more-->
 
 #### 自定义图形的外观
 
@@ -29,7 +31,7 @@ plt.plot(x, np.sin(x), 'r-o',
 plt.show()
 ```
 
-![0503_style]('/src/imgs/1805/0503_style.png')
+![0503_style](/src/imgs/1805/0503_style.png)
 
 #### 使用子图，可以在一个窗口绘制多张图。
 
@@ -42,7 +44,7 @@ plt.plot(x, np.cos(x), 'g')
 plt.show()
 ```
 
-![0503_child]('/src/imgs/1805/0503_child.png')
+![0503_child](/src/imgs/1805/0503_child.png)
 
 #### 简单散点图
 
@@ -53,7 +55,7 @@ plt.scatter(x,y) #通过 plot 命令并将线的样式设置为 'bo' 也可以�
 plt.show()
 ```
 
-![0503_sandian]('/src/imgs/1805/0503_sandian.png')
+![0503_sandian](/src/imgs/1805/0503_sandian.png)
 
 #### 直方图
 
@@ -63,7 +65,7 @@ plt.hist(x, 50)
 plt.show()
 ```
 
-![0503_zhifang]('/src/imgs/1805/0503_zhifang,png')
+![0503_zhifang](/src/imgs/1805/0503_zhifang.png)
 
 #### 彩色映射散点图
 
@@ -77,7 +79,7 @@ plt.colorbar() #加了一个颜色栏。
 plt.show()
 ```
 
-![0503_color_sandian]('/src/imgs/1805/0503_color_sandian.png')
+![0503_color_sandian](/src/imgs/1805/0503_color_sandian.png)
 
 #### 添加标题，坐标轴标记和图例
 
@@ -92,7 +94,7 @@ plt.title('Sin and Cos Waves') # 添加图形标题
 plt.show()
 ```
 
-![0503_label]('/src/imgs/1805/0503_label.png')
+![0503_label](/src/imgs/1805/0503_label.png)
 
 #### 饼图
 ```python
@@ -112,7 +114,7 @@ plt.title('Interesting Graph\nCheck it out')
 plt.show()
 ```
 
-![0503_pie]('/src/imgs/1805/0503_pie.png')
+![0503_pie](/src/imgs/1805/0503_pie.png)
 
 
 #### 从文件读取数据
@@ -141,12 +143,12 @@ plt.legend()
 plt.show()
 ```
 
-![0503_read_file_data]('/src/imgs/1805/0503_read_file_data.png')
+![0503_read_file_data](/src/imgs/1805/0503_read_file_data.png)
 
 - - -
 
 附：
-[code]('/raw/code/matplotlib/matplotlibdemo.ipynb')
+[code](/raw/code/matplotlib/matplotlibdemo.ipynb)
 
 - - -
 THE END.

@@ -9,10 +9,12 @@ tags: [Matplotlib]
 #### 画一个简单的图形
 
 ```python
+import matplotlib.pyplot as plt
+import numpy as np
 x = np.linspace(0, 2 * np.pi, 50) #生成一个包含 50 个元素的数组，这 50 个元素均匀的分布在 [0, 2pi] 的区间上。
 plt.plot(x, np.sin(x)) # 如果没有第一个参数 x，图形的 x 坐标默认为数组的索引
 plt.plot(x, np.sin(x),
-        x, np.sin(2 * x)) #绘制两个数据集
+         x, np.sin(2 * x)) #绘制两个数据集
 plt.show() # 显示图形
 ```
 
@@ -23,7 +25,7 @@ plt.show() # 显示图形
 ```python
 x = np.linspace(0, 2 * np.pi, 50)
 plt.plot(x, np.sin(x), 'r-o',
-        x, np.cos(x), 'g--') #'r' 和 'g' 代表线条的颜色，'-o' 代表包含实心点标记的实线，'--' 代表虚线
+         x, np.cos(x), 'g--') #'r' 和 'g' 代表线条的颜色，'-o' 代表包含实心点标记的实线，'--' 代表虚线
 plt.show()
 ```
 

@@ -25,7 +25,7 @@ customize:
     highlight: monokai
     sidebar:  # sidebar position, options: left, right or leave it empty
     thumbnail: true # enable posts thumbnail, options: true, false
-    favicon: images/logo.png # path to favicon
+    favicon: https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true # path to favicon
     social_links:
         github: /
         twitter: /

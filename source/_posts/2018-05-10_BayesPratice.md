@@ -253,6 +253,56 @@ p1: 0.0
 ['stupid', 'garbage'] 属于非侮辱类
 ```
 
+但是这样写的算法无法进行分类，p0和p1的计算结果都是0，最终分类都是非侮辱类，显然结果错误。这是为什么呢？之前已经提过，利用贝叶斯分类器对文档进行分类时，要计算多个概率的乘积以获得文档属于某个类别的概率，即计算 p(w_{0}|1)p(w_{1}|1)p(w_{2}|1)...p(w_{n}|1)  。如果其中有一个概率值为0，那么最后的计算结果也为0。
+
+#### 5.平滑处理
+
+为了降低这种影响，可以将所有词的出现数初始化为1，并将分母初始化为2。这种做法就叫做拉普拉斯平滑(Laplace Smoothing)又被称为加1平滑，是比较常用的平滑方法，它就是为了解决0概率问题。
+
+除此之外，另外一个遇到的问题就是下溢出，这是由于太多很小的数相乘造成的。学过数学的人都知道，两个小数相乘，越乘越小，这样就造成了下溢出。在程序中，在相应小数位置进行四舍五入，计算结果可能就变成0了。为了解决这个问题，对乘积结果取自然对数。通过求对数可以避免下溢出或者浮点数舍入导致的错误。同时，采用自然对数进行处理不会有任何损失。
+
+根据上面这两种改进方法，改进之后的trainNB0方法和classifyNB方法：
+
+```python
+def trainNB0(trainMatrix,trainCategory):
+    numTrainDocs = len(trainMatrix)                         #计算训练的文档数目
+    numWords = len(trainMatrix[0])                          #计算每篇文档的词条数
+    pAbusive = sum(trainCategory)/float(numTrainDocs)       #文档属于侮辱类的概率
+    p0Num = np.ones(numWords); p1Num = np.ones(numWords)    #创建numpy.ones数组,词条出现数初始化为1，拉普拉斯平滑
+    p0Denom = 2.0; p1Denom = 2.0                            #分母初始化为2,拉普拉斯平滑
+    for i in range(numTrainDocs):
+        if trainCategory[i] == 1:                           #统计属于侮辱类的条件概率所需的数据，即P(w0|1),P(w1|1),P(w2|1)···
+            p1Num += trainMatrix[i]
+            p1Denom += sum(trainMatrix[i])
+        else:                                               #统计属于非侮辱类的条件概率所需的数据，即P(w0|0),P(w1|0),P(w2|0)···
+            p0Num += trainMatrix[i]
+            p0Denom += sum(trainMatrix[i])
+    p1Vect = np.log(p1Num/p1Denom)                          #取对数，防止下溢出         
+    p0Vect = np.log(p0Num/p0Denom)         
+    return p0Vect,p1Vect,pAbusive                           #返回属于侮辱类的条件概率数组，属于非侮辱类的条件概率数组，文档属于侮辱类的概率
+
+def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
+    p1 = sum(vec2Classify * p1Vec) + np.log(pClass1)        #对应元素相乘。logA * B = logA + logB，所以这里加上log(pClass1)
+    p0 = sum(vec2Classify * p0Vec) + np.log(1.0 - pClass1)
+    print('p0:',p0)
+    print('p1:',p1)
+    if p1 > p0:
+        return 1
+    else:
+        return 0
+```
+
+最终计算出来的分类结果：
+
+```
+p0: -7.694848072384611
+p1: -9.826714493730215
+['love', 'my', 'dalmation'] 属于非侮辱类
+p0: -7.20934025660291
+p1: -4.702750514326955
+['stupid', 'garbage'] 属于侮辱类
+```
+
 - - -
 参考：
 

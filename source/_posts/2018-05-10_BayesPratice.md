@@ -309,5 +309,9 @@ p1: -4.702750514326955
 1. [Python3《机器学习实战》学习笔记（四）：朴素贝叶斯基础篇之言论过滤器](https://zhuanlan.zhihu.com/p/28719332)
 2. [Python3《机器学习实战》学习笔记（五）：朴素贝叶斯实战篇之新浪新闻分类](https://zhuanlan.zhihu.com/p/28720393)
 
+附：
+
+[code](/raw/code/BayesClassify/BayesClassify_CommentClassify.ipynb.ipynb)
+
 - - -
 THE END.

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Numpy | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="一、创建ndarray123456789101112131415161718192021222324252627282930import numpy as npa = np.array([1, 2, 3, 4])b = np.array([[1, 2, 3, 4],[4, 5, 6, 7], [7, 8, 9, 10]])# np.ones(x):创建一个长度为x，且元素全为1的ndarrayc">
+<meta name="keywords" content="Numpy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Numpy">
+<meta property="og:url" content="http://ai.wisim.me/2018/05/03/2018-05-03_Numpy/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="一、创建ndarray123456789101112131415161718192021222324252627282930import numpy as npa = np.array([1, 2, 3, 4])b = np.array([[1, 2, 3, 4],[4, 5, 6, 7], [7, 8, 9, 10]])# np.ones(x):创建一个长度为x，且元素全为1的ndarrayc">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1805/0506_numpy_logspace.png">
+<meta property="og:updated_time" content="2018-05-07T03:08:07.917Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Numpy">
+<meta name="twitter:description" content="一、创建ndarray123456789101112131415161718192021222324252627282930import numpy as npa = np.array([1, 2, 3, 4])b = np.array([[1, 2, 3, 4],[4, 5, 6, 7], [7, 8, 9, 10]])# np.ones(x):创建一个长度为x，且元素全为1的ndarrayc">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1805/0506_numpy_logspace.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-05-03_Numpy" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Numpy
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/03/2018-05-03_Numpy/">
+            <time datetime="2018-05-02T16:00:00.000Z" itemprop="datePublished">2018-05-03</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Numpy/">Numpy</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="一、创建ndarray"><a href="#一、创建ndarray" class="headerlink" title="一、创建ndarray"></a>一、创建ndarray</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line">a = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</div><div class="line">b = np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>],[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]])</div><div class="line"></div><div class="line"><span class="comment"># np.ones(x):创建一个长度为x，且元素全为1的ndarray</span></div><div class="line">c = np.ones(<span class="number">2</span>,dtype = np.int)</div><div class="line">[<span class="number">1</span>, <span class="number">1</span>]</div><div class="line"></div><div class="line"><span class="comment"># np.ones(x，y):创建一个长度为x行y列，且元素全为1的ndarray</span></div><div class="line">d = np.ones((<span class="number">3</span>,<span class="number">2</span>))</div><div class="line">[[<span class="number">1.</span>, <span class="number">1.</span>],</div><div class="line"> [<span class="number">1.</span>, <span class="number">1.</span>],</div><div class="line"> [<span class="number">1.</span>, <span class="number">1.</span>]]</div><div class="line"></div><div class="line"><span class="comment"># np.zeros(x,y):创建一个x行y列且元素全为0的ndarray</span></div><div class="line">e = np.zeros((<span class="number">3</span>,<span class="number">2</span>))</div><div class="line">[[<span class="number">0.</span>, <span class="number">0.</span>],</div><div class="line"> [<span class="number">0.</span>, <span class="number">0.</span>],</div><div class="line"> [<span class="number">0.</span>, <span class="number">0.</span>]]</div><div class="line"></div><div class="line"><span class="comment"># np.empty(x,y):创建一个x行y列且未初始化的ndarray(随机数填充数据)</span></div><div class="line">f = np.empty((<span class="number">1</span>,<span class="number">2</span>), dtype =  int)</div><div class="line">[[<span class="number">4607182418800017408</span>, <span class="number">4607182418800017408</span>]]</div><div class="line"></div><div class="line"><span class="comment"># 使用 np.arange 生成连续元素的ndarray</span></div><div class="line">g = np.arange(<span class="number">6</span>) <span class="comment">#从0到6，默认间隔(步长)为1</span></div><div class="line">[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</div><div class="line"></div><div class="line">h = np.arange(<span class="number">0</span>,<span class="number">6</span>,<span class="number">2</span>) <span class="comment">#从0到6，间隔为2，不包括6</span></div><div class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>]</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 使用 np.linspace(start, stop, num, endpoint, retstep, dtype) 生成ndarray,num:生成ndarray的元素个数</span></div><div class="line">a = np.linspace(<span class="number">1.0</span>, <span class="number">2.0</span>, num  = <span class="number">10</span>)</div><div class="line">[<span class="number">1.</span>,<span class="number">1.11111111</span>,<span class="number">1.22222222</span>,<span class="number">1.33333333</span>,<span class="number">1.44444444</span>,<span class="number">1.55555556</span>,<span class="number">1.66666667</span>,<span class="number">1.77777778</span>,<span class="number">1.88888889</span>,<span class="number">2.</span>]</div><div class="line"></div><div class="line"><span class="comment"># np.logspace(start, stop, num, endpoint, base, dtype) ： 返回一个 ndarray 对象，其实就是linespace生成的元素值对应的base作为底数的幂</span></div><div class="line">y = np.logspace(<span class="number">1.0</span>,  <span class="number">2.0</span>, num =  <span class="number">10</span>)</div><div class="line">[ <span class="number">10.</span>,<span class="number">12.91549665</span>,<span class="number">16.68100537</span>,<span class="number">21.5443469</span>,<span class="number">27.82559402</span>,<span class="number">35.93813664</span>,<span class="number">46.41588834</span>,<span class="number">59.94842503</span>,<span class="number">77.42636827</span>,<span class="number">100.</span>]</div></pre></td></tr></table></figure>
+<p>我们来看一下上面生成的两个ndarray所画出的函数是不是10的幂函数图像：</p>
+<p><img src="/src/imgs/1805/0506_numpy_logspace.png" alt="0506_numpy_logspace"></p>
+<p>对应代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>)</div><div class="line">plt.xlabel(<span class="string">'linspace'</span>)</div><div class="line">plt.ylabel(<span class="string">'logspace'</span>)</div><div class="line">plt.plot(a,b,<span class="string">'b-'</span>,label=<span class="string">'logspace'</span>)</div><div class="line">plt.legend()</div><div class="line">plt.subplot(<span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>)</div><div class="line">plt.plot(a,np.power(<span class="number">10</span>,a),<span class="string">'r-'</span>,label=<span class="string">'10^a'</span>)</div><div class="line">plt.legend()</div><div class="line">plt.show()</div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># np.fromiter(iterable, dtype, count = -1) : 从任何可迭代对象构建一个ndarray对象</span></div><div class="line">list = range(<span class="number">5</span>)</div><div class="line">it = iter(list)</div><div class="line"><span class="comment"># 使用迭代器创建 ndarray</span></div><div class="line">x = np.fromiter(it, dtype = int)</div><div class="line">[<span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span>]</div><div class="line"></div><div class="line"><span class="comment"># np.frombuffer():此函数将缓冲区解释为一维ndarray。</span></div><div class="line">但是参数是String类型的会报错误，原因如下：</div><div class="line">https://stackoverflow.com/questions/<span class="number">43362986</span>/numpy-frombuffer-attributeerror-str-object-has-no-attribute-buffer</div></pre></td></tr></table></figure>
+<h4 id="二、ndarray的属性"><a href="#二、ndarray的属性" class="headerlink" title="二、ndarray的属性"></a>二、ndarray的属性</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># array.size ndarray元素个数</span></div><div class="line">a.size</div><div class="line"><span class="number">4</span></div><div class="line"></div><div class="line"><span class="comment"># array.dtype ndarray元素的类型</span></div><div class="line">a.dtype</div><div class="line">dtype(<span class="string">'int64'</span>)</div><div class="line"></div><div class="line"><span class="comment"># array.itemsize ndarray每个元素所占字节大小</span></div><div class="line">a.itemsize</div><div class="line"><span class="number">8</span> <span class="comment"># int64类型大小为8字节</span></div><div class="line"></div><div class="line"><span class="comment"># array.ndim ndarray纬度</span></div><div class="line">a.nidm</div><div class="line"><span class="number">1</span></div><div class="line">b.ndim</div><div class="line"><span class="number">2</span></div><div class="line"></div><div class="line"><span class="comment"># array.shape ：ndarray各个维度的长度</span></div><div class="line">a.shape</div><div class="line">(<span class="number">4</span>,)</div><div class="line">b.shape</div><div class="line">(<span class="number">3</span>,<span class="number">4</span>)</div></pre></td></tr></table></figure>
+<h4 id="三、ndarray操作"><a href="#三、ndarray操作" class="headerlink" title="三、ndarray操作"></a>三、ndarray操作</h4><h5 id="单个ndarray操作"><a href="#单个ndarray操作" class="headerlink" title="单个ndarray操作"></a>单个ndarray操作</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># array.sum()：求ndarray所有元素的和值。也可以加上axis参数，求各行或者各列的元素和值</span></div><div class="line"><span class="comment"># array.min()：求ndarray所有元素中的最小值。也可以加上axis参数，求各行或者各列的元素最小值</span></div><div class="line"><span class="comment"># array.max()：求ndarray所有元素中的最大值。也可以加上axis参数，求各行或者各列的元素最大值</span></div><div class="line"></div><div class="line"><span class="comment"># array.shape = x,y : 通过改变ndarray的shape值，可以改变ndarray的行数和列数.（总数必须一致）</span></div><div class="line">b.shape = <span class="number">4</span>,<span class="number">3</span></div><div class="line">[[ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>],</div><div class="line"> [ <span class="number">4</span>,  <span class="number">4</span>,  <span class="number">5</span>],</div><div class="line"> [ <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">7</span>],</div><div class="line"> [ <span class="number">8</span>,  <span class="number">9</span>, <span class="number">10</span>]]</div><div class="line"></div><div class="line"><span class="comment"># array.reshape(x,y) 的作用和指定shape值的效果一样，但是会返回一个新的ndarray，并且这个ndarray和原ndarray共享内存，无论修改哪一个ndarray都会引起另外一个ndarray的变化</span></div><div class="line">b.reshape(<span class="number">3</span>,<span class="number">4</span>)</div><div class="line"></div><div class="line"><span class="comment"># array.resize(x,y) 用于原地设置形状,也就是修改的是原ndarray。而reshape和shape都是修改之后返回一个新ndarray</span></div><div class="line">b.resize(<span class="number">2</span>,<span class="number">6</span>)</div><div class="line">[[ <span class="number">1</span>, <span class="number">-1</span>,  <span class="number">4</span>,  <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">9</span>],</div><div class="line"> [ <span class="number">2</span>,  <span class="number">4</span>,  <span class="number">5</span>,  <span class="number">7</span>,  <span class="number">8</span>, <span class="number">10</span>]]</div><div class="line"></div><div class="line"><span class="comment"># array.ravel() 将ndarray展开，创建视图,视图和原ndarray共享内存，无论修改哪一个ndarray都会引起另外一个ndarray的变化</span></div><div class="line">i = b.ravel()</div><div class="line">[ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">4</span>,  <span class="number">5</span>,  <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">7</span>,  <span class="number">8</span>,  <span class="number">9</span>, <span class="number">10</span>]</div><div class="line"></div><div class="line"><span class="comment"># array.flatten() 将ndarray展开，创建副本,副本修改不影响原ndarray变化</span></div><div class="line">j = b.flatten()</div><div class="line">[ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">4</span>,  <span class="number">5</span>,  <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">7</span>,  <span class="number">8</span>,  <span class="number">9</span>, <span class="number">10</span>]</div><div class="line"></div><div class="line"><span class="comment"># array.transpose() 用于转置矩阵</span></div><div class="line">k = b.transpose()</div><div class="line">[[ <span class="number">1</span>,  <span class="number">4</span>,  <span class="number">7</span>],</div><div class="line"> [ <span class="number">2</span>,  <span class="number">5</span>,  <span class="number">8</span>],</div><div class="line"> [<span class="number">-1</span>,  <span class="number">6</span>,  <span class="number">9</span>],</div><div class="line"> [ <span class="number">4</span>,  <span class="number">7</span>, <span class="number">10</span>]]</div></pre></td></tr></table></figure>
+<h5 id="多个ndarray操作"><a href="#多个ndarray操作" class="headerlink" title="多个ndarray操作"></a>多个ndarray操作</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># np.vstack(a1,a2) : 纵向（vertical）合并两个ndarray</span></div><div class="line">a1 = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</div><div class="line">a2 = np.array([<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>])</div><div class="line">np.vstack((a1,a2))</div><div class="line">[[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</div><div class="line"> [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]]</div><div class="line"></div><div class="line"><span class="comment"># np.hstack(a1,a2) : 横向（horizontal）合并两个ndarray</span></div><div class="line">a1 = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</div><div class="line">a2 = np.array([<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>])</div><div class="line">np.hstack((a1,a2))</div><div class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</div><div class="line"></div><div class="line"><span class="comment"># np.stach((a1,a2),axis = 1) : axis可以设置堆叠的维度,默认是0，效果和vstack相同，如果设置为1，则是vstack的转置矩阵。</span></div><div class="line">a1 = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</div><div class="line">a2 = np.array([<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>])</div><div class="line">np.stack((a1,a2),axis = <span class="number">1</span>)</div><div class="line">[[<span class="number">1</span>, <span class="number">4</span>],</div><div class="line"> [<span class="number">2</span>, <span class="number">5</span>],</div><div class="line"> [<span class="number">3</span>, <span class="number">6</span>]]</div></pre></td></tr></table></figure>
+<h5 id="ndarray分割"><a href="#ndarray分割" class="headerlink" title="ndarray分割"></a>ndarray分割</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># np.vsplit(a,num) : 纵向分割</span></div><div class="line">a= np.array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">            [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>],</div><div class="line">            [<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])</div><div class="line">np.vsplit(a,<span class="number">3</span>)</div><div class="line">[array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]]), array([[<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]]), array([[<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])]</div><div class="line"></div><div class="line"><span class="comment"># np.hsplit(a,num) : 横向分割</span></div><div class="line">a= np.array([[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>],</div><div class="line">            [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>],</div><div class="line">            [<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])</div><div class="line">np.hsplit(a,<span class="number">3</span>)</div><div class="line">[array([[<span class="number">0</span>],[<span class="number">3</span>],[<span class="number">6</span>]]), array([[<span class="number">1</span>],[<span class="number">4</span>],[<span class="number">7</span>]]), array([[<span class="number">2</span>],[<span class="number">5</span>],[<span class="number">8</span>]])]</div><div class="line"></div><div class="line"><span class="comment"># 也可使用np.split(a, 3, axis=1) 指定axis作为分割方向</span></div></pre></td></tr></table></figure>
+<h4 id="四、矩阵运算"><a href="#四、矩阵运算" class="headerlink" title="四、矩阵运算"></a>四、矩阵运算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># ndarray相乘</span></div><div class="line"><span class="comment"># *操作符：每个位置的元素对应相乘.术语广播</span></div><div class="line">a = np.array([[<span class="number">2</span>,<span class="number">3</span>],[<span class="number">3</span>,<span class="number">4</span>]])</div><div class="line">b = np.array([[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>]])</div><div class="line">a * b</div><div class="line">[[ <span class="number">6</span>, <span class="number">12</span>],</div><div class="line"> [<span class="number">15</span>, <span class="number">24</span>]]</div><div class="line"></div><div class="line">a = np.array([[<span class="number">2</span>,<span class="number">3</span>],[<span class="number">3</span>,<span class="number">4</span>]])</div><div class="line">b = np.array([[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>]])</div><div class="line">a+b</div><div class="line">[[ <span class="number">5</span>,  <span class="number">7</span>],</div><div class="line"> [ <span class="number">8</span>, <span class="number">10</span>]]</div><div class="line"></div><div class="line">a = np.array([[<span class="number">2</span>,<span class="number">3</span>],[<span class="number">3</span>,<span class="number">4</span>]])</div><div class="line">b = np.array([[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>]])</div><div class="line">a-b</div><div class="line">[[<span class="number">-1</span>, <span class="number">-1</span>],</div><div class="line"> [<span class="number">-2</span>, <span class="number">-2</span>]]</div><div class="line"></div><div class="line">a = np.array([[<span class="number">2</span>,<span class="number">3</span>],[<span class="number">3</span>,<span class="number">4</span>]])</div><div class="line">b = np.array([[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>]])</div><div class="line">a&gt;b</div><div class="line">[[<span class="keyword">False</span>, <span class="keyword">False</span>],</div><div class="line"> [<span class="keyword">False</span>, <span class="keyword">False</span>]]</div><div class="line"></div><div class="line"><span class="comment"># dot操作符：按照矩阵乘法规则相乘</span></div><div class="line">a.dot(b) <span class="comment"># 或者np.dot(a,b)</span></div><div class="line">[[<span class="number">21</span>, <span class="number">26</span>],</div><div class="line"> [<span class="number">29</span>, <span class="number">36</span>]]</div><div class="line"></div><div class="line"><span class="comment"># 使用 linalg 模块求逆矩阵。</span></div><div class="line"><span class="keyword">import</span> numpy.linalg <span class="keyword">as</span> nla</div><div class="line">x = np.array([[<span class="number">1</span>,<span class="number">1</span>],[<span class="number">1</span>,<span class="number">2</span>]])</div><div class="line">y = nla.inv(x)</div><div class="line">[[ <span class="number">2.</span>, <span class="number">-1.</span>],</div><div class="line"> [<span class="number">-1.</span>,  <span class="number">1.</span>]]</div></pre></td></tr></table></figure>
+<p>linalg 还有其他多种功能。比如：trace:对角线元素之和， det:计算矩阵行列式，等。</p>
+<h4 id="五、ndarray数组的基本索引和切片"><a href="#五、ndarray数组的基本索引和切片" class="headerlink" title="五、ndarray数组的基本索引和切片"></a>五、ndarray数组的基本索引和切片</h4><h5 id="ndarray的基本索引"><a href="#ndarray的基本索引" class="headerlink" title="ndarray的基本索引"></a>ndarray的基本索引</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = np.array([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>]])</div><div class="line">x[<span class="number">0</span>]    <span class="comment"># [1, 2]</span></div><div class="line">x[<span class="number">0</span>][<span class="number">1</span>] <span class="comment"># 2 ,普通python数组的索引</span></div><div class="line">x[<span class="number">0</span>,<span class="number">1</span>]  <span class="comment"># 2 ,同x[0][1],ndarray数组的索引</span></div></pre></td></tr></table></figure>
+<h5 id="ndarray的切片"><a href="#ndarray的切片" class="headerlink" title="ndarray的切片"></a>ndarray的切片</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">x = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</div><div class="line">x[<span class="number">1</span>:<span class="number">3</span>]  <span class="comment"># [2, 3], 左闭右开的区间</span></div><div class="line">x[:<span class="number">3</span>]   <span class="comment"># [1,2,3], 左边默认为 0，仍然是左闭右开</span></div><div class="line">x[<span class="number">1</span>:]   <span class="comment"># [2,3,4,5], 右边默认为数组的长度，仍然是左闭右开</span></div><div class="line"></div><div class="line">x = np.array([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>]])</div><div class="line">x[:<span class="number">2</span>]        <span class="comment"># [[1, 2],[3, 4]],</span></div><div class="line">x[:<span class="number">2</span>,:<span class="number">1</span>]     <span class="comment"># [[1],[3]]</span></div><div class="line">x[:<span class="number">2</span>,:<span class="number">1</span>] = <span class="number">0</span> <span class="comment"># 用标量赋值,x=[[0, 2],[0, 4],[5, 6]]</span></div></pre></td></tr></table></figure>
+<h4 id="六、其他用法"><a href="#六、其他用法" class="headerlink" title="六、其他用法"></a>六、其他用法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 使用 where 进行 ndarray 的条件应用</span></div><div class="line">cond = np.array([<span class="keyword">True</span>,<span class="keyword">False</span>,<span class="keyword">True</span>,<span class="keyword">False</span>])</div><div class="line">x = np.where(cond,<span class="number">-2</span>,<span class="number">2</span>)</div><div class="line">[<span class="number">-2</span>,  <span class="number">2</span>, <span class="number">-2</span>,  <span class="number">2</span>]</div><div class="line"></div><div class="line">cond = np.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>])</div><div class="line">x = np.where(cond&gt;<span class="number">2</span>,<span class="number">-2</span>,<span class="number">2</span>)</div><div class="line">[ <span class="number">2</span>,  <span class="number">2</span>, <span class="number">-2</span>, <span class="number">-2</span>]</div></pre></td></tr></table></figure>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/05/03/2018-05-03_Numpy/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/05/10/2018-05-10_BayesPraticeComment/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    朴素贝叶斯分类算法实践-言论过滤器
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/05/03/2018-05-03_Matplotlib/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Matplotlib</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

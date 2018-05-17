@@ -14,6 +14,41 @@ tags: [机器学习]
 
 <!--more-->
 
+- 分类 ： 输出值如果是不连续的学习算法称为分类器（classifier）。
+- 回归 ： 输出值连续的学习算法称为回归函数（regression function）。
+
+#### 监督学习
+
+1. 广义线性模型(Generalized Linear Models)
+2. 线性和二次判别分析(Linear and Quadratic Discriminant Analysis)
+3. 核岭回归(Kernel ridge regression)
+4. SVM(Support Vector Machines)
+5. 随机梯度下降法(Stochastic Gradient Descent)
+6. 最邻近算法(Nearest Neighbors)
+7. 高斯过程(Gaussian Processes)
+8. 交叉分解(Cross decomposition)
+9. 朴素贝叶斯(Naive Bayes)
+10. 决策树(Decision Trees)
+11. 集成方法(Ensemble methods)
+12. 多分类和多标签算法(Multiclass and multilabel algorithms)
+13. 特征选择(Feature selection)
+14. 半监督(Semi-Supervised)
+15. 序回归(Isotonic regression)
+16. Probability calibration
+17. 有监督神经网络模型(Neural network models (supervised))
+
+#### 无监督学习
+
+1. 高斯混合模型(Gaussian mixture models)
+2. 流形学习(Manifold learning)
+3. 聚类(Clustering)
+4. 双聚类(Biclustering)
+5. Decomposing signals in components (matrix factorization problems)
+6. 协方差估计(Covariance estimation)
+7. Novelty and Outlier Detection
+8. 密度估计(Density Estimation)
+9. 无监督神经网络模型(Neural network models (unsupervised))
+
 #### 损失函数
 
 对于给定的输入X和假设空间中选择的决策函数模型f，由f(X)给出相应的输入Y，这个输出的预没值f(X)与真实值Y可能一致，也可能不一致，用一个损失函数或代价函数来度量预测的错误程度。损失函数是f(x)和Y的非负实值函数，记作L(Y,f(X))
@@ -80,11 +115,6 @@ $R_{srm}(f) = \frac{1}{N}\sum_{i=1}^NL(y_i,f(x_i))+\lambda J(f)$
 $\min_{f\in\mathcal{F}}\frac{1}{N}L(y_i,f(x_i))+\lambda J(f)$
 
 这样，监督学习问题就变成了经验风险或结构风险函数的最优化问题。这时经验或结构风险函数是最优化的目标函数。
-
-#### 监督学习
-
-- 分类 ： 输出值如果是不连续的监督学习算法称为分类器（classifier）。
-- 回归 ： 输出值连续的监督学习算法称为回归函数（regression function）。
 
 #### 归纳偏好
 

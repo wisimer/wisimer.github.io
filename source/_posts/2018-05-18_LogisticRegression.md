@@ -114,10 +114,11 @@ $$\frac{\partial J(w,b)}{\partial w_j}=\frac{1}{n}\sum_{i=1}^{n}{\frac{\partial 
 
 由于对每个$w_j$都要进行梯度更新，所以我们先得到下面的伪代码：
 
-![0518_cost_function_gradient](0518_cost_function_gradient.jpeg)
+![0518_cost_function_gradient](/src/imgs/1805/0518_cost_function_gradient.jpeg)
 
 注意这里$dw_j$没有上标，也训练集中的每个样本进行梯度运算的时候都是使用的一个全局的参数w。
 
+在实际操作中，不建议使用for循环，可以进行向量化，使得运算更为迅速。
 
 - - -
 

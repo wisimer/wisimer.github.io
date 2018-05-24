@@ -73,23 +73,33 @@ $J(w,b)=\frac{1}{n}\sum_{i=1}^{n}{L({\widehat{y}}^i,y^i)}=-\frac{1}{n}\sum_{i=1}
 
 要使得代价函数越小越好就是要 $\frac{1}{n}\sum_{i=1}^{n}{[y^ilog{\widehat{y}}^i+(1-y^i)log(1-{\widehat{y}}^i)]}$ 越大越好。为求最大值，这里采用梯度上升的方法。
 
-##### 1. 先来看看损失函数的梯度：
+##### 1. 损失函数的梯度：
 
 首先还是要明确，损失函数是针对单独一个训练样本的。
 
 由于 $L(\widehat{y},y)=-[ylog\widehat{y}+(1-y)log(1-\widehat{y})]$ ，所以损失函数 $L(\widehat{y},y)$ 对 $\widehat{y}$ 求导可得：
 
-$$d\widehat{y}=\frac{dL(\widehat{y},y)}{d\widehat{y}}=-\frac{y}{\widehat{y}}+\frac{1-y}{1-\widehat{y}}$$
+$$\begin {aligned} d\widehat{y}=\frac{dL(\widehat{y},y)}{d\widehat{y}}
+&=-\frac{y}{\widehat{y}}+\frac{1-y}{1-\widehat{y}}\\\
+\end {aligned}$$
 
 而 $\widehat{y}=h(z)=\frac{1}{1+e^{-z}}$，再利用链式求导法则，损失函数 $L(\widehat{y},y)$ 对 $z$ 求导可得：
 
-$$dz=\frac{dL(\widehat{y},y)}{dz}=\frac{dL}{d\widehat{y}} \cdot  \frac{d\widehat{y}}{dz}=(-\frac{y}{\widehat{y}}+\frac{1-y}{1-\widehat{y}})\cdot[\widehat{y}(1-\widehat{y})]=\widehat{y}-y$$
+$$\begin {aligned}dz=\frac{dL(\widehat{y},y)}{dz}
+&=\frac{dL}{d\widehat{y}} \cdot\frac{d\widehat{y}}{dz} \\\
+&=(-\frac{y}{\widehat{y}}+\frac{1-y}{1-\widehat{y}})\cdot[\widehat{y}(1-\widehat{y})]\\\
+&=\widehat{y}-y\\\
+\end {aligned}$$
 
 amazing...
 
 接着再求 $dw_j$，由于 $z=w^Tx+b$ ,利用链式法则可得：
 
-$$dw_1=\frac{\partial L}{\partial w_1}=\frac{dL}{dz} \cdot \frac{dz}{dw_1}=x_1 \cdot dz=x_1 \cdot (\widehat{y}-y)$$
+$$\begin {aligned} dw_1=\frac{\partial L}{\partial w_1}
+&=\frac{dL}{dz} \cdot \frac{dz}{dw_1}\\\
+&=x_1 \cdot dz\\\
+&=x_1 \cdot (\widehat{y}-y)\\\
+\end {aligned}$$
 
 同理 $dw_2=x_2(\widehat{y}-y)...dw_n=x_n(\widehat{y}-y)$。
 
@@ -114,8 +124,26 @@ $$\frac{\partial J(w,b)}{\partial w_j}=\frac{1}{n}\sum_{i=1}^{n}{\frac{\partial 
 
 由于对每个$w_j$都要进行梯度更新，所以我们先得到下面的伪代码：
 
-![0518_cost_function_gradient](/src/imgs/1805/0518_cost_function_gradient.jpeg)
+<!-- ![0518_cost_function_gradient](/src/imgs/1805/0518_cost_function_gradient.jpeg) -->
 
+$$
+\begin {aligned}
+&J=0;\\\
+&d_{w_1}=0,d_{w_2}=0,...d_{w_m}=0;\\\
+&d_b=0;\\\
+&for \: i=1 \: to \: n://n个样本\\\
+&\:\:\:\:z^{(i)}=w^Tx{(i)}+b;\\\
+&\:\:\:\:\widehat{y}^{i}=sigmoid(z^{i});\\\
+&\:\:\:\:J+=-[y^{i}log\widehat{y}^{(i)}+(1-\widehat{i}^{i})log(1-\widehat{y}^{i})];\\\
+&\:\:\:\:dz^{(i)}=\widehat{y}^{(i)}-y^{i};\\\
+&\:\:\:\:for \: j=1 \: to \: m://m个参数\\\
+&\:\:\:\:\:\:\:\:dw_j+=x_jdz^{(i)};\\\
+&\:\:\:\:db+=dz^{(i)};\\\
+&J/=n;\\\
+&d_{w_1}/=n,d_{w_2}/=n,...d_{w_m}/=n;\\\
+&db/=n;\\\
+\end{aligned}
+$$
 > 注意这里$dw_j$没有上标，也训练集中的每个样本进行梯度运算的时候都是使用的一个全局的参数w。
 
 在实际操作中，不建议使用for循环，可以进行向量化，使得运算更为迅速。

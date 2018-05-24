@@ -116,9 +116,148 @@ $$\frac{\partial J(w,b)}{\partial w_j}=\frac{1}{n}\sum_{i=1}^{n}{\frac{\partial 
 
 ![0518_cost_function_gradient](/src/imgs/1805/0518_cost_function_gradient.jpeg)
 
-注意这里$dw_j$没有上标，也训练集中的每个样本进行梯度运算的时候都是使用的一个全局的参数w。
+> 注意这里$dw_j$没有上标，也训练集中的每个样本进行梯度运算的时候都是使用的一个全局的参数w。
 
 在实际操作中，不建议使用for循环，可以进行向量化，使得运算更为迅速。
+
+#### 五、实现
+
+##### 1. 数据准备
+
+[testSet.txt](/raw/code/LogisticRegression/testSet.txt)
+
+数据格式如下：
+
+```
+-0.017612	14.053064	0
+-1.395634	4.662541	1
+-0.752157	6.538620	0
+-1.322371	7.152853	0
+......
+```
+
+数据没有实际意义。第一列是参数x1,第二列是参数x2，第三列是分类标签（0/1）。
+
+假设Sigmoid函数的输入记为 z ，那么 $z=w_{0}+w_{1}x_{1} + w_{2}x_{2}$ ，其实$w_0$就是上面的参数b。为了方便将z表示成向量相乘的形式 $z=w^Tx$，可以添加一个值为1的变量$x_0$，于是前面的z就变形为： $z=w_{0}x_{0} +w_{1}x_{1} + w_{2}x_{2}$ 。下面代码中加载数据时手动插入一列1。
+
+
+```python
+"""
+从 testSet.txt 中加载数据
+"""
+def loadDataSet():
+    dataMat = []                                                        #创建数据列表
+    labelMat = []                                                       #创建标签列表
+    fr = open('testSet.txt')                                            #打开文件   
+    for line in fr.readlines():                                         #逐行读取
+        lineArr = line.strip().split()                                  #去回车，放入列表
+        dataMat.append([1.0, float(lineArr[0]), float(lineArr[1])])          #添加数据(x,y)
+        labelMat.append(int(lineArr[2]))                                #添加标签(分类结果)
+    fr.close()                                                          #关闭文件
+    return dataMat, labelMat                                            #返回
+
+"""
+绘制数据点图
+"""
+def plotDataSet():
+    dataMat, labelMat = loadDataSet()                                   #加载数据集
+    dataArr = np.array(dataMat)                                         #转换成numpy的array数组
+    n = np.shape(dataMat)[0]                                            #数据个数
+    xcord1 = []; ycord1 = []                                            #正样本
+    xcord2 = []; ycord2 = []                                            #负样本
+    for i in range(n):                                                  #根据数据集标签进行分类
+        if int(labelMat[i]) == 1:
+            xcord1.append(dataArr[i,1]); ycord1.append(dataArr[i,2])    #1为正样本
+        else:
+            xcord2.append(dataArr[i,1]); ycord2.append(dataArr[i,2])    #0为负样本
+    fig = plt.figure()
+    ax = fig.add_subplot(111)                                           #添加subplot
+    ax.scatter(xcord1, ycord1, s = 20, c = 'red', marker = 's',alpha=.5,label='1') #绘制1样本
+    ax.scatter(xcord2, ycord2, s = 20, c = 'green',alpha=.5,label='0')             #绘制0样本
+    plt.legend()
+    plt.title('DataSet')                                                #绘制title
+    plt.xlabel('x1'); plt.ylabel('x2')                                  #绘制label
+    plt.show()                                                          #显示
+
+if __name__ == '__main__':
+    plotDataSet()
+```
+
+绘制结果：
+![0518_logistic_data_plot](/src/imgs/1805/0518_logistic_data_plot.png)
+
+$z=w^Tx$ 这个方程未知的参数为 $w_{0},w_{1},w_{2}$ ，也就是我们需要求的回归系数(最优参数)。
+
+##### 2. 训练Logistic回归算法
+
+回顾一下上面得出的梯度更新公式：$w_j:=w_j-\alpha \cdot dw_j$，再对照伪代码，转化成python代码：
+
+```python
+def sigmoid(inX):
+    return 1.0 / (1 + np.exp(-inX))
+
+def gradAscent(dataMatIn, classLabels):
+    dataMatrix = np.mat(dataMatIn)                                       #变量转换成numpy的mat
+    labelMat = np.mat(classLabels).transpose()                           #标签转换成numpy的mat,并进行转置
+    m, n = np.shape(dataMatrix)                                          #返回dataMatrix的大小。m为行数,n为列数。
+    alpha = 0.001                                                        #移动步长,也就是学习速率,控制更新的幅度。
+    maxCycles = 500                                                      #最大迭代次数
+    weights = np.ones((n,1))                                             #weights就是要求的特征系数w，全部初始化为1
+    for k in range(maxCycles):
+        h = sigmoid(dataMatrix * weights)                                #梯度上升矢量化公式
+        dY = labelMat - h
+        weights = weights + alpha * dataMatrix.transpose() * dY          #对w执行梯度更新
+    return weights.getA()                                                #将矩阵转换为数组，返回权重数组
+
+if __name__ == '__main__':
+    dataMat, labelMat = loadDataSet()           
+    print(gradAscent(dataMat, labelMat))
+```
+
+运行结果：
+
+```
+[[ 4.12414349]
+ [ 0.48007329]
+ [-0.6168482 ]]
+```
+
+也就是$w_0=4.12414349,w_1=0.48007329,w_2=-0.6168482$
+
+由于决策边界 $w^Tx=0$，可得 $w_0+w_1x_1+w_2x_2=0 => x_2=(-w_0-w_1x_1)/w_2$ 。顺便根据得出的特征值绘制一下预测函数的图像：
+
+```python
+def plotBestFit(weights):
+    dataMat, labelMat = loadDataSet()                                   #加载数据集
+    dataArr = np.array(dataMat)                                         #转换成numpy的array数组
+    n = np.shape(dataMat)[0]                                            #数据个数
+    xcord1 = []; ycord1 = []                                            #正样本
+    xcord2 = []; ycord2 = []                                            #负样本
+    for i in range(n):                                                  #根据数据集标签进行分类
+        if int(labelMat[i]) == 1:
+            xcord1.append(dataArr[i,1]); ycord1.append(dataArr[i,2])    #1为正样本
+        else:
+            xcord2.append(dataArr[i,1]); ycord2.append(dataArr[i,2])    #0为负样本
+    fig = plt.figure()
+    ax = fig.add_subplot(111)                                           #添加subplot
+    ax.scatter(xcord1, ycord1, s = 20, c = 'red', marker = 's',alpha=.5)#绘制正样本
+    ax.scatter(xcord2, ycord2, s = 20, c = 'green',alpha=.5)            #绘制负样本
+    x1 = np.arange(-3.0, 3.0, 0.1)
+    x2 = (-weights[0] - weights[1] * x1) / weights[2]                   #w0+w1x1+w2x2=0 => x2=(-w0-w1x1)/w2
+    ax.plot(x1, x2)
+    plt.title('BestFit')                                                #绘制title
+    plt.xlabel('x1'); plt.ylabel('x2')                                  #绘制label
+    plt.show()       
+
+if __name__ == '__main__':
+    dataMat, labelMat = loadDataSet()           
+    weights = gradAscent(dataMat, labelMat)
+    plotBestFit(weights)
+```
+
+如图：
+
+![0518_logistic_line](/src/imgs/1805/0518_logistic_line.png)
 
 - - -
 

@@ -170,6 +170,11 @@ $$
 
 
 ```python
+# -*- coding: UTF-8 -*-
+import re
+import numpy as np
+import random
+import matplotlib.pyplot as plt
 """
 从 testSet.txt 中加载数据
 """
@@ -286,6 +291,79 @@ if __name__ == '__main__':
 如图：
 
 ![0518_logistic_line](/src/imgs/1805/0518_logistic_line.png)
+
+#### 六、改进:随机梯度上升法
+
+上述算法，要进行maxCycles次循环，每次循环中矩阵会有m*n次乘法计算，每次更新回归系数(最优参数)的时候，使用六所有的样本数据,所以时间复杂度（开销）是maxCycles*m*n，当数据量较大时，时间复杂度就会很大。因此，可以是用随机梯度上升法来进行算法改进，一次只用一个样本点去更新回归系数(最优参数)，这样就可以有效减少计算量了，这种方法就叫做随机梯度上升算法。
+
+> 随机梯度上升法的思想是，每次只使用一个数据样本点来更新回归系数。这样就大大减小计算开销。
+
+代码如下：
+
+```python
+"""
+改进后的随机梯度下降法
+"""
+def stocGradAscentBetter(dataMatrix, classLabels, numIter=150):
+    m,n = np.shape(dataMatrix)                                                  #返回dataMatrix的大小。m为行数,n为列数。
+    weights = np.ones(n)                                                        #参数初始化
+    for j in range(numIter):
+        dataIndex = list(range(m))
+        for i in range(m):
+            alpha = 4/(1.0+j+i)+0.01                                            #降低alpha的大小，每次减小1/(j+i)。
+            randIndex = int(random.uniform(0,len(dataIndex)))                   #随机选取样本
+            h = sigmoid(sum(dataMatrix[randIndex]*weights))                     #选择随机选取的一个样本，计算h
+            error = classLabels[randIndex] - h                                  #计算误差
+            weights = weights + alpha * error * np.array(dataMatrix[randIndex]) #更新回归系数,注意这里要转换为numpy.array才能正确运行
+            del(dataIndex[randIndex])                                           #删除已经使用的样本
+    return weights
+
+def plotBestFit(weights1,weights2):
+    dataMat, labelMat = loadDataSet()                                   #加载数据集
+    dataArr = np.array(dataMat)                                         #转换成numpy的array数组
+    n = np.shape(dataMat)[0]                                            #数据个数
+    xcord1 = []; ycord1 = []                                            #正样本
+    xcord2 = []; ycord2 = []                                            #负样本
+    for i in range(n):                                                  #根据数据集标签进行分类
+        if int(labelMat[i]) == 1:
+            xcord1.append(dataArr[i,1]); ycord1.append(dataArr[i,2])    #1为正样本
+        else:
+            xcord2.append(dataArr[i,1]); ycord2.append(dataArr[i,2])    #0为负样本
+    fig = plt.figure()
+    plt.title('BestFit')  
+    plt.xlabel('x1'); plt.ylabel('x2')                                  #绘制label
+
+    ax = fig.add_subplot(111)                                           #添加subplot
+    ax.scatter(xcord1, ycord1, s = 20, c = 'red', marker = 's',alpha=.5)#绘制正样本
+    ax.scatter(xcord2, ycord2, s = 20, c = 'green',alpha=.5)            #绘制负样本
+
+    x1 = np.arange(-3.0, 3.0, 0.1)
+
+    x2 = (-weights1[0] - weights1[1] * x1) / weights1[2]
+    ax.plot(x1, x2,label='GradAscent')
+
+    x22 = (-weights2[0] - weights2[1] * x1) / weights2[2]
+    ax.plot(x1, x22,label='StocGradAscent')
+    plt.legend()
+
+    plt.show()
+
+if __name__ == '__main__':
+    dataMat, labelMat = loadDataSet()
+    start1 = time.time()
+    weights = gradAscent(dataMat, labelMat)
+    start2 = time.time()
+    weightsBetter = stocGradAscentBetter(dataMat, labelMat)
+    plotBestFit(weights,weightsBetter)
+
+```
+
+改进后的效果和原先的差不多：
+
+![logistic_better_gradascent](/src/imgs/1805/0518_logistic_better_gradascent.png)
+
+- 该算法第一个改进之处在于，alpha在每次迭代的时候都会调整 : `alpha = 4/(1.0+j+i)+0.01`，并且，虽然alpha会随着迭代次数不断减小，但永远不会减小到0，因为这里还存在一个常数项。必须这样做的原因是为了保证在多次迭代之后新数据仍然具有一定的影响。如果需要处理的问题是动态变化的，那么可以适当加大上述常数项，来确保新的值获得更大的回归系数。另一点值得注意的是，在降低alpha的函数中，alpha每次减少1/(j+i)，其中j是迭代次数，i是样本点的下标。
+- 第二个改进的地方在于更新回归系数(最优参数)时，只使用一个样本点，并且选择的样本点是随机的，每次迭代不使用已经用过的样本点。这样的方法，就有效地减少了计算量，并保证了回归效果。
 
 - - -
 

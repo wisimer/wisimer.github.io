@@ -1,0 +1,3 @@
+title: "ARTS"
+layout: "arts"
+---

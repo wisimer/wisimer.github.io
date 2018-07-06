@@ -3,7 +3,7 @@ title: Print all sub-array with 0 sum
 date: 2017-04-17
 layout: default
 category: Alogrithm
-tags: DP
+tags: [DP,ARTS]
 ---
 
 ```

@@ -1,7 +1,7 @@
 ---
 title: 朴素贝叶斯分类算法实践-言论过滤器
 date: 2018-05-10
-categories: 机器学习
+categories: ML
 tags: [朴素贝叶斯分类]
 ---
 

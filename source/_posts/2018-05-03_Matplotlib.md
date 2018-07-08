@@ -1,7 +1,7 @@
 ---
 title: Matplotlib
 date: 2018-05-03
-categories: 机器学习
+categories: ML
 tags: [Matplotlib]
 ---
 

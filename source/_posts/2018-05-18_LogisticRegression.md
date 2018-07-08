@@ -1,7 +1,7 @@
 ---
 title: Logistic回归算法
 date: 2018-05-18
-categories: 机器学习
+categories: ML
 tags: [Logistic回归]
 ---
 

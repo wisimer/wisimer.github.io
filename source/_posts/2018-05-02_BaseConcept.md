@@ -1,8 +1,8 @@
 ---
 title: 基本概念
 date: 2018-05-02
-categories: 机器学习
-tags: [机器学习]
+categories: ML
+tags: [FAQ]
 ---
 
 #### 假设空间

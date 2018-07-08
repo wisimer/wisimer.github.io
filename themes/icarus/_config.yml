@@ -1,11 +1,10 @@
 # Menus
 menu:
-  主页: .
-  归档: archives
+  HOME: .
+  ARCHIVE: archives
   ARTS: /categories/ARTS
-  分类: categories
-  标签: tags
-  关于: about
+  CATEGOTY: categories
+  ABOUT: about
 
 # Customize
 customize:

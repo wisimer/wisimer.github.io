@@ -1,8 +1,8 @@
 ---
 date: 2017-11-22
 layout: default
-category: Alogrithm
-tags: DP
+category: ALGORITHM
+tags: DYNAMICPROGRAMMING
 title: 动态规划-数对之差最大值
 ---
 

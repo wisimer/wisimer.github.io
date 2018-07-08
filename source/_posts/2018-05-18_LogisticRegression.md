@@ -2,7 +2,7 @@
 title: Logistic回归算法
 date: 2018-05-18
 categories: ML
-tags: [Logistic回归]
+tags: [LogisticRegression]
 ---
 
 #### 一、前言

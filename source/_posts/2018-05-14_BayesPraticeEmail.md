@@ -2,7 +2,7 @@
 title: 朴素贝叶斯分类算法实践-垃圾邮件过滤器
 date: 2018-05-14
 categories: ML
-tags: [朴素贝叶斯分类]
+tags: [NaiveBayes]
 ---
 
 #### 一、前言

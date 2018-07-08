@@ -2,7 +2,7 @@
 title: 感知机
 date: 2018-02-19
 categories: ML
-tags: [感知机]
+tags: [Perceptron]
 ---
 
 #### 感知机

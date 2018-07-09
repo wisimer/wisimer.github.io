@@ -1,12 +1,12 @@
 ---
 date: 2016-08-12
 title: LeetCode:381. Insert Delete GetRandom O(1)
-tags: LEETCODE
+tags: Leetcode
 category: ALGORITHM
 layout: default
 ---
 
-### [LeetCode:381. Insert Delete GetRandom O(1) - Duplicates allowed](https://leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed/)
+### [LeetCode:381. Insert Delete GetRandom O(1) - Duplicates allowed](https://Leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed/)
 
 >Design a data structure that supports all following operations in average O(1) time.
 Note: Duplicate elements are allowed.

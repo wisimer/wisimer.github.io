@@ -1,12 +1,12 @@
 ---
 date: 2016-08-12
 title: LeetCode:384. Shuffle an Array
-tags: LEETCODE
+tags: Leetcode
 category: ALGORITHM
 layout: default
 ---
 
-### [LeetCode:384. Shuffle an Array](https://leetcode.com/problems/shuffle-an-array/)
+### [LeetCode:384. Shuffle an Array](https://Leetcode.com/problems/shuffle-an-array/)
 
 > Shuffle a set of numbers without duplicates.
 

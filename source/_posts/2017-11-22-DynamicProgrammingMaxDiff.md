@@ -2,7 +2,7 @@
 date: 2017-11-22
 layout: default
 category: ALGORITHM
-tags: DYNAMICPROGRAMMING
+tags: DynamicProgramming
 title: 动态规划-数对之差最大值
 ---
 

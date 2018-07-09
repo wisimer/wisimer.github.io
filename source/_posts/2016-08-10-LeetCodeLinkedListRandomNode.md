@@ -1,12 +1,12 @@
 ---
 date: 2016-08-10
 title: LeetCode:382. Linked List Random Node
-tags: [LEETCODE,List]
+tags: [Leetcode,List]
 category: ALGORITHM
 layout: default
 ---
 
-### [LeetCode:382. Linked List Random Node](https://leetcode.com/problems/linked-list-random-node/)
+### [LeetCode:382. Linked List Random Node](https://Leetcode.com/problems/linked-list-random-node/)
 
 > Given a singly linked list, return a random node's value from the linked list. Each node must have the same probability of being chosen.
 Follow up:

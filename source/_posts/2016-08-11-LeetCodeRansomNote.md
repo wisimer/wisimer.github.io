@@ -1,12 +1,12 @@
 ---
 date: 2016-08-11
 title: LeetCode:383. Ransom Note
-tags: [LEETCODE,String]
+tags: [Leetcode,String]
 category: ALGORITHM
 layout: default
 ---
 
-### [eetCode:383. Ransom Note](https://leetcode.com/problems/ransom-note/)
+### [eetCode:383. Ransom Note](https://Leetcode.com/problems/ransom-note/)
 
 > Given an arbitrary ransom note string and another string containing letters from all the magazines,write a function that will return true if the ransom note can be constructed from the magazines ;otherwise,it will return false.
 Each letter in the magazine string can only be used once in your ransom note.

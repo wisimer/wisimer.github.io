@@ -46,5 +46,5 @@ title: "Hello AI."
 ### 链接
 
 - [MathPad](http://webdemo.myscript.com/views/math.html#)
-- [LeetCode](https://leetcode.com/problems)
+- [LeetCode](https://Leetcode.com/problems)
 - [QiNiu](https://portal.qiniu.com/)

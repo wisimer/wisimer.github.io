@@ -1,12 +1,12 @@
 ---
 date: 2016-08-13
 title: LeetCode:378. Kth Smallest Element in a Sorted Matrix
-tags: LEETCODE
+tags: Leetcode
 category: ALGORITHM
 layout: default
 ---
 
-### [LeetCode:378. Kth Smallest Element in a Sorted Matrix](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/)
+### [LeetCode:378. Kth Smallest Element in a Sorted Matrix](https://Leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/)
 
 ```
 Given a n x n matrix where each of the rows and columns are sorted in ascending order, find the kth smallest element in the matrix.

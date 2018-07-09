@@ -1,12 +1,12 @@
 ---
 date: 2016-08-18
 title: LeetCode:385. Mini Parser
-tags: LEETCODE
+tags: Leetcode
 category: ALGORITHM
 layout: default
 ---
 
-### [LeetCode:385. Mini Parser](https://leetcode.com/problems/mini-parser/)
+### [LeetCode:385. Mini Parser](https://Leetcode.com/problems/mini-parser/)
 
 ```
 Given a nested list of integers represented as a string, implement a parser to deserialize it.

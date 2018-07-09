@@ -1,7 +1,7 @@
 ---
 date: 2016-08-20
 title: LeetCode:377. Combination Sum IV
-tags: LeetCode
+tags: LEETCODE
 category: ALGORITHM
 layout: default
 ---

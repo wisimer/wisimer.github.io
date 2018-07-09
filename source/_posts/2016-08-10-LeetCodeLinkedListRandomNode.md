@@ -1,7 +1,7 @@
 ---
 date: 2016-08-10
 title: LeetCode:382. Linked List Random Node
-tags: [Leetcode,List]
+tags: [LEETCODE,List]
 category: ALGORITHM
 layout: default
 ---

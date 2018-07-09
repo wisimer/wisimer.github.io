@@ -1,7 +1,7 @@
 ---
 date: 2016-08-11
 title: LeetCode:383. Ransom Note
-tags: [LeetCode,String]
+tags: [LEETCODE,String]
 category: ALGORITHM
 layout: default
 ---

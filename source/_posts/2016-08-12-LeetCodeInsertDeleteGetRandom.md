@@ -1,7 +1,7 @@
 ---
 date: 2016-08-12
 title: LeetCode:381. Insert Delete GetRandom O(1)
-tags: LeetCode
+tags: LEETCODE
 category: ALGORITHM
 layout: default
 ---

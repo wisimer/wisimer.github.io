@@ -1,7 +1,7 @@
 ---
 date: 2016-08-18
 title: LeetCode:385. Mini Parser
-tags: LeetCode
+tags: LEETCODE
 category: ALGORITHM
 layout: default
 ---

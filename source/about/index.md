@@ -17,10 +17,10 @@ title: "Hello AI."
 
 ARTS Rules:
 
-- ARTS汇总文件名 : 2018-07-06-ARTS_ISSUE_001.md
+- ARTS汇总文件名 :0000-00-00-ARTS_ISSUE_000.md
 - ARTS汇总文章的category : ARTS
 - ARTS汇总文章的tags : ARTS
-- 单个ARTS类别文件名 : 2018-07-06-ARTS_ISSUE_001_a/r/t/s.md
+- 单个ARTS类别文件名 : 0000-00-00-ARTS_ISSUE_000_a/r/t/s.md
 - 单个ARTS类别文章的category : 根据文章自定，不得使用ARTS，保证 `ARTS` 分类下面是所有ISSUE
 - 单个ARTS类别文章的tags : 根据文章自定，同时加入 `ARTS` 标签
 

@@ -15,6 +15,15 @@ title: "Hello AI."
 - Tip : 学习一个技术技巧
 - Share : 分享一个技术观点和思考
 
+ARTS Rules:
+
+- ARTS汇总文件名 : 2018-07-06-ARTS_ISSUE_001.md
+- ARTS汇总文章的category : ARTS
+- ARTS汇总文章的tags : ARTS
+- 单个ARTS类别文件名 : 2018-07-06-ARTS_ISSUE_001_a/r/t/s.md
+- 单个ARTS类别文章的category : 根据文章自定，不得使用ARTS，保证 `ARTS` 分类下面是所有ISSUE
+- 单个ARTS类别文章的tags : 根据文章自定，同时加入 `ARTS` 标签
+
 ### 主要分类
 
 - MACHINE LEARING (ML)
@@ -45,6 +54,8 @@ title: "Hello AI."
 
 ### 链接
 
-- [MathPad](http://webdemo.myscript.com/views/math.html#)
+- [MathPad](https://webdemo.myscript.com/views/main/math.html)
 - [LeetCode](https://Leetcode.com/problems)
+- [LintCode](https://lintcode.com/)
+- [Nowcoder](https://www.nowcoder.com/activity/oj)
 - [QiNiu](https://portal.qiniu.com/)

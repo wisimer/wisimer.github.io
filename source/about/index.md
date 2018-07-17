@@ -2,6 +2,8 @@ title: "Hello AI."
 
 ---
 
+> The more we do,the more we can do.
+
 ### 关于WISIM
 
 这是我的个人站点，用来记录和分享平时的一些AI技术学习上的发现，以及生活上的感悟和思想。

@@ -13,7 +13,7 @@ title: "Hello AI."
 每周至少一个 `ARTS`
 
 - Algorithm : 一个算法题
-- Review : 点评一篇英文技术文章
+- Review/Reading : 点评一篇英文技术文章/阅读一篇英语文章
 - Tip : 学习一个技术技巧
 - Share : 分享一个技术观点和思考
 

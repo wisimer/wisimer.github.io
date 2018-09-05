@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android ViewDragHelper | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="ViewDragHelper 作为处理手势滑动，实现复杂滑动效果很有一套。一起来看看它的实现原理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android ViewDragHelper">
+<meta property="og:url" content="http://ai.wisim.me/2016/11/16/2016-11-16-AndroidViewDragHelper/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="ViewDragHelper 作为处理手势滑动，实现复杂滑动效果很有一套。一起来看看它的实现原理。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android ViewDragHelper">
+<meta name="twitter:description" content="ViewDragHelper 作为处理手势滑动，实现复杂滑动效果很有一套。一起来看看它的实现原理。">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2016-11-16-AndroidViewDragHelper" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android ViewDragHelper
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/11/16/2016-11-16-AndroidViewDragHelper/">
+            <time datetime="2016-11-15T16:00:00.000Z" itemprop="datePublished">2016-11-16</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>ViewDragHelper 作为处理手势滑动，实现复杂滑动效果很有一套。一起来看看它的实现原理。</p>
+<a id="more"></a>
+<h3 id="一、先来看看-ViewDragHelper-的-shouldInterceptTouchEvent-方法："><a href="#一、先来看看-ViewDragHelper-的-shouldInterceptTouchEvent-方法：" class="headerlink" title="一、先来看看 ViewDragHelper 的 shouldInterceptTouchEvent 方法："></a>一、先来看看 ViewDragHelper 的 shouldInterceptTouchEvent 方法：</h3><h4 id="1-从-MotionEvent-ACTION-DOWN-开始："><a href="#1-从-MotionEvent-ACTION-DOWN-开始：" class="headerlink" title="(1) 从 MotionEvent.ACTION_DOWN 开始："></a>(1) 从 MotionEvent.ACTION_DOWN 开始：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (action) &#123;</span><br><span class="line">    <span class="keyword">case</span> MotionEvent.ACTION_DOWN: &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> x = ev.getX();</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> y = ev.getY();</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> pointerId = MotionEventCompat.getPointerId(ev, <span class="number">0</span>);</span><br><span class="line">        saveInitialMotion(x, y, pointerId);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> View toCapture = findTopChildUnder((<span class="keyword">int</span>) x, (<span class="keyword">int</span>) y);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Catch a settling view if possible.</span></span><br><span class="line">        <span class="keyword">if</span> (toCapture == mCapturedView &amp;&amp; mDragState == STATE_SETTLING) &#123;</span><br><span class="line">            tryCaptureViewForDrag(toCapture, pointerId);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> edgesTouched = mInitialEdgesTouched[pointerId];</span><br><span class="line">        <span class="keyword">if</span> ((edgesTouched &amp; mTrackingEdges) != <span class="number">0</span>) &#123;</span><br><span class="line">            mCallback.onEdgeTouched(edgesTouched &amp; mTrackingEdges, pointerId);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用 findTopChildUnder 方法，根据 x,y 的值找到当前坐标下的第一个子View。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (toCapture == mCapturedView &amp;&amp; mDragState == STATE_SETTLING) &#123;</span><br><span class="line">    tryCaptureViewForDrag(toCapture, pointerId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先是判断如果刚刚拿到的子View就是想要拖拽的子View，并且当前的状态是自然滚动状态，则调用 tryCaptureViewForDrag ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">tryCaptureViewForDrag</span><span class="params">(View toCapture, <span class="keyword">int</span> pointerId)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (toCapture == mCapturedView &amp;&amp; mActivePointerId == pointerId) &#123;</span><br><span class="line">        <span class="comment">// Already done!</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (toCapture != <span class="keyword">null</span> &amp;&amp; mCallback.tryCaptureView(toCapture, pointerId)) &#123;</span><br><span class="line">        mActivePointerId = pointerId;</span><br><span class="line">        captureChildView(toCapture, pointerId);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果当前拖拽的View已经是mCapturedView，并且 mActivePointerId == pointerId 则表明已经获取了需要拖拽的View，直接返回true。否则调用  mCallback.tryCaptureView(toCapture, pointerId) 主动判断，再调用 captureChildView 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">captureChildView</span><span class="params">(View childView, <span class="keyword">int</span> activePointerId)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (childView.getParent() != mParentView) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"captureChildView: parameter must be a descendant "</span> +</span><br><span class="line">                <span class="string">"of the ViewDragHelper's tracked parent view ("</span> + mParentView + <span class="string">")"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mCapturedView = childView;</span><br><span class="line">    mActivePointerId = activePointerId;</span><br><span class="line">    mCallback.onViewCaptured(childView, activePointerId);</span><br><span class="line">    setDragState(STATE_DRAGGING);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里就是赋值一下内部的成员变量以及更新拖动的状态为 STATE_DRAGGING。</p>
+<h4 id="2-再看看-MotionEvent-ACTION-MOVE-里面："><a href="#2-再看看-MotionEvent-ACTION-MOVE-里面：" class="headerlink" title="(2) 再看看 MotionEvent.ACTION_MOVE 里面："></a>(2) 再看看 MotionEvent.ACTION_MOVE 里面：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> MotionEvent.ACTION_MOVE: &#123;</span><br><span class="line">    <span class="comment">// First to cross a touch slop over a draggable view wins. Also report edge drags.</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> pointerCount = MotionEventCompat.getPointerCount(ev);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pointerCount; i++) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> pointerId = MotionEventCompat.getPointerId(ev, i);</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> x = MotionEventCompat.getX(ev, i);</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> y = MotionEventCompat.getY(ev, i);</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> dx = x - mInitialMotionX[pointerId];</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> dy = y - mInitialMotionY[pointerId];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> View toCapture = findTopChildUnder((<span class="keyword">int</span>) x, (<span class="keyword">int</span>) y);</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">boolean</span> pastSlop = toCapture != <span class="keyword">null</span> &amp;&amp; checkTouchSlop(toCapture, dx, dy);</span><br><span class="line">        <span class="keyword">if</span> (pastSlop) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> oldLeft = toCapture.getLeft();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> targetLeft = oldLeft + (<span class="keyword">int</span>) dx;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> newLeft = mCallback.clampViewPositionHorizontal(toCapture,</span><br><span class="line">                    targetLeft, (<span class="keyword">int</span>) dx);</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> oldTop = toCapture.getTop();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> targetTop = oldTop + (<span class="keyword">int</span>) dy;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> newTop = mCallback.clampViewPositionVertical(toCapture, targetTop,</span><br><span class="line">                    (<span class="keyword">int</span>) dy);</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> horizontalDragRange = mCallback.getViewHorizontalDragRange(</span><br><span class="line">                    toCapture);</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> verticalDragRange = mCallback.getViewVerticalDragRange(toCapture);</span><br><span class="line">            <span class="keyword">if</span> ((horizontalDragRange == <span class="number">0</span> || horizontalDragRange &gt; <span class="number">0</span></span><br><span class="line">                    &amp;&amp; newLeft == oldLeft) &amp;&amp; (verticalDragRange == <span class="number">0</span></span><br><span class="line">                    || verticalDragRange &gt; <span class="number">0</span> &amp;&amp; newTop == oldTop)) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        reportNewEdgeDrags(dx, dy, pointerId);</span><br><span class="line">        <span class="keyword">if</span> (mDragState == STATE_DRAGGING) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (pastSlop &amp;&amp; tryCaptureViewForDrag(toCapture, pointerId)) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    saveLastMotion(ev);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>mCallback.clampViewPositionHorizontal 是用来获取拖拽的子View toCapture 在竖直方向上的 top 值。在实现 mCallback 的 clampViewPositionVertical 方法时，可以根据 targetTop 值以及你的需求，返回一个范围内的值。</p>
+<p>接着看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (pastSlop &amp;&amp; tryCaptureViewForDrag(toCapture, pointerId)) &#123;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样是调用 tryCaptureViewForDrag 方法，就不赘述了。</p>
+<hr>
+<h3 id="题外话：关于使用位运算的技巧："><a href="#题外话：关于使用位运算的技巧：" class="headerlink" title="题外话：关于使用位运算的技巧："></a>题外话：关于使用位运算的技巧：</h3><p>ViewDragHelper 内部定义了几个静态成员变量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EDGE_LEFT = <span class="number">1</span> &lt;&lt; <span class="number">0</span>;   <span class="comment">//0001</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EDGE_RIGHT = <span class="number">1</span> &lt;&lt; <span class="number">1</span>;  <span class="comment">//0010</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EDGE_TOP = <span class="number">1</span> &lt;&lt; <span class="number">2</span>;    <span class="comment">//0100</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EDGE_BOTTOM = <span class="number">1</span> &lt;&lt; <span class="number">3</span>; <span class="comment">//1000</span></span><br></pre></td></tr></table></figure>
+<p>在 saveInitialMotion 保存位置信息的时候会调用 getEdgesTouched 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">getEdgesTouched</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (x &lt; mParentView.getLeft() + mEdgeSize) result |= EDGE_LEFT;</span><br><span class="line">    <span class="keyword">if</span> (y &lt; mParentView.getTop() + mEdgeSize) result |= EDGE_TOP;</span><br><span class="line">    <span class="keyword">if</span> (x &gt; mParentView.getRight() - mEdgeSize) result |= EDGE_RIGHT;</span><br><span class="line">    <span class="keyword">if</span> (y &gt; mParentView.getBottom() - mEdgeSize) result |= EDGE_BOTTOM;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样使用 | 和 &amp; 位操作可以让 mInitialEdgesTouched 数组里面的某一位保存多个边界状态。这种思路很有趣。比如说我一个手势，既在左边界又在上边界，这个时候就会执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> (x &lt; mParentView.getLeft() + mEdgeSize) result |= EDGE_LEFT;</span><br><span class="line"><span class="keyword">if</span> (y &lt; mParentView.getTop() + mEdgeSize) result |= EDGE_TOP;</span><br></pre></td></tr></table></figure>
+<p>result 执行两次 | 操作之后会得到 0101</p>
+<p>如果我要判断这个收拾是否在上边界，可以直接和 EDGE_TOP 执行 &amp; 操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> code = result &amp; EDGE_TOP;</span><br><span class="line"><span class="keyword">if</span> (code == EDGE_TOP) &#123;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就可以判断收拾是否在上边界了，同理也可以判断是否在左边界。</p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2016/11/16/2016-11-16-AndroidViewDragHelper/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/02/22/2017-02-22-AndroidANRAnalysis/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Android ANR 分析的几个要点
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2016/10/29/2016-10-29-JavaPlusEqual/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Java中 a=a+b 和 a+=b 的区别</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

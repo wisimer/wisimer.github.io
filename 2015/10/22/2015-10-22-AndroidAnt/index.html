@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Ant 构建Android工程 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言：Eclipse时代的Android构建工具Ant，原本是用于跨平台构建Java工程的，虽然现在AndroidSrudio已经默认使用Gradle了，不过还是有学习的地方的。 1.下载选择 apache-ant-1.9.6-bin.zip版本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ant 构建Android工程">
+<meta property="og:url" content="http://ai.wisim.me/2015/10/22/2015-10-22-AndroidAnt/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="前言：Eclipse时代的Android构建工具Ant，原本是用于跨平台构建Java工程的，虽然现在AndroidSrudio已经默认使用Gradle了，不过还是有学习的地方的。 1.下载选择 apache-ant-1.9.6-bin.zip版本">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_ant_home.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_path.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_ant-version.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_ant-help.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_templates.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_slidingmenu.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_slidingmenu_use.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_manifest_channel.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_multi_channels.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_JD_channel.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1022_Xiaomi_channel.png">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ant 构建Android工程">
+<meta name="twitter:description" content="前言：Eclipse时代的Android构建工具Ant，原本是用于跨平台构建Java工程的，虽然现在AndroidSrudio已经默认使用Gradle了，不过还是有学习的地方的。 1.下载选择 apache-ant-1.9.6-bin.zip版本">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1510/1022_ant_home.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-10-22-AndroidAnt" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Ant 构建Android工程
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/10/22/2015-10-22-AndroidAnt/">
+            <time datetime="2015-10-21T16:00:00.000Z" itemprop="datePublished">2015-10-22</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>前言：Eclipse时代的Android构建工具Ant，原本是用于跨平台构建Java工程的，虽然现在AndroidSrudio已经默认使用Gradle了，不过还是有学习的地方的。</p>
+<h3 id="1-下载"><a href="#1-下载" class="headerlink" title="1.下载"></a>1.下载</h3><p>选择 <a href="http://apache.fayea.com/ant/binaries/apache-ant-1.9.6-bin.zip" target="_blank" rel="noopener">apache-ant-1.9.6-bin.zip</a>版本</p>
+<a id="more"></a>
+<h3 id="2-配置环境变量"><a href="#2-配置环境变量" class="headerlink" title="2.配置环境变量"></a>2.配置环境变量</h3><p>2.1.新建 ANT_HOME 环境变量</p>
+<p><img src="/src/imgs/1510/1022_ant_home.png" alt="1022_ant_home.png"></p>
+<p>2.2.添加到path</p>
+<p><img src="/src/imgs/1510/1022_path.png" alt="1022_path.png"></p>
+<p>2.3.命令行检测 ： ant -version</p>
+<p><img src="/src/imgs/1510/1022_ant-version.png" alt="1022_ant-version.png"></p>
+<h3 id="3-直接创建ant模板工程"><a href="#3-直接创建ant模板工程" class="headerlink" title="3. 直接创建ant模板工程"></a>3. 直接创建ant模板工程</h3><p>终端执行 ： <code>android create project -k com.wxp.ant.test -a MainActivity -p ./AntTest -t 11</code></p>
+<p>也可以使用 update命令来更新一个已有的工程 ： <code>android update project -k com.wxp.ant.test -a MainActivity -p ./AntTest -t 11</code></p>
+<p><img src="/src/imgs/1510/1022_ant-help.png" alt="1022_ant-help.png"></p>
+<p>参数详情：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-n 项目名称</span><br><span class="line">-k 新建工程的包名</span><br><span class="line">-a 入口Activity</span><br><span class="line">-p 路径</span><br><span class="line">-t 目标平台 （可以使用 android list targets 查看可用平台）</span><br></pre></td></tr></table></figure>
+<p>此外还有直接创建gradle项目模板的命令</p>
+<p><code>android create project -k com.wxp.ant.test -a MainActivity -p ./GradleTest -t 11 -n GradleTest -g -v 1.2.3</code></p>
+<p>对比一下两个工程的目录结构</p>
+<p><img src="/src/imgs/1510/1022_templates.png" alt="1022_templates.png"></p>
+<h3 id="4-编译命令"><a href="#4-编译命令" class="headerlink" title="4.编译命令"></a>4.编译命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ant debug : 生成一个debug包</span><br><span class="line">ant release : 生成一个release包</span><br><span class="line">ant isntalld</span><br><span class="line">ant installr : 直接安装apk</span><br><span class="line">ant uninstall : 直接卸载apk</span><br><span class="line">ant clean : 清理工程</span><br></pre></td></tr></table></figure>
+<p>Android SDK中已经有了一个比较完整的build.xml文件了 ： sdk\tools\ant\build.xml</p>
+<p>ant release 实际执行的是 :</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- This runs -package-release and -release-nosign first and then runs</span></span><br><span class="line"><span class="comment">     only if release-sign is true (set in -release-check,</span></span><br><span class="line"><span class="comment">     called by -release-no-sign)--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"release"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">depends</span>=<span class="string">"-set-release-mode, -release-obfuscation-check, -package, -post-package, -release-prompt-for-password, -release-nosign, -release-sign, -post-build"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">description</span>=<span class="string">"Builds the application in release mode."</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>ant debug 实际执行的是 :</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Builds debug output package --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"debug"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">depends</span>=<span class="string">"-set-debug-files, -do-debug, -post-build"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">description</span>=<span class="string">"Builds the application and signs it with a debug key."</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-编译、打包的步骤："><a href="#5-编译、打包的步骤：" class="headerlink" title="5.编译、打包的步骤："></a>5.编译、打包的步骤：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">5.1第一步 生成R.java类文件：</span><br><span class="line">ant和命令行使用android SDK提供的aapt.exe程序生成R.java。</span><br><span class="line"></span><br><span class="line">5.2第二步 将.aidl文件生成.java类文件：</span><br><span class="line">ant和命令行使用android SDK提供的aidl.exe生成.java文件。</span><br><span class="line"></span><br><span class="line">5.3第三步 编译.java类文件生成class文件：</span><br><span class="line">ant和命令行使用jdk的javac编译java类文件生成class文件。</span><br><span class="line"></span><br><span class="line">5.4第四步 将class文件打包生成classes.dex文件：</span><br><span class="line">ant和命令行使用android SDK提供的dx.bat命令行脚本生成classes.dex文件。</span><br><span class="line"></span><br><span class="line">5.5第五步 打包资源文件（包括res、assets、androidmanifest.xml等）：</span><br><span class="line">ant和命令行使用Android SDK提供的aapt.exe生成资源包文件。</span><br><span class="line"></span><br><span class="line">5.6第六步 生成未签名的apk安装文件：</span><br><span class="line">ant和命令行使用android SDK提供的apkbuilder.bat命令脚本生成未签名的apk安装文件。</span><br><span class="line"></span><br><span class="line">5.7第七步 对未签名的apk进行签名生成签名后的android文件：</span><br><span class="line">ant和命令行使用jdk的jarsigner对未签名的包进行apk签名。</span><br></pre></td></tr></table></figure>
+<h3 id="6-使用自定义的签名"><a href="#6-使用自定义的签名" class="headerlink" title="6.使用自定义的签名"></a>6.使用自定义的签名</h3><p>在项目根目录下添加ant.properties（或者local.properties）文件,配置密钥的路径和别名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">key.store=F:\\wxp.keystore</span><br><span class="line">key.store.password=mima</span><br><span class="line">key.alias=wxp</span><br><span class="line">key.alias.password=mima</span><br></pre></td></tr></table></figure>
+<h3 id="7-使用外部jar包或者library"><a href="#7-使用外部jar包或者library" class="headerlink" title="7.使用外部jar包或者library"></a>7.使用外部jar包或者library</h3><p>jar包可以直接放到libs目录下面，打包的时候会自动打包进去</p>
+<p>重点是使用已有的工程作为libiary</p>
+<p>(1)首先将libiary拷贝到工程根目录，以slidingmenulibrary为例，进入slidingmenulibrary目录执行 ： <code>android update lib-project -t 11 -p ./</code></p>
+<p>或者直接在根目录下执行 ：<code>android update project -n AntTest -t 11 -p ./ --subprojects</code></p>
+<p>这样中方法会为目录下的每一个子工程生成构建ant所需要的文件</p>
+<p><img src="/src/imgs/1510/1022_slidingmenu.png" alt="1022_slidingmenu.png"></p>
+<p>(2)添加相应的配置</p>
+<p>在slidingmenulibrary目录下的project.properties文件加入 ： android.library=true</p>
+<p>在AntTest目录下的project.properties文件中加入要使用的libiary的名称 ： android.library.reference.1=./slidingmenulibrary</p>
+<p>(3)编译 ant debug install</p>
+<p>使用slidingmenulibrary的效果图：</p>
+<p><img src="/src/imgs/1510/1022_slidingmenu_use.png" alt="1022_slidingmenu_use.png"></p>
+<h3 id="8-多渠道包打包"><a href="#8-多渠道包打包" class="headerlink" title="8.多渠道包打包"></a>8.多渠道包打包</h3><p>下载 多渠道所需的jar包 ： <a href="http://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip" target="_blank" rel="noopener">ant-contrib-1.0b3.jar</a>，放到ant的lib目录下</p>
+<p>(1)在AndroidManifest.xml中配置默认的渠道</p>
+<p><img src="/src/imgs/1510/1022_manifest_channel.png" alt="1022_manifest_channel.png"></p>
+<p>(2)在\AntTest\ant.properties中配置多个渠道</p>
+<p><img src="/src/imgs/1510/1022_multi_channels.png" alt="1022_multi_channels.png"></p>
+<p>(3)在AntTest目录下新建 一个 custom_rules.xml 文件,内容如下 :</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">name</span>=<span class="string">"custom_rules"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">taskdef</span> <span class="attr">resource</span>=<span class="string">"net/sf/antcontrib/antcontrib.properties"</span> &gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">classpath</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pathelement</span> <span class="attr">location</span>=<span class="string">"lib/ant-contrib-1.0b3.jar"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">classpath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">taskdef</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"deploy"</span> &gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">foreach</span></span></span><br><span class="line"><span class="tag">            <span class="attr">delimiter</span>=<span class="string">","</span></span></span><br><span class="line"><span class="tag">            <span class="attr">list</span>=<span class="string">"$&#123;market_channels&#125;"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">param</span>=<span class="string">"channel"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">target</span>=<span class="string">"modify_manifest"</span> &gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"modify_manifest"</span> &gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">echo</span> <span class="attr">message</span>=<span class="string">"=============BEGIN $&#123;channel&#125; =============="</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">replaceregexp</span> <span class="attr">flags</span>=<span class="string">"g"</span> <span class="attr">byline</span>=<span class="string">"false"</span>&gt;</span></span><br><span class="line">           <span class="comment">&lt;!--正则匹配JD_CHANNEL字段 --&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">regexp</span> <span class="attr">pattern</span>=<span class="string">"android:name=&amp;quot;JD_CHANNEL&amp;quot; android:value=&amp;quot;(.*)&amp;quot;"</span> /&gt;</span></span><br><span class="line">           <span class="comment">&lt;!--将匹配到的JD_CHANNEL字段的值替换成自定义的渠道 $&#123;channel&#125;  --&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">substitution</span> <span class="attr">expression</span>=<span class="string">"android:name=&amp;quot;JD_CHANNEL&amp;quot; android:value=&amp;quot;$&#123;channel&#125;&amp;quot;"</span> /&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">fileset</span></span></span><br><span class="line"><span class="tag">                <span class="attr">dir</span>=<span class="string">""</span></span></span><br><span class="line"><span class="tag">                <span class="attr">includes</span>=<span class="string">"AndroidManifest.xml"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">replaceregexp</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--指定apk输出的位置 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mkdir</span> <span class="attr">dir</span>=<span class="string">"$&#123;channel&#125;"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span></span></span><br><span class="line"><span class="tag">            <span class="attr">name</span>=<span class="string">"out.final.file"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">location</span>=<span class="string">"$&#123;channel&#125;/$&#123;ant.project.name&#125;_$&#123;channel&#125;.apk"</span> /&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- antcall是修改之后需要继续执行的任务target。这里调用的是clean和debug. --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">antcall</span> <span class="attr">target</span>=<span class="string">"clean"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">antcall</span> <span class="attr">target</span>=<span class="string">"debug"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">echo</span> <span class="attr">message</span>=<span class="string">"=============END $&#123;channel&#125; =============="</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>(4)直接用aapt查看AndroidManifest.xml文件的内容，看看有没有打包成功</p>
+<p><code>aapt l -a AntTest_JD.apk</code></p>
+<p><img src="/src/imgs/1510/1022_JD_channel.png" alt="1022_JD_channel.png"></p>
+<p><code>aapt l -a AntTest_Xiaomi.apk</code></p>
+<p><img src="/src/imgs/1510/1022_Xiaomi_channel.png" alt="1022_Xiaomi_channel.png"></p>
+<hr>
+<p>参考文章：</p>
+<ol>
+<li><p><a href="http://blog.csdn.net/xxdddail/article/details/21384995?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="noopener">http://blog.csdn.net/xxdddail/article/details/21384995?utm_source=tuicool&amp;utm_medium=referral</a></p>
+</li>
+<li><p><a href="http://my.oschina.net/oppo4545/blog/346778#OSC_h6_5" target="_blank" rel="noopener">http://my.oschina.net/oppo4545/blog/346778#OSC_h6_5</a></p>
+</li>
+<li><p><a href="http://blog.csdn.net/sky_monkey/article/details/11882411" target="_blank" rel="noopener">http://blog.csdn.net/sky_monkey/article/details/11882411</a></p>
+</li>
+</ol>
+<blockquote>
+<p>说了这么多，其实然并卵</p>
+</blockquote>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/10/22/2015-10-22-AndroidAnt/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/10/23/2015-10-23-TouchEventListViewInScrollView/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    ScrollView嵌套ListView处理事件冲突
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/10/13/2015-10-13-AndroidDagger1Deep/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android依赖注入框架 Dagger1 深入了解</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

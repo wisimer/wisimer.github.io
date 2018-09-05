@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>朴素贝叶斯分类算法实践-垃圾邮件过滤器 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="一、前言这个例子中，我们将了解朴素贝叶斯的一个最著名的应用：电子邮件垃圾过滤。 首先看一下使用朴素贝叶斯对电子邮件进行分类的步骤：  收集数据：提供文本文件。 准备数据：将文本文件解析成词条向量。 分析数据：检查词条确保解析的正确性。 训练算法：使用我们之前建立的trainNB0()函数。 测试算法：使用classifyNB()，并构建一个新的测试函数来计算文档集的错误率。 使用算法：构建一个完整">
+<meta name="keywords" content="NaiveBayes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="朴素贝叶斯分类算法实践-垃圾邮件过滤器">
+<meta property="og:url" content="http://ai.wisim.me/2018/05/14/2018-05-14_BayesPraticeEmail/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="一、前言这个例子中，我们将了解朴素贝叶斯的一个最著名的应用：电子邮件垃圾过滤。 首先看一下使用朴素贝叶斯对电子邮件进行分类的步骤：  收集数据：提供文本文件。 准备数据：将文本文件解析成词条向量。 分析数据：检查词条确保解析的正确性。 训练算法：使用我们之前建立的trainNB0()函数。 测试算法：使用classifyNB()，并构建一个新的测试函数来计算文档集的错误率。 使用算法：构建一个完整">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="朴素贝叶斯分类算法实践-垃圾邮件过滤器">
+<meta name="twitter:description" content="一、前言这个例子中，我们将了解朴素贝叶斯的一个最著名的应用：电子邮件垃圾过滤。 首先看一下使用朴素贝叶斯对电子邮件进行分类的步骤：  收集数据：提供文本文件。 准备数据：将文本文件解析成词条向量。 分析数据：检查词条确保解析的正确性。 训练算法：使用我们之前建立的trainNB0()函数。 测试算法：使用classifyNB()，并构建一个新的测试函数来计算文档集的错误率。 使用算法：构建一个完整">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-05-14_BayesPraticeEmail" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            朴素贝叶斯分类算法实践-垃圾邮件过滤器
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/14/2018-05-14_BayesPraticeEmail/">
+            <time datetime="2018-05-13T16:00:00.000Z" itemprop="datePublished">2018-05-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/NaiveBayes/">NaiveBayes</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h4><p>这个例子中，我们将了解朴素贝叶斯的一个最著名的应用：电子邮件垃圾过滤。</p>
+<p>首先看一下使用朴素贝叶斯对电子邮件进行分类的步骤：</p>
+<ol>
+<li>收集数据：提供文本文件。</li>
+<li>准备数据：将文本文件解析成词条向量。</li>
+<li>分析数据：检查词条确保解析的正确性。</li>
+<li>训练算法：使用我们之前建立的trainNB0()函数。</li>
+<li>测试算法：使用classifyNB()，并构建一个新的测试函数来计算文档集的错误率。</li>
+<li>使用算法：构建一个完整的程序对一组文档进行分类，将错分的文档输出到屏幕上。</li>
+</ol>
+<a id="more"></a>
+<h4 id="二、实现"><a href="#二、实现" class="headerlink" title="二、实现"></a>二、实现</h4><h5 id="1-收集数据"><a href="#1-收集数据" class="headerlink" title="1. 收集数据"></a>1. 收集数据</h5><p>数据我已经为大家准备好了，可以在<a href="/raw/code/BayesClassify/email.zip">这里</a>下载：</p>
+<p>有两个文件夹ham和spam，ham文件夹下是正常邮件，spam文件夹下的txt文件为垃圾邮件。</p>
+<h5 id="2-准备数据"><a href="#2-准备数据" class="headerlink" title="2. 准备数据"></a>2. 准备数据</h5><p>对于英文文本，我们可以以非字母、非数字作为符号进行切分，使用split函数即可。编写代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">接收一个文本里的字符串并将其解析为字符串列表</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">textParse</span><span class="params">(bigString)</span>:</span>                                                   <span class="comment">#将字符串转换为字符列表</span></span><br><span class="line">    listOfTokens = re.split(<span class="string">r'\W*'</span>, bigString)                              <span class="comment">#将特殊符号作为切分标志进行字符串切分，即非字母、非数字</span></span><br><span class="line">    <span class="keyword">return</span> [tok.lower() <span class="keyword">for</span> tok <span class="keyword">in</span> listOfTokens <span class="keyword">if</span> len(tok) &gt; <span class="number">2</span>]            <span class="comment">#除了单个字母，例如大写的I，其它单词变成小写</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">将切分的实验样本词条整理成不重复的词条列表，也就是词汇表</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createVocabList</span><span class="params">(dataSet)</span>:</span></span><br><span class="line">    vocabSet = set([])                      <span class="comment">#创建一个空的不重复列表</span></span><br><span class="line">    <span class="keyword">for</span> document <span class="keyword">in</span> dataSet:               </span><br><span class="line">        vocabSet = vocabSet | set(document) <span class="comment">#取并集</span></span><br><span class="line">    <span class="keyword">return</span> list(vocabSet)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    docList = []; classList = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">26</span>):                                                  <span class="comment">#遍历25个txt文件</span></span><br><span class="line">        wordList = textParse(open(<span class="string">'email/spam/%d.txt'</span> % i, <span class="string">'r'</span>, encoding = <span class="string">"ISO-8859-1"</span>).read())     <span class="comment">#读取每个垃圾邮件，并字符串转换成字符串列表</span></span><br><span class="line">        docList.append(wordList)</span><br><span class="line">        classList.append(<span class="number">1</span>)                                                 <span class="comment">#标记垃圾邮件，1表示垃圾文件</span></span><br><span class="line">        wordList = textParse(open(<span class="string">'email/ham/%d.txt'</span> % i, <span class="string">'r'</span>, encoding = <span class="string">"ISO-8859-1"</span>).read())      <span class="comment">#读取每个非垃圾邮件，并字符串转换成字符串列表</span></span><br><span class="line">        docList.append(wordList)</span><br><span class="line">        classList.append(<span class="number">0</span>)                                                 <span class="comment">#标记非垃圾邮件，1表示垃圾文件   </span></span><br><span class="line">    vocabList = createVocabList(docList)                                    <span class="comment">#创建词汇表，不重复</span></span><br><span class="line">    print(vocabList)</span><br></pre></td></tr></table></figure>
+<p>这里注意要加上 <code>encoding</code> 参数，才能正确读取文本内容，否则会报错。运行之后就得到所有邮件文本的词汇表，这里就不展示里。</p>
+<h5 id="3-构建词向量模型-词袋模型"><a href="#3-构建词向量模型-词袋模型" class="headerlink" title="3. 构建词向量模型/词袋模型"></a>3. 构建词向量模型/词袋模型</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">词向量模：根据vocabList词汇表，型创建词向量</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setOfWords2Vec</span><span class="params">(vocabList, inputSet)</span>:</span></span><br><span class="line">    returnVec = [<span class="number">0</span>] * len(vocabList)                <span class="comment">#创建一个其中所含元素都为0的向量</span></span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> inputSet:                           <span class="comment">#遍历每个词条</span></span><br><span class="line">        <span class="keyword">if</span> word <span class="keyword">in</span> vocabList:                       <span class="comment">#如果词条存在于词汇表中，则置1</span></span><br><span class="line">            returnVec[vocabList.index(word)] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> returnVec                                <span class="comment">#返回文档向量</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">词袋量模：根据vocabList词汇表，型创建词袋模型</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bagOfWords2VecMN</span><span class="params">(vocabList, inputSet)</span>:</span></span><br><span class="line">    returnVec = [<span class="number">0</span>]*len(vocabList)                   <span class="comment">#创建一个其中所含元素都为0的向量</span></span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> inputSet:                            <span class="comment">#遍历每个词条</span></span><br><span class="line">        <span class="keyword">if</span> word <span class="keyword">in</span> vocabList:                        <span class="comment">#如果词条存在于词汇表中，则计数加一</span></span><br><span class="line">            returnVec[vocabList.index(word)] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> returnVec</span><br></pre></td></tr></table></figure>
+<p>两种模型里面选择一种即可，这里选择的是词向量模型</p>
+<h5 id="4-训练分类器"><a href="#4-训练分类器" class="headerlink" title="4. 训练分类器"></a>4. 训练分类器</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">训练分类器</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">trainNB0</span><span class="params">(trainMatrix,trainCategory)</span>:</span></span><br><span class="line">    numTrainDocs = len(trainMatrix)                         <span class="comment">#计算训练的文档数目</span></span><br><span class="line">    numWords = len(trainMatrix[<span class="number">0</span>])                          <span class="comment">#计算每篇文档的词条数</span></span><br><span class="line">    pAbusive = sum(trainCategory)/float(numTrainDocs)       <span class="comment">#文档属于侮辱类的概率</span></span><br><span class="line">    p0Num = np.ones(numWords); p1Num = np.ones(numWords)    <span class="comment">#创建numpy.ones数组,词条出现数初始化为1，拉普拉斯平滑</span></span><br><span class="line">    p0Denom = <span class="number">2.0</span>; p1Denom = <span class="number">2.0</span>                            <span class="comment">#分母初始化为2,拉普拉斯平滑</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numTrainDocs):</span><br><span class="line">        <span class="keyword">if</span> trainCategory[i] == <span class="number">1</span>:            <span class="comment">#统计属于垃圾邮件的条件概率所需的数据，即P(w0|1),P(w1|1),P(w2|1)···</span></span><br><span class="line">            p1Num += trainMatrix[i]</span><br><span class="line">            p1Denom += sum(trainMatrix[i])</span><br><span class="line">        <span class="keyword">else</span>:                                <span class="comment">#统计属于正常邮件的条件概率所需的数据，即P(w0|0),P(w1|0),P(w2|0)···</span></span><br><span class="line">            p0Num += trainMatrix[i]</span><br><span class="line">            p0Denom += sum(trainMatrix[i])</span><br><span class="line">    p1Vect = np.log(p1Num/p1Denom)           <span class="comment">#取对数，防止下溢出         </span></span><br><span class="line">    p0Vect = np.log(p0Num/p0Denom)         </span><br><span class="line">    <span class="keyword">return</span> p0Vect,p1Vect,pAbusive            <span class="comment">#返回属于正常邮件的条件概率数组，属于垃圾邮件的条件概率数组，文档属于垃圾邮件的概率</span></span><br></pre></td></tr></table></figure>
+<h5 id="5-测试分类器"><a href="#5-测试分类器" class="headerlink" title="5. 测试分类器"></a>5. 测试分类器</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classifyNB</span><span class="params">(vec2Classify, p0Vec, p1Vec, pClass1)</span>:</span></span><br><span class="line">    p1 = sum(vec2Classify * p1Vec) + np.log(pClass1) <span class="comment">#对应元素相乘。logA * B = logA + logB，所以这里加上log(pClass1)</span></span><br><span class="line">    p0 = sum(vec2Classify * p0Vec) + np.log(<span class="number">1.0</span> - pClass1)</span><br><span class="line">    <span class="keyword">if</span> p1 &gt; p0:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h5 id="6-使用分类器"><a href="#6-使用分类器" class="headerlink" title="6. 使用分类器"></a>6. 使用分类器</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">spamTest</span><span class="params">()</span>:</span></span><br><span class="line">    docList = []; classList = []; fullText = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">26</span>):                                                  <span class="comment">#遍历25个txt文件</span></span><br><span class="line">        wordList = textParse(open(<span class="string">'email/spam/%d.txt'</span> % i, <span class="string">'r'</span>).read())     <span class="comment">#读取每个垃圾邮件，并字符串转换成字符串列表</span></span><br><span class="line">        docList.append(wordList)</span><br><span class="line">        fullText.append(wordList)</span><br><span class="line">        classList.append(<span class="number">1</span>)                                                 <span class="comment">#标记垃圾邮件，1表示垃圾文件</span></span><br><span class="line">        wordList = textParse(open(<span class="string">'email/ham/%d.txt'</span> % i, <span class="string">'r'</span>).read())      <span class="comment">#读取每个非垃圾邮件，并字符串转换成字符串列表</span></span><br><span class="line">        docList.append(wordList)</span><br><span class="line">        fullText.append(wordList)</span><br><span class="line">        classList.append(<span class="number">0</span>)                                                 <span class="comment">#标记非垃圾邮件，1表示垃圾文件   </span></span><br><span class="line">    vocabList = createVocabList(docList)                                    <span class="comment">#创建词汇表，不重复</span></span><br><span class="line">    trainingSet = list(range(<span class="number">50</span>)); testSet = []                             <span class="comment">#创建存储训练集的索引值的列表和测试集的索引值的列表                       </span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):                                                     <span class="comment">#从50个邮件中，随机挑选出40个作为训练集,10个做测试集</span></span><br><span class="line">        randIndex = int(random.uniform(<span class="number">0</span>, len(trainingSet)))                <span class="comment">#随机选取索索引值</span></span><br><span class="line">        testSet.append(trainingSet[randIndex])                              <span class="comment">#添加测试集的索引值</span></span><br><span class="line">        <span class="keyword">del</span>(trainingSet[randIndex])                                         <span class="comment">#在训练集列表中删除添加到测试集的索引值</span></span><br><span class="line">    trainMat = []; trainClasses = []                                        <span class="comment">#创建训练集矩阵和训练集类别标签系向量             </span></span><br><span class="line">    <span class="keyword">for</span> docIndex <span class="keyword">in</span> trainingSet:                                            <span class="comment">#遍历训练集</span></span><br><span class="line">        trainMat.append(setOfWords2Vec(vocabList, docList[docIndex]))       <span class="comment">#将生成的词集模型添加到训练矩阵中</span></span><br><span class="line">        trainClasses.append(classList[docIndex])                            <span class="comment">#将类别添加到训练集类别标签系向量中</span></span><br><span class="line">    p0V, p1V, pSpam = trainNB0(np.array(trainMat), np.array(trainClasses))  <span class="comment">#训练朴素贝叶斯模型</span></span><br><span class="line">    errorCount = <span class="number">0</span>                                                          <span class="comment">#错误分类计数</span></span><br><span class="line">    <span class="keyword">for</span> docIndex <span class="keyword">in</span> testSet:                                                <span class="comment">#遍历测试集</span></span><br><span class="line">        wordVector = setOfWords2Vec(vocabList, docList[docIndex])           <span class="comment">#测试集的词集模型</span></span><br><span class="line">        <span class="keyword">if</span> classifyNB(np.array(wordVector), p0V, p1V, pSpam) != classList[docIndex]:    <span class="comment">#如果分类错误</span></span><br><span class="line">            errorCount += <span class="number">1</span>                                                 <span class="comment">#错误计数加1</span></span><br><span class="line">            print(<span class="string">"分类错误的测试集："</span>,docList[docIndex])</span><br><span class="line">    print(<span class="string">'错误率：%.2f%%'</span> % (float(errorCount) / len(testSet) * <span class="number">100</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    spamTest()</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">分类错误的测试集： [&apos;yeah&apos;, &apos;ready&apos;, &apos;may&apos;, &apos;not&apos;, &apos;here&apos;, &apos;because&apos;, &apos;jar&apos;, &apos;jar&apos;, &apos;has&apos;, &apos;plane&apos;, &apos;tickets&apos;, &apos;germany&apos;, &apos;for&apos;]</span><br><span class="line">错误率：10.00%</span><br><span class="line">/Users/wxp/anaconda3/lib/python3.6/re.py:212: FutureWarning: split() requires a non-empty pattern match.</span><br><span class="line">  return _compile(pattern, flags).split(string, maxsplit)</span><br></pre></td></tr></table></figure>
+<p>由于测试数据是随机选的几个邮件文本，所以每次运行结果都可能不一样。</p>
+<hr>
+<p>参考：</p>
+<ol>
+<li><a href="https://zhuanlan.zhihu.com/p/28720393" target="_blank" rel="noopener">Python3《机器学习实战》学习笔记（五）：朴素贝叶斯实战篇之新浪新闻分类</a></li>
+</ol>
+<p>附：</p>
+<p><a href="/raw/code/BayesClassify/BayesClassify_EmailClassify.ipynb">code</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/05/14/2018-05-14_BayesPraticeEmail/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/05/14/2018-05-14_LinearRegression/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    线性回归算法
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/05/10/2018-05-10_BayesPraticeComment/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">朴素贝叶斯分类算法实践-言论过滤器</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>自定义View-SwitchButton | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="系统自带的（5.0之前的）switch 实在是不好看，实际需求是要有一种直观的 开和关 的感受。下面就通过自定义view来实现一个炫酷的SwicthButton 0. 继承View实现OnTouchListener接口1234567891011121314151617181920public class Blog_SwitchButton extends View implements OnTou">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义View-SwitchButton">
+<meta property="og:url" content="http://ai.wisim.me/2014/06/30/2014-06-30-AndroidSwitchbutton/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="系统自带的（5.0之前的）switch 实在是不好看，实际需求是要有一种直观的 开和关 的感受。下面就通过自定义view来实现一个炫酷的SwicthButton 0. 继承View实现OnTouchListener接口1234567891011121314151617181920public class Blog_SwitchButton extends View implements OnTou">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1406/30_switchbutton.gif">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义View-SwitchButton">
+<meta name="twitter:description" content="系统自带的（5.0之前的）switch 实在是不好看，实际需求是要有一种直观的 开和关 的感受。下面就通过自定义view来实现一个炫酷的SwicthButton 0. 继承View实现OnTouchListener接口1234567891011121314151617181920public class Blog_SwitchButton extends View implements OnTou">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1406/30_switchbutton.gif">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2014-06-30-AndroidSwitchbutton" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            自定义View-SwitchButton
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/06/30/2014-06-30-AndroidSwitchbutton/">
+            <time datetime="2014-06-29T16:00:00.000Z" itemprop="datePublished">2014-06-30</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>系统自带的（5.0之前的）switch 实在是不好看，实际需求是要有一种直观的 开和关 的感受。下面就通过自定义view来实现一个炫酷的SwicthButton</p>
+<h4 id="0-继承View实现OnTouchListener接口"><a href="#0-继承View实现OnTouchListener接口" class="headerlink" title="0. 继承View实现OnTouchListener接口"></a>0. 继承View实现OnTouchListener接口</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Blog_SwitchButton</span> <span class="keyword">extends</span> <span class="title">View</span> <span class="keyword">implements</span> <span class="title">OnTouchListener</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> Bitmap bg_on, bg_off, slipper_btn;</span><br><span class="line">  <span class="comment">// 按下时的x和当前的x</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">float</span> downX, nowX;</span><br><span class="line">  <span class="comment">// 记录用户是否在滑动</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">boolean</span> onSlip = <span class="keyword">false</span>;</span><br><span class="line">  <span class="comment">// 当前的状态ON / OFF</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">boolean</span> nowStatus = <span class="keyword">false</span>;</span><br><span class="line">  <span class="comment">// 监听接口</span></span><br><span class="line">  <span class="keyword">private</span> OnChangedListener listener;</span><br><span class="line">  <span class="comment">// 两个构造函数</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Blog_SwitchButton</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">super</span>(context);</span><br><span class="line">  init();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Blog_SwitchButton</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">super</span>(context, attrs);</span><br><span class="line">  init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="1-初始化函数，用于解析图片，以及设置监听"><a href="#1-初始化函数，用于解析图片，以及设置监听" class="headerlink" title="1.初始化函数，用于解析图片，以及设置监听"></a>1.初始化函数，用于解析图片，以及设置监听</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 载入图片资源</span></span><br><span class="line">  bg_on = BitmapFactory.decodeResource(getResources(), R.drawable.on);</span><br><span class="line">  bg_off = BitmapFactory.decodeResource(getResources(), R.drawable.off);</span><br><span class="line">  slipper_btn = BitmapFactory.decodeResource(getResources(),R.drawable.btn);</span><br><span class="line">  setOnTouchListener(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-重写onDraw方法，绘制视图"><a href="#2-重写onDraw方法，绘制视图" class="headerlink" title="2.重写onDraw方法，绘制视图"></a>2.重写onDraw方法，绘制视图</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">  Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">  Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">  <span class="keyword">float</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 根据nowX设置背景，开或者关状态</span></span><br><span class="line">  <span class="keyword">if</span> (nowX &lt; (bg_on.getWidth() / <span class="number">2</span>)) &#123;</span><br><span class="line">    canvas.drawBitmap(bg_off, matrix, paint);<span class="comment">// 画出关闭时的背景</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    canvas.drawBitmap(bg_on, matrix, paint);<span class="comment">// 画出打开时的背景</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (onSlip) &#123;<span class="comment">// 是否是在滑动状态,</span></span><br><span class="line">    <span class="keyword">if</span> (nowX &gt;= bg_on.getWidth())&#123;<span class="comment">// 是否划出指定范围,不能让滑块跑到外头,必须做这个判断</span></span><br><span class="line">      x = bg_on.getWidth() - slipper_btn.getWidth() / <span class="number">2</span>;<span class="comment">// 减去滑块1/2的长度</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      x = nowX - slipper_btn.getWidth() / <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (nowStatus) &#123;<span class="comment">// 根据当前的状态设置滑块的x值</span></span><br><span class="line">      x = bg_on.getWidth() - slipper_btn.getWidth();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      x = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对滑块滑动进行异常处理，不能让滑块出界</span></span><br><span class="line"><span class="keyword">if</span> (x &lt; <span class="number">0</span>) &#123;</span><br><span class="line">  x = <span class="number">0</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (x &gt; bg_on.getWidth() - slipper_btn.getWidth()) &#123;</span><br><span class="line">  x = bg_on.getWidth() - slipper_btn.getWidth();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 画出滑块</span></span><br><span class="line">canvas.drawBitmap(slipper_btn, x, <span class="number">0</span>, paint);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-重写onTouch方法用于处理用户到触摸事件"><a href="#3-重写onTouch方法用于处理用户到触摸事件" class="headerlink" title="3.重写onTouch方法用于处理用户到触摸事件"></a>3.重写onTouch方法用于处理用户到触摸事件</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View v, MotionEvent event)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (event.getAction()) &#123;</span><br><span class="line">    <span class="comment">// 当用户按下时</span></span><br><span class="line">    <span class="keyword">case</span> MotionEvent.ACTION_DOWN: &#123;</span><br><span class="line">      <span class="keyword">if</span> (event.getX() &gt; bg_off.getWidth()|| event.getY() &gt; bg_off.getHeight()) &#123;</span><br><span class="line">        <span class="comment">//如果在控件的范围之外则不处理</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//如果在控件的范围之内，则设置为滑动状态</span></span><br><span class="line">        onSlip = <span class="keyword">true</span>;</span><br><span class="line">        downX = event.getX();</span><br><span class="line">        nowX = downX;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//当用户滑动按钮时</span></span><br><span class="line">    <span class="keyword">case</span> MotionEvent.ACTION_MOVE: &#123;</span><br><span class="line">      nowX = event.getX();</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//当用户抬起手指时</span></span><br><span class="line">    <span class="keyword">case</span> MotionEvent.ACTION_UP: &#123;</span><br><span class="line">      onSlip = <span class="keyword">false</span>;</span><br><span class="line">      <span class="keyword">if</span> (event.getX() &gt;= (bg_on.getWidth() / <span class="number">2</span>)) &#123;</span><br><span class="line">        <span class="comment">//如果按钮此时在右侧，则为ON状态把nowState设置为true，并且要把按钮归到右侧到位置</span></span><br><span class="line">        nowStatus = <span class="keyword">true</span>;</span><br><span class="line">        nowX = bg_on.getWidth() - slipper_btn.getWidth();</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//如果按钮此时在左侧，则为OFF状态，按钮的位置为0</span></span><br><span class="line">        nowStatus = <span class="keyword">false</span>;</span><br><span class="line">        nowX = <span class="number">0</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (listener != <span class="keyword">null</span>) &#123;</span><br><span class="line">        listener.OnChanged(Blog_SwitchButton.<span class="keyword">this</span>, nowStatus);</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 每次用户产生触摸事件之后都要刷新界面，重新绘制视图</span></span><br><span class="line">    invalidate();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-定义一个回调接口-为WiperSwitch设置一个监听，供外部调用的方法"><a href="#4-定义一个回调接口-为WiperSwitch设置一个监听，供外部调用的方法" class="headerlink" title="4.定义一个回调接口.为WiperSwitch设置一个监听，供外部调用的方法"></a>4.定义一个回调接口.为WiperSwitch设置一个监听，供外部调用的方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnChangedListener</span> </span>&#123;</span><br><span class="line">  <span class="comment">//在外部实现这个方法，可以在这个方法内部处理一些逻辑业务</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnChanged</span><span class="params">(Blog_SwitchButton wiperSwitch, <span class="keyword">boolean</span> checkState)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnChangedListener</span><span class="params">(OnChangedListener listener)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.listener = listener;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-设置滑动开关的初始状态，供外部调用"><a href="#5-设置滑动开关的初始状态，供外部调用" class="headerlink" title="5.设置滑动开关的初始状态，供外部调用"></a>5.设置滑动开关的初始状态，供外部调用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setChecked</span><span class="params">(<span class="keyword">boolean</span> checked)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (checked) &#123;</span><br><span class="line">    nowX = bg_off.getWidth();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    nowX = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  nowStatus = checked;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果图如下:</p>
+<p><img src="/src/imgs/1406/30_switchbutton.gif" alt="30_switchbutton.gif"></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2014/06/30/2014-06-30-AndroidSwitchbutton/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    BroadcastReceiver 的简单使用
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/06/17/2014-06-17-AndroidViewPager/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android 使用Viewpager实现主界面的不同页面之间的切换</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

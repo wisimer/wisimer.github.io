@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>使用Volley获取fir.im服务器端应用的最新版本 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="儿童节快乐。  一、首先将应用发布到fir.im上。可以得到他的APP ID，我这里的APP ID为556c487d210234f16a000350在浏览器中输入http://fir.im/api/v2/app/version/556c487d210234f16a000350,可以看到输出的应用信息 1&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;Timo&amp;quot;,&amp;quot;v">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Volley获取fir.im服务器端应用的最新版本">
+<meta property="og:url" content="http://ai.wisim.me/2015/06/01/2015-06-01-AndroidVolleyUpdateInfo/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="儿童节快乐。  一、首先将应用发布到fir.im上。可以得到他的APP ID，我这里的APP ID为556c487d210234f16a000350在浏览器中输入http://fir.im/api/v2/app/version/556c487d210234f16a000350,可以看到输出的应用信息 1&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;Timo&amp;quot;,&amp;quot;v">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Volley获取fir.im服务器端应用的最新版本">
+<meta name="twitter:description" content="儿童节快乐。  一、首先将应用发布到fir.im上。可以得到他的APP ID，我这里的APP ID为556c487d210234f16a000350在浏览器中输入http://fir.im/api/v2/app/version/556c487d210234f16a000350,可以看到输出的应用信息 1&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;Timo&amp;quot;,&amp;quot;v">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-06-01-AndroidVolleyUpdateInfo" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            使用Volley获取fir.im服务器端应用的最新版本
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/06/01/2015-06-01-AndroidVolleyUpdateInfo/">
+            <time datetime="2015-05-31T16:00:00.000Z" itemprop="datePublished">2015-06-01</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <blockquote>
+<p>儿童节快乐。</p>
+</blockquote>
+<h4 id="一、首先将应用发布到fir-im上。可以得到他的APP-ID，我这里的APP-ID为556c487d210234f16a000350"><a href="#一、首先将应用发布到fir-im上。可以得到他的APP-ID，我这里的APP-ID为556c487d210234f16a000350" class="headerlink" title="一、首先将应用发布到fir.im上。可以得到他的APP ID，我这里的APP ID为556c487d210234f16a000350"></a>一、首先将应用发布到fir.im上。可以得到他的APP ID，我这里的APP ID为<code>556c487d210234f16a000350</code></h4><p>在浏览器中输入<a href="http://fir.im/api/v2/app/version/556c487d210234f16a000350" target="_blank" rel="noopener">http://fir.im/api/v2/app/version/556c487d210234f16a000350</a>,可以看到输出的应用信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;:&quot;Timo&quot;,&quot;version&quot;:&quot;1&quot;,&quot;changelog&quot;:&quot;beta0.1&quot;,&quot;versionShort&quot;:&quot;1.0&quot;,&quot;installUrl&quot;:&quot;http://fir.im/api/v2/app/install/556c487d210234f16a000350?token=f3b596a0085311e595c0e761ac19d16b4db1b3ff&quot;,&quot;update_url&quot;:&quot;http://fir.im/timo&quot;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="二、在Android-Studio中使用GsonFormat自动生成上面json字符串的实体类"><a href="#二、在Android-Studio中使用GsonFormat自动生成上面json字符串的实体类" class="headerlink" title="二、在Android Studio中使用GsonFormat自动生成上面json字符串的实体类"></a>二、在Android Studio中使用GsonFormat自动生成上面json字符串的实体类</h4><blockquote>
+<p><code>GsonFormay</code>的主页： <a href="https://github.com/zzz40500/GsonFormat" target="_blank" rel="noopener">https://github.com/zzz40500/GsonFormat</a></p>
+</blockquote>
+<a id="more"></a>
+<p>最终生成的实体类UpdateInfo如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UpdateInfo</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * installUrl : http://fir.im/api/v2/app/install/556c487d210234f16a000350?token=f3b596a0085311e595c0e761ac19d16b4db1b3ff</span></span><br><span class="line"><span class="comment">     * update_url : http://fir.im/timo</span></span><br><span class="line"><span class="comment">     * name : Timo</span></span><br><span class="line"><span class="comment">     * changelog : beta0.1</span></span><br><span class="line"><span class="comment">     * versionShort : 1.0</span></span><br><span class="line"><span class="comment">     * version : 1</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String installUrl;</span><br><span class="line">    <span class="keyword">private</span> String update_url;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String changelog;</span><br><span class="line">    <span class="keyword">private</span> String versionShort;</span><br><span class="line">    <span class="keyword">private</span> String version;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setInstallUrl</span><span class="params">(String installUrl)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.installUrl = installUrl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUpdate_url</span><span class="params">(String update_url)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.update_url = update_url;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setChangelog</span><span class="params">(String changelog)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.changelog = changelog;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setVersionShort</span><span class="params">(String versionShort)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.versionShort = versionShort;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setVersion</span><span class="params">(String version)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.version = version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getInstallUrl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> installUrl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUpdate_url</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> update_url;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getChangelog</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> changelog;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getVersionShort</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> versionShort;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getVersion</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="三、接着开始编写自定义的GsonRequest"><a href="#三、接着开始编写自定义的GsonRequest" class="headerlink" title="三、接着开始编写自定义的GsonRequest"></a>三、接着开始编写自定义的GsonRequest</h4><ol>
+<li><p>GsonRequest继承自Request类，并且同样提供了两个构造函数。</p>
+</li>
+<li><p>在parseNetworkResponse()方法中，先是将服务器响应的数据解析出来，然后通过调用Gson的fromJson方法将数据组装成对象。</p>
+</li>
+<li><p>在deliverResponse方法中将最终的数据进行回调。</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GsonRequest</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Request</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Response.Listener&lt;T&gt; mListener;</span><br><span class="line">    <span class="keyword">private</span> Gson mGson;</span><br><span class="line">    <span class="keyword">private</span> Class&lt;T&gt; mClass;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GsonRequest</span><span class="params">(<span class="keyword">int</span> method, String url, Class&lt;T&gt; clazz, Response.Listener&lt;T&gt; listener,Response.ErrorListener errorListener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(method, url, errorListener);</span><br><span class="line">        mGson = <span class="keyword">new</span> Gson();</span><br><span class="line">        mClass = clazz;</span><br><span class="line">        mListener = listener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GsonRequest</span><span class="params">(String url, Class&lt;T&gt; clazz, Response.Listener&lt;T&gt; listener,Response.ErrorListener errorListener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(Method.GET, url, clazz, listener, errorListener);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Response&lt;T&gt; <span class="title">parseNetworkResponse</span><span class="params">(NetworkResponse response)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String jsonString = <span class="keyword">new</span> String(response.data,HttpHeaderParser.parseCharset(response.headers));</span><br><span class="line">            <span class="keyword">return</span> Response.success(mGson.fromJson(jsonString, mClass),</span><br><span class="line">                    HttpHeaderParser.parseCacheHeaders(response));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">            Log.e(<span class="string">"wxpinfo"</span>,<span class="string">"parseNetworkResponse error : "</span>+error);</span><br><span class="line">            <span class="keyword">return</span> Response.error(<span class="keyword">new</span> ParseError(e));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">deliverResponse</span><span class="params">(T response)</span> </span>&#123;</span><br><span class="line">        mListener.onResponse(response);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="四、接着就可以使用GsonRequest了"><a href="#四、接着就可以使用GsonRequest了" class="headerlink" title="四、接着就可以使用GsonRequest了"></a>四、接着就可以使用GsonRequest了</h4><ol>
+<li>首先要获取本地应用的版本：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getLocalVersionName</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    String versionName = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 包名改为自己应用的包名即可</span></span><br><span class="line">        versionName = context.getPackageManager().getPackageInfo(</span><br><span class="line">                <span class="string">"timo.wxp.com.timoren"</span>, <span class="number">1</span>).versionName;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (PackageManager.NameNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    Log.e(<span class="string">"wxpinfo"</span>, <span class="string">"loaclversionName"</span> + versionName);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> versionName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>接着定义一个volleyGetUpdateInfo方法获将服务器最新应用的版本和本地版本进行对比：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">volleyGetUpdateInfo</span><span class="params">(<span class="keyword">final</span> Context context)</span> </span>&#123;</span><br><span class="line">    String APP_URL = <span class="string">"http://fir.im/api/v2/app/version/556c487d210234f16a000350"</span>;</span><br><span class="line">    RequestQueue mQueue = Volley.newRequestQueue(context);</span><br><span class="line">    GsonRequest&lt;UpdateInfo&gt; gsonRequest = <span class="keyword">new</span> GsonRequest&lt;UpdateInfo&gt;(</span><br><span class="line">            APP_URL, UpdateInfo.class,</span><br><span class="line">            <span class="keyword">new</span> Response.Listener&lt;UpdateInfo&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(UpdateInfo updateInfo)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (Float.valueOf(getLocalVersionName(context))  &lt; Float.valueOf(updateInfo.versionShort) ) &#123;</span><br><span class="line">                        Toast.makeText(context,<span class="string">"NEED UPDATE"</span>,Toast.LENGTH_SHORT).show();</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Float.valueOf(getLocalVersionName(context))  &gt; Float.valueOf(updateInfo.versionShort) )&#123;</span><br><span class="line">                        Toast.makeText(context,<span class="string">"本地大于服务器"</span>,Toast.LENGTH_SHORT).show();</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        Toast.makeText(context,<span class="string">"版本相同"</span>,Toast.LENGTH_SHORT).show();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, <span class="keyword">new</span> Response.ErrorListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onErrorResponse</span><span class="params">(VolleyError error)</span> </span>&#123;</span><br><span class="line">            Log.e(<span class="string">"wxpinfo"</span>, <span class="string">"error --&gt; "</span> + error.getMessage(), error);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    mQueue.add(gsonRequest);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果要判断本地应用和服务器最新应用的版本大小只要调用volleyGetUpdateInfo这个方法即可。</p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/06/01/2015-06-01-AndroidVolleyUpdateInfo/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/06/24/2015-06-24-JavaThreadYield/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Java线程中yield()方法的使用
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/05/28/2015-05-28-AndroidWeiboProfile/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">ScrollView与ListView嵌套仿微博个人主页</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

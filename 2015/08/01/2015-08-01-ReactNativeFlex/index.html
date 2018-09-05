@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>ReactNative之Flexbox布局 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Flexbox是CSS3中引入的布局模型－弹性盒子模型，旨在通过弹性的方式来对齐和分布容器中内容的空间，使其能够适应不同屏幕的宽度。  Flexbox并不是作为一个单一的属性，而是作为一系列属性的集合。ReactNative中的Flexbox是这个规范的一个子集。">
+<meta name="keywords" content="ReactNative">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReactNative之Flexbox布局">
+<meta property="og:url" content="http://ai.wisim.me/2015/08/01/2015-08-01-ReactNativeFlex/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="Flexbox是CSS3中引入的布局模型－弹性盒子模型，旨在通过弹性的方式来对齐和分布容器中内容的空间，使其能够适应不同屏幕的宽度。  Flexbox并不是作为一个单一的属性，而是作为一系列属性的集合。ReactNative中的Flexbox是这个规范的一个子集。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1508/0815_flexDirection.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1508/0815_flexWrap.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1508/0815_alignItems.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1508/0815_justifyContent.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1508/0815_flex.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1508/0815_alignSelf.png">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ReactNative之Flexbox布局">
+<meta name="twitter:description" content="Flexbox是CSS3中引入的布局模型－弹性盒子模型，旨在通过弹性的方式来对齐和分布容器中内容的空间，使其能够适应不同屏幕的宽度。  Flexbox并不是作为一个单一的属性，而是作为一系列属性的集合。ReactNative中的Flexbox是这个规范的一个子集。">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1508/0815_flexDirection.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-08-01-ReactNativeFlex" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            ReactNative之Flexbox布局
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/08/01/2015-08-01-ReactNativeFlex/">
+            <time datetime="2015-07-31T16:00:00.000Z" itemprop="datePublished">2015-08-01</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ReactNative/">ReactNative</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p><a href="http://www.w3school.com.cn/cssref/index.asp#flexbox" target="_blank" rel="noopener">Flexbox</a>是<a href="http://www.w3school.com.cn/css3/" target="_blank" rel="noopener">CSS3</a>中引入的布局模型－弹性盒子模型，旨在通过弹性的方式来对齐和分布容器中内容的空间，使其能够适应不同屏幕的宽度。</p>
+<blockquote>
+<p>Flexbox并不是作为一个单一的属性，而是作为一系列属性的集合。ReactNative中的Flexbox是这个规范的一个子集。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="Flexbox属性"><a href="#Flexbox属性" class="headerlink" title="Flexbox属性"></a>Flexbox属性</h3><p>对于Flexbox，会有一个<code>Flex container</code>作为容器，里面包含了一些了Flex元素<code>Flex item</code>。<br>Flexbox中的有些属性是针对于<code>Flex container</code>，而另外有些属性是针对于<code>Flex item</code>的。</p>
+<h4 id="一、针对Flex-container的属性"><a href="#一、针对Flex-container的属性" class="headerlink" title="一、针对Flex container的属性"></a>一、针对<code>Flex container</code>的属性</h4><ol>
+<li><p>flexDirection:有两个可选值，’column’（默认值）和’row’。 row 表示主轴的方向是水平的。可以看一下两种不同的排列方式：</p>
+<p> <img src="/src/imgs/1508/0815_flexDirection.png" alt="0815_flexDirection.png"></p>
+</li>
+<li><p>flexWrap:有两个可选值，’nowrap’（默认值）和’wrap’。默认情况下，ReactNative中Flexbox会将所有元素排列在一行，<br>如果想要元素达到容器边缘之后换行则要设置为wrap。看一下两种不同的包裹方式：</p>
+<p> <img src="/src/imgs/1508/0815_flexWrap.png" alt="0815_flexWrap.png"></p>
+<blockquote>
+<p>如果设置了 flexWrap 属性为’wrap’，要使其生效，需要设置容器的宽度为固定值</p>
+</blockquote>
+</li>
+<li><p>alignItems:有四个可选值，’flex-start’,’flex-end’,’center’和’stretch’。具体排列方式依次如图：</p>
+<p> <img src="/src/imgs/1508/0815_alignItems.png" alt="0815_alignItems.png"></p>
+<blockquote>
+<p>如果设置了 alignItems 属性为’stretch’，要使其生效就不能设置item的高度为固定值</p>
+</blockquote>
+</li>
+<li><p>justifyContent:有五个可选值，’flex-start’,’flex-end’,’center’,’space-between’和’space-around’。具体排列方式如图：</p>
+<p> <img src="/src/imgs/1508/0815_justifyContent.png" alt="0815_justifyContent.png"></p>
+<blockquote>
+<p>若要使的 justifyContent 属性生效，需要设置容器的宽度为固定值</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="值得注意的是alignItems属性是针对于纵轴方向上的排布，而justifyContent则是针对于横轴方向上的排布，同时将两个属性设置为’center’即可实现内容的水平垂直居中显示"><a href="#值得注意的是alignItems属性是针对于纵轴方向上的排布，而justifyContent则是针对于横轴方向上的排布，同时将两个属性设置为’center’即可实现内容的水平垂直居中显示" class="headerlink" title="值得注意的是alignItems属性是针对于纵轴方向上的排布，而justifyContent则是针对于横轴方向上的排布，同时将两个属性设置为’center’即可实现内容的水平垂直居中显示"></a>值得注意的是<code>alignItems</code>属性是针对于纵轴方向上的排布，而<code>justifyContent</code>则是针对于横轴方向上的排布，同时将两个属性设置为’center’即可实现内容的水平垂直居中显示</h4><h4 id="二、针对Flex-item的属性"><a href="#二、针对Flex-item的属性" class="headerlink" title="二、针对Flex item的属性"></a>二、针对<code>Flex item</code>的属性</h4><ol>
+<li><p>flex:表示flex元素在布局中所占的比重。我们这里先将第一个容器内五个元素的flex属性值依次设置为1，2，3，2，1。<br>接着将第二个容器内的五个元素的flex属性值依次设置为2，2，2，2，2。来看一下最后的效果：</p>
+<p> <img src="/src/imgs/1508/0815_flex.png" alt="0815_flex.png"></p>
+</li>
+<li><p>alignSelf:有五个可选值，’auto’,’flex-start’,’flex-end’,’center’和’stretch’。用来控制单个flex元素在Flex container中的位置。<br>我们来看一下他们各自的效果</p>
+<p> <img src="/src/imgs/1508/0815_alignSelf.png" alt="0815_alignSelf.png"></p>
+</li>
+</ol>
+<h4 id="值得注意的是justifyContent属性控制的是整个容器中的元素相对于容器本身的位置，alignSelf属性控制的是单个元素本身相对于它的父容器的位置。"><a href="#值得注意的是justifyContent属性控制的是整个容器中的元素相对于容器本身的位置，alignSelf属性控制的是单个元素本身相对于它的父容器的位置。" class="headerlink" title="值得注意的是justifyContent属性控制的是整个容器中的元素相对于容器本身的位置，alignSelf属性控制的是单个元素本身相对于它的父容器的位置。"></a>值得注意的是<code>justifyContent</code>属性控制的是整个容器中的元素相对于容器本身的位置，<code>alignSelf</code>属性控制的是单个元素本身相对于它的父容器的位置。</h4><hr>
+<p>通过使用Flexbox可以很方便的解决如下几个问题：</p>
+<ol>
+<li>浮动布局</li>
+<li>不同宽度屏幕的适配</li>
+<li>宽度自动分配</li>
+<li>水平垂直居中</li>
+</ol>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/08/01/2015-08-01-ReactNativeFlex/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/08/10/2015-08-10-ReactNativeCSS/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    ReactNative中的布局样式
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/07/29/2015-07-29-AndroidMAT/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">使用MAT工具定位Android应用内存泄漏</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

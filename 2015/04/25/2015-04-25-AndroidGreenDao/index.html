@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android ORM框架GreenDao使用教程 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="一、首先是在AndroidStudio配置GreenDao的使用环境，在build.gradle中添加GreenDao的依赖123456dependencies &amp;#123;    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])    compile &apos;com.android.support:appcompat-v7:22.0.0&apos;    com">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android ORM框架GreenDao使用教程">
+<meta property="og:url" content="http://ai.wisim.me/2015/04/25/2015-04-25-AndroidGreenDao/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="一、首先是在AndroidStudio配置GreenDao的使用环境，在build.gradle中添加GreenDao的依赖123456dependencies &amp;#123;    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])    compile &apos;com.android.support:appcompat-v7:22.0.0&apos;    com">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android ORM框架GreenDao使用教程">
+<meta name="twitter:description" content="一、首先是在AndroidStudio配置GreenDao的使用环境，在build.gradle中添加GreenDao的依赖123456dependencies &amp;#123;    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])    compile &apos;com.android.support:appcompat-v7:22.0.0&apos;    com">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-04-25-AndroidGreenDao" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android ORM框架GreenDao使用教程
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/04/25/2015-04-25-AndroidGreenDao/">
+            <time datetime="2015-04-24T16:00:00.000Z" itemprop="datePublished">2015-04-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="一、首先是在AndroidStudio配置GreenDao的使用环境，在build-gradle中添加GreenDao的依赖"><a href="#一、首先是在AndroidStudio配置GreenDao的使用环境，在build-gradle中添加GreenDao的依赖" class="headerlink" title="一、首先是在AndroidStudio配置GreenDao的使用环境，在build.gradle中添加GreenDao的依赖"></a>一、首先是在AndroidStudio配置GreenDao的使用环境，在build.gradle中添加GreenDao的依赖</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="function">compile <span class="title">fileTree</span><span class="params">(dir: <span class="string">'libs'</span>, include: [<span class="string">'*.jar'</span>])</span></span></span><br><span class="line"><span class="function">    compile 'com.android.support:appcompat-v7:22.0.0'</span></span><br><span class="line"><span class="function">    compile 'de.greenrobot:greendao:1.3.7'</span></span><br><span class="line"><span class="function">    compile 'de.greenrobot:greendao-generator:1.3.1'</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>可以点击右上角出现的’Sync Now’按钮，亦可直接点击’Sync Project with Gradle Files’按钮</p>
+<a id="more"></a>
+<h4 id="二、下面是官方文档里面的一个例子，在Android项目中新建一个DaoGenerator，这个类用来生成一系列Dao类文件，我这里把它命名为MyDaoGenerator"><a href="#二、下面是官方文档里面的一个例子，在Android项目中新建一个DaoGenerator，这个类用来生成一系列Dao类文件，我这里把它命名为MyDaoGenerator" class="headerlink" title="二、下面是官方文档里面的一个例子，在Android项目中新建一个DaoGenerator，这个类用来生成一系列Dao类文件，我这里把它命名为MyDaoGenerator"></a>二、下面是官方文档里面的一个例子，在Android项目中新建一个DaoGenerator，这个类用来生成一系列Dao类文件，我这里把它命名为MyDaoGenerator</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyDaoGenerator</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//这里第一个参数是版本号，第二个参数是生成类文件的包名</span></span><br><span class="line">        Schema schema = <span class="keyword">new</span> Schema(<span class="number">1000</span>, <span class="string">"timo.wxp.com.greendaodemo.gen"</span>);</span><br><span class="line"></span><br><span class="line">        addNote(schema);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//这里第二个参数是生成类文件的路径</span></span><br><span class="line">        <span class="keyword">new</span> DaoGenerator().generateAll(schema,<span class="string">"./greendaodemo/src/main/java/"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addNote</span><span class="params">(Schema schema)</span> </span>&#123;</span><br><span class="line">        Entity note = schema.addEntity(<span class="string">"Note"</span>);</span><br><span class="line">        note.addIdProperty();</span><br><span class="line">        note.addStringProperty(<span class="string">"text"</span>).notNull();</span><br><span class="line">        note.addStringProperty(<span class="string">"comment"</span>);</span><br><span class="line">        note.addDateProperty(<span class="string">"date"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接着要直接运行这个文件，才能生成相应的文件。其中有<code>DaoMaster</code>以及<code>DaoSession</code>是两个一定会生成的类。<br>另外这里我们自己新增了一个<code>Note</code>类，与之同时生成的还有一个<code>NoteDao</code>类。</p>
+<p>Note实体类不用提，不如我们来看一下NoteDao类，看一看自动生成了什么内容</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NoteDao</span> <span class="keyword">extends</span> <span class="title">AbstractDao</span>&lt;<span class="title">Note</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TABLENAME = <span class="string">"NOTE"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Properties of entity Note.&lt;br/&gt;</span></span><br><span class="line"><span class="comment">     * Can be used for QueryBuilder and for referencing column names.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Properties</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> Property Id = <span class="keyword">new</span> Property(<span class="number">0</span>, Long.class, <span class="string">"id"</span>, <span class="keyword">true</span>, <span class="string">"_id"</span>);</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> Property Text = <span class="keyword">new</span> Property(<span class="number">1</span>, String.class, <span class="string">"text"</span>, <span class="keyword">false</span>, <span class="string">"TEXT"</span>);</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> Property Comment = <span class="keyword">new</span> Property(<span class="number">2</span>, String.class, <span class="string">"comment"</span>, <span class="keyword">false</span>, <span class="string">"COMMENT"</span>);</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> Property Date = <span class="keyword">new</span> Property(<span class="number">3</span>, java.util.Date.class, <span class="string">"date"</span>, <span class="keyword">false</span>, <span class="string">"DATE"</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NoteDao</span><span class="params">(DaoConfig config)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(config);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NoteDao</span><span class="params">(DaoConfig config, DaoSession daoSession)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(config, daoSession);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Creates the underlying database table. */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">createTable</span><span class="params">(SQLiteDatabase db, <span class="keyword">boolean</span> ifNotExists)</span> </span>&#123;</span><br><span class="line">        String constraint = ifNotExists? <span class="string">"IF NOT EXISTS "</span>: <span class="string">""</span>;</span><br><span class="line">        db.execSQL(<span class="string">"CREATE TABLE "</span> + constraint + <span class="string">"'NOTE' ("</span> + <span class="comment">//</span></span><br><span class="line">                <span class="string">"'_id' INTEGER PRIMARY KEY ,"</span> + <span class="comment">// 0: id</span></span><br><span class="line">                <span class="string">"'TEXT' TEXT NOT NULL ,"</span> + <span class="comment">// 1: text</span></span><br><span class="line">                <span class="string">"'COMMENT' TEXT,"</span> + <span class="comment">// 2: comment</span></span><br><span class="line">                <span class="string">"'DATE' INTEGER);"</span>); <span class="comment">// 3: date</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Drops the underlying database table. */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dropTable</span><span class="params">(SQLiteDatabase db, <span class="keyword">boolean</span> ifExists)</span> </span>&#123;</span><br><span class="line">        String sql = <span class="string">"DROP TABLE "</span> + (ifExists ? <span class="string">"IF EXISTS "</span> : <span class="string">""</span>) + <span class="string">"'NOTE'"</span>;</span><br><span class="line">        db.execSQL(sql);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** <span class="doctag">@inheritdoc</span> */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">bindValues</span><span class="params">(SQLiteStatement stmt, Note entity)</span> </span>&#123;</span><br><span class="line">        stmt.clearBindings();</span><br><span class="line"></span><br><span class="line">        Long id = entity.getId();</span><br><span class="line">        <span class="keyword">if</span> (id != <span class="keyword">null</span>) &#123;</span><br><span class="line">            stmt.bindLong(<span class="number">1</span>, id);</span><br><span class="line">        &#125;</span><br><span class="line">        stmt.bindString(<span class="number">2</span>, entity.getText());</span><br><span class="line"></span><br><span class="line">        String comment = entity.getComment();</span><br><span class="line">        <span class="keyword">if</span> (comment != <span class="keyword">null</span>) &#123;</span><br><span class="line">            stmt.bindString(<span class="number">3</span>, comment);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        java.util.Date date = entity.getDate();</span><br><span class="line">        <span class="keyword">if</span> (date != <span class="keyword">null</span>) &#123;</span><br><span class="line">            stmt.bindLong(<span class="number">4</span>, date.getTime());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** <span class="doctag">@inheritdoc</span> */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Long <span class="title">readKey</span><span class="params">(Cursor cursor, <span class="keyword">int</span> offset)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> cursor.isNull(offset + <span class="number">0</span>) ? <span class="keyword">null</span> : cursor.getLong(offset + <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** <span class="doctag">@inheritdoc</span> */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Note <span class="title">readEntity</span><span class="params">(Cursor cursor, <span class="keyword">int</span> offset)</span> </span>&#123;</span><br><span class="line">        Note entity = <span class="keyword">new</span> Note( <span class="comment">//</span></span><br><span class="line">            cursor.isNull(offset + <span class="number">0</span>) ? <span class="keyword">null</span> : cursor.getLong(offset + <span class="number">0</span>), <span class="comment">// id</span></span><br><span class="line">            cursor.getString(offset + <span class="number">1</span>), <span class="comment">// text</span></span><br><span class="line">            cursor.isNull(offset + <span class="number">2</span>) ? <span class="keyword">null</span> : cursor.getString(offset + <span class="number">2</span>), <span class="comment">// comment</span></span><br><span class="line">            cursor.isNull(offset + <span class="number">3</span>) ? <span class="keyword">null</span> : <span class="keyword">new</span> java.util.Date(cursor.getLong(offset + <span class="number">3</span>)) <span class="comment">// date</span></span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">return</span> entity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** <span class="doctag">@inheritdoc</span> */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readEntity</span><span class="params">(Cursor cursor, Note entity, <span class="keyword">int</span> offset)</span> </span>&#123;</span><br><span class="line">        entity.setId(cursor.isNull(offset + <span class="number">0</span>) ? <span class="keyword">null</span> : cursor.getLong(offset + <span class="number">0</span>));</span><br><span class="line">        entity.setText(cursor.getString(offset + <span class="number">1</span>));</span><br><span class="line">        entity.setComment(cursor.isNull(offset + <span class="number">2</span>) ? <span class="keyword">null</span> : cursor.getString(offset + <span class="number">2</span>));</span><br><span class="line">        entity.setDate(cursor.isNull(offset + <span class="number">3</span>) ? <span class="keyword">null</span> : <span class="keyword">new</span> java.util.Date(cursor.getLong(offset + <span class="number">3</span>)));</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** <span class="doctag">@inheritdoc</span> */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Long <span class="title">updateKeyAfterInsert</span><span class="params">(Note entity, <span class="keyword">long</span> rowId)</span> </span>&#123;</span><br><span class="line">        entity.setId(rowId);</span><br><span class="line">        <span class="keyword">return</span> rowId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** <span class="doctag">@inheritdoc</span> */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Long <span class="title">getKey</span><span class="params">(Note entity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(entity != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> entity.getId();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** <span class="doctag">@inheritdoc</span> */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">isEntityUpdateable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="三、接着就是要在Android项目中使用这些生成的类来完成对数据库的操作了。"><a href="#三、接着就是要在Android项目中使用这些生成的类来完成对数据库的操作了。" class="headerlink" title="三、接着就是要在Android项目中使用这些生成的类来完成对数据库的操作了。"></a>三、接着就是要在Android项目中使用这些生成的类来完成对数据库的操作了。</h4><p>首先就是实例化一个DevOpenHelper对象，通过这个对象获取一个SQLiteDatabase实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DaoMaster.DevOpenHelper helper = <span class="keyword">new</span> DaoMaster.DevOpenHelper(<span class="keyword">this</span>, <span class="string">"notes-db"</span>, <span class="keyword">null</span>);</span><br><span class="line">db = helper.getWritableDatabase();</span><br></pre></td></tr></table></figure>
+<p>然后再实例化一个DaoMaster对象，再通过daoMaster获取一个DaoSession实例，接着就可以通过这个DaoSession实例获取一个NoteDao实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">daoMaster = <span class="keyword">new</span> DaoMaster(db);</span><br><span class="line">daoSession = daoMaster.newSession();</span><br><span class="line">noteDao = daoSession.getNoteDao();</span><br></pre></td></tr></table></figure>
+<p>有了这个NoteDao实例，我们就可以做很多事情了。比如，查询数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String textColumn = NoteDao.Properties.Text.columnName;</span><br><span class="line">String orderBy = textColumn + <span class="string">" COLLATE LOCALIZED ASC"</span>;</span><br><span class="line">cursor = db.query(noteDao.getTablename(), noteDao.getAllColumns(), <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, orderBy);</span><br></pre></td></tr></table></figure>
+<p>再比如插入一条记录：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addNote</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Note note = <span class="keyword">new</span> Note(<span class="keyword">null</span>, noteText, comment, <span class="keyword">new</span> Date());</span><br><span class="line">    noteDao.insert(note);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再比如删除一条记录：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">noteDao.deleteByKey(id);</span><br></pre></td></tr></table></figure>
+<p>GreenDao一些比较简单的操作就是这些类，更深入的研究可以查看官网<a href="http://greendao-orm.com/" target="_blank" rel="noopener">http://greendao-orm.com/</a></p>
+<p>参考资料：<a href="http://www.it165.net/pro/html/201401/9026.html" target="_blank" rel="noopener">http://www.it165.net/pro/html/201401/9026.html</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/04/25/2015-04-25-AndroidGreenDao/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/05/13/2015-05-13-DynaminProgrammingMinCoins/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    动态规划-最少硬币问题
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/04/11/2015-04-11-UbuntuMacbookWifi/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">MacbookPro(2011 early)安装 Ubuntu12.04之后无线网不能使用</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

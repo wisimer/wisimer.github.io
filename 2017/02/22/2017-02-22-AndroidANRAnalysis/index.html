@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android ANR 分析的几个要点 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="一、找到trace.txt中的ANR1234----- pid 23835 at 2017-02-21 20:11:48 -----Cmd line: com.wisim.example...... trace.txt中,上面这种形式就是一个ANR日志的开始标志了。一个trace.txt中会有好多ANR，有的可能在界面上弹出提示框，有的没有。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android ANR 分析的几个要点">
+<meta property="og:url" content="http://ai.wisim.me/2017/02/22/2017-02-22-AndroidANRAnalysis/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="一、找到trace.txt中的ANR1234----- pid 23835 at 2017-02-21 20:11:48 -----Cmd line: com.wisim.example...... trace.txt中,上面这种形式就是一个ANR日志的开始标志了。一个trace.txt中会有好多ANR，有的可能在界面上弹出提示框，有的没有。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android ANR 分析的几个要点">
+<meta name="twitter:description" content="一、找到trace.txt中的ANR1234----- pid 23835 at 2017-02-21 20:11:48 -----Cmd line: com.wisim.example...... trace.txt中,上面这种形式就是一个ANR日志的开始标志了。一个trace.txt中会有好多ANR，有的可能在界面上弹出提示框，有的没有。">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2017-02-22-AndroidANRAnalysis" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android ANR 分析的几个要点
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/02/22/2017-02-22-AndroidANRAnalysis/">
+            <time datetime="2017-02-21T16:00:00.000Z" itemprop="datePublished">2017-02-22</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="一、找到trace-txt中的ANR"><a href="#一、找到trace-txt中的ANR" class="headerlink" title="一、找到trace.txt中的ANR"></a>一、找到trace.txt中的ANR</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">----- pid 23835 at 2017-02-21 20:11:48 -----</span><br><span class="line">Cmd line: com.wisim.example</span><br><span class="line"></span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>trace.txt中,上面这种形式就是一个ANR日志的开始标志了。一个trace.txt中会有好多ANR，有的可能在界面上弹出提示框，有的没有。</p>
+<a id="more"></a>
+<h4 id="二、ANR类型"><a href="#二、ANR类型" class="headerlink" title="二、ANR类型"></a>二、ANR类型</h4><h5 id="1-CPU满负荷"><a href="#1-CPU满负荷" class="headerlink" title="1. CPU满负荷"></a>1. CPU满负荷</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">CPU usage from 3330ms to 814ms ago:</span><br><span class="line">6% 178/system_server: 3.5% user + 1.4% kernel / faults: 86 minor 20 major</span><br><span class="line">4.6% 2976/com.anly.githubapp: 0.7% user + 3.7% kernel /faults: 52 minor 19 major</span><br><span class="line">0.9% 252/com.android.systemui: 0.9% user + 0% kernel</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">100%TOTAL: 5.9% user + 4.1% kernel + 89% iowait</span><br></pre></td></tr></table></figure>
+<p>看到最后一行表明：</p>
+<ol>
+<li>当是CPU占用100%, 满负荷了.</li>
+<li>其中绝大数是被iowait即I/O操作占用了.</li>
+</ol>
+<p>此时分析方法调用栈, 一般来说会发现是方法中有频繁的文件读写或是数据库读写操作放在主线程来做了.</p>
+<h5 id="2-内存原因"><a href="#2-内存原因" class="headerlink" title="2. 内存原因"></a>2. 内存原因</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line">DALVIK THREADS:</span><br><span class="line">&quot;main&quot;prio=5 tid=3 VMWAIT</span><br><span class="line">|group=&quot;main&quot; sCount=1 dsCount=0 s=N obj=0x40026240self=0xbda8</span><br><span class="line">| sysTid=1815 nice=0 sched=0/0 cgrp=unknownhandle=-1344001376</span><br><span class="line">atdalvik.system.VMRuntime.trackExternalAllocation(NativeMethod)</span><br><span class="line">atandroid.graphics.Bitmap.nativeCreate(Native Method)</span><br><span class="line">atandroid.graphics.Bitmap.createBitmap(Bitmap.java:468)</span><br><span class="line">atandroid.view.View.buildDrawingCache(View.java:6324)</span><br><span class="line">atandroid.view.View.getDrawingCache(View.java:6178)</span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">MEMINFO in pid 1360 [android.process.acore] **</span><br><span class="line"></span><br><span class="line">           native  dalvik  other  total</span><br><span class="line">size:      17036   23111   N/A    40147</span><br><span class="line">allocated: 16484   20675   N/A    37159</span><br><span class="line">free:      296     2436    N/A    2732</span><br></pre></td></tr></table></figure>
+<p>free那行就是剩余的内存，可以看到free的内存已所剩无几.当然这种情况可能更多的是会产生OOM的异常.</p>
+<p>查看内存信息也可以搜搜看如下代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RAM: 2932124K total, 603160K free, 19100K buffers, 382832K cached, 3496K shmem, 77900K slab\</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-线程死锁"><a href="#3-线程死锁" class="headerlink" title="3. 线程死锁"></a>3. 线程死锁</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&quot;main&quot; prio=5 tid=1 Native</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x763ac390 self=0xf48a4500</span><br><span class="line">  ......</span><br><span class="line">  at com.tencent.android.tpush.common.p.a(ProGuard:96)</span><br><span class="line">  at com.tencent.android.tpush.common.n.a(ProGuard:107)</span><br><span class="line">  at com.tencent.android.tpush.service.channel.b.m(ProGuard:808)</span><br><span class="line">  at com.tencent.android.tpush.service.channel.b.k(ProGuard:609)</span><br><span class="line">  - locked &lt;0x0e28719c&gt; (a com.tencent.android.tpush.service.channel.b)</span><br><span class="line">  at com.tencent.android.tpush.service.channel.b.f(ProGuard:75)</span><br><span class="line">  at com.tencent.android.tpush.service.channel.j.onReceive(ProGuard:791)</span><br><span class="line">  at </span><br><span class="line">  ......</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&quot;TpnsClient&quot; prio=5 tid=32 Blocked</span><br><span class="line">  | group=&quot;main&quot; sCount=1 dsCount=0 obj=0x32ee3160 self=0xee818200</span><br><span class="line">  | sysTid=5469 nice=0 cgrp=bg_non_interactive sched=0/0 handle=0xdd5fa930</span><br><span class="line">  | state=S schedstat=( 0 0 0 ) utm=5 stm=1 core=1 HZ=100</span><br><span class="line">  | stack=0xdd4f8000-0xdd4fa000 stackSize=1038KB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  at com.tencent.android.tpush.service.channel.b.a(ProGuard:912)</span><br><span class="line">  - waiting to lock &lt;0x0e28719c&gt; (a com.tencent.android.tpush.service.channel.b) held by thread 1</span><br><span class="line">  at com.tencent.android.tpush.service.channel.a.a.b(ProGuard:121)</span><br><span class="line">  at com.tencent.android.tpush.service.channel.a.a.run(ProGuard:161)</span><br></pre></td></tr></table></figure>
+<p>这里tid=1的线程locked <0x0e28719c>这个锁，而tid=32的线程又在waiting to lock <0x0e28719c></0x0e28719c></0x0e28719c></p>
+<p>还有循环等待的情况，也会导致死锁发生ANR。</p>
+<h5 id="4-其他原因"><a href="#4-其他原因" class="headerlink" title="4. 其他原因"></a>4. 其他原因</h5><p>当然其他异常也会导致出现ANR。这个要在实践中积累。最主要的还是要耐心分析。</p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2017/02/22/2017-02-22-AndroidANRAnalysis/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/02/23/2017-02-23-JavaIncompatibleClassChangeError/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Java 中的 IncompatibleClassChangeError 错误
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2016/11/16/2016-11-16-AndroidViewDragHelper/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android ViewDragHelper</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

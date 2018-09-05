@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Java线程中wait()方法以及notify()方法的使用 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="wait()以及notify()是Object的两个方法。Obj.wait()，与Obj.notify()必须要与synchronized(Obj)一起使用，也就是wait,与notify是针对已经获取了Obj锁进行操作。  从语法角度来说就是Obj.wait(),Obj.notify必须在synchronized(Obj){…}语句块内。  从功能上来说wait就是说线程在获取对象锁后，主动释">
+<meta name="keywords" content="MultiThread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java线程中wait()方法以及notify()方法的使用">
+<meta property="og:url" content="http://ai.wisim.me/2015/07/14/2015-07-13-JavaThreadWaitNotify/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="wait()以及notify()是Object的两个方法。Obj.wait()，与Obj.notify()必须要与synchronized(Obj)一起使用，也就是wait,与notify是针对已经获取了Obj锁进行操作。  从语法角度来说就是Obj.wait(),Obj.notify必须在synchronized(Obj){…}语句块内。  从功能上来说wait就是说线程在获取对象锁后，主动释">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java线程中wait()方法以及notify()方法的使用">
+<meta name="twitter:description" content="wait()以及notify()是Object的两个方法。Obj.wait()，与Obj.notify()必须要与synchronized(Obj)一起使用，也就是wait,与notify是针对已经获取了Obj锁进行操作。  从语法角度来说就是Obj.wait(),Obj.notify必须在synchronized(Obj){…}语句块内。  从功能上来说wait就是说线程在获取对象锁后，主动释">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-07-13-JavaThreadWaitNotify" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Java线程中wait()方法以及notify()方法的使用
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/07/14/2015-07-13-JavaThreadWaitNotify/">
+            <time datetime="2015-07-13T16:00:00.000Z" itemprop="datePublished">2015-07-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/JAVA/">JAVA</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/MultiThread/">MultiThread</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <ol>
+<li><p>wait()以及notify()是Object的两个方法。Obj.wait()，与Obj.notify()必须要与synchronized(Obj)一起使用，也就是wait,与notify是针对已经获取了Obj锁进行操作。</p>
+</li>
+<li><p>从语法角度来说就是Obj.wait(),Obj.notify必须在synchronized(Obj){…}语句块内。</p>
+</li>
+<li><p>从功能上来说wait就是说线程在获取对象锁后，主动释放对象锁，同时本线程休眠。直到有其它线程调用对象的notify()唤醒该线程，才能继续获取对象锁，并继续执行。</p>
+</li>
+<li><p>相应的notify()就是对对象锁的唤醒操作。</p>
+</li>
+<li><p>有一点需要注意的是notify()调用后，并不是马上就释放对象锁的，而是在相应的synchronized(){}语句块执行结束，自动释放锁后，JVM会在wait()对象锁的线程中随机选取一线程，赋予其对象锁，唤醒线程，继续执行。这样就提供了在线程间同步、唤醒的操作。</p>
+</li>
+</ol>
+<a id="more"></a>
+<h4 id="来看一个简单的例子，i线程打印到2之后等待，切换到J线程打印，J线程打印完成之后再通知i线程继续打印。"><a href="#来看一个简单的例子，i线程打印到2之后等待，切换到J线程打印，J线程打印完成之后再通知i线程继续打印。" class="headerlink" title="来看一个简单的例子，i线程打印到2之后等待，切换到J线程打印，J线程打印完成之后再通知i线程继续打印。"></a>来看一个简单的例子，i线程打印到2之后等待，切换到J线程打印，J线程打印完成之后再通知i线程继续打印。</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyNotify</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        MyThread mt1 = <span class="keyword">new</span> MyThread();</span><br><span class="line">        mt1.start();</span><br><span class="line">        MyNotifyThread mt2 = <span class="keyword">new</span> MyNotifyThread();</span><br><span class="line">        mt2.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span>  Object o = <span class="keyword">new</span> Object();</span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(o) &#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;<span class="number">4</span>;i++) &#123;</span><br><span class="line">                    System.out.println(<span class="string">"i = "</span>+i);</span><br><span class="line">                    <span class="keyword">if</span>(i == <span class="number">2</span>) &#123;</span><br><span class="line">                        System.out.println(currentThread().getName()+<span class="string">".wait()"</span>);</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                        	o.wait();</span><br><span class="line">                        &#125; <span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyNotifyThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(o) &#123;</span><br><span class="line">            	  <span class="keyword">for</span>(<span class="keyword">int</span> J = <span class="number">0</span>;J&lt;<span class="number">6</span>;J++) &#123;</span><br><span class="line">                    System.out.println(<span class="string">"J = "</span>+J);</span><br><span class="line">                    <span class="keyword">if</span>(J == <span class="number">3</span>) &#123;</span><br><span class="line">            	      	System.out.println(currentThread().getName()+<span class="string">".notify()"</span>);</span><br><span class="line">               			  o.notify();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行之后的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">i = 0</span><br><span class="line">i = 1</span><br><span class="line">i = 2</span><br><span class="line">Thread-0.wait()</span><br><span class="line">J = 0</span><br><span class="line">J = 1</span><br><span class="line">J = 2</span><br><span class="line">J = 3</span><br><span class="line">Thread-1.notify()</span><br><span class="line">J = 4</span><br><span class="line">J = 5</span><br><span class="line">i = 3</span><br></pre></td></tr></table></figure>
+<p>可以看到i线程（也就是 Thread-0）打印到2之后便暂停打印，接着J线程（也就是Thread-1）开始打印，当J为3的时候，J进程调用了notify()方法，此时J线程会继续打印知道完成，最终结束之后i线程才又开始打印。也印证了开头所述的：notify()调用后，并不是马上就释放对象锁的，而是在相应的synchronized(){}语句块执行结束。</p>
+<h4 id="再来看一个三线程顺序打印ABC的例子"><a href="#再来看一个三线程顺序打印ABC的例子" class="headerlink" title="再来看一个三线程顺序打印ABC的例子"></a>再来看一个三线程顺序打印ABC的例子</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyPrintABC</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  	Object a = <span class="keyword">new</span> Object();</span><br><span class="line">  	Object b = <span class="keyword">new</span> Object();</span><br><span class="line">  	Object c = <span class="keyword">new</span> Object();</span><br><span class="line">  	PrintThread PA = <span class="keyword">new</span> PrintThread(<span class="string">"A"</span>,a,c);</span><br><span class="line">  	PrintThread PB = <span class="keyword">new</span> PrintThread(<span class="string">"B"</span>,b,a);</span><br><span class="line">  	PrintThread PC = <span class="keyword">new</span> PrintThread(<span class="string">"C"</span>,c,b); </span><br><span class="line">  	PA.start();</span><br><span class="line">  	<span class="keyword">try</span> &#123;</span><br><span class="line">  		PA.sleep(<span class="number">1</span>);</span><br><span class="line">  	&#125; <span class="keyword">catch</span>(Exception e) &#123;&#125;</span><br><span class="line">  	PB.start();</span><br><span class="line">  	<span class="keyword">try</span> &#123;</span><br><span class="line">  		PB.sleep(<span class="number">1</span>);</span><br><span class="line">  	&#125; <span class="keyword">catch</span>(Exception e) &#123;&#125;</span><br><span class="line">  	PC.start();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">  		PC.sleep(<span class="number">1</span>);</span><br><span class="line">  	&#125; <span class="keyword">catch</span>(Exception e) &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> String mName = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">private</span> Object mSelf = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">private</span> Object mPre = <span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PrintThread</span><span class="params">(String name,Object self,Object pre)</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">this</span>.mName = name;</span><br><span class="line">    	<span class="keyword">this</span>.mSelf = self;</span><br><span class="line">    	<span class="keyword">this</span>.mPre = pre;</span><br><span class="line">    &#125;	</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    	<span class="keyword">while</span>(i &lt; <span class="number">10</span>) &#123;</span><br><span class="line">    		<span class="keyword">try</span> &#123;</span><br><span class="line">    	    <span class="keyword">synchronized</span>(mPre) &#123;</span><br><span class="line">    		    <span class="keyword">synchronized</span>(mSelf) &#123;</span><br><span class="line">    		      System.out.println(currentThread().getName()+<span class="string">"--&gt;"</span>+mName);</span><br><span class="line">    		      i++;</span><br><span class="line">    		      mSelf.notify();   		     		    </span><br><span class="line">    		    &#125;</span><br><span class="line">    		    mPre.wait(); </span><br><span class="line">    	    &#125; </span><br><span class="line">    	  &#125; <span class="keyword">catch</span>(Exception e) &#123;&#125;    		</span><br><span class="line">    	&#125;</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里一个PrintThread有两个对象锁mSelf和mPre。为了保证打印顺序，一个进程首先要获取mPre对象锁，也就是要等待前一个进程打印完成，释放它对应的自身对象锁。<br>接着再去获取当前线程自己的mSelf对象锁，同时获取之后，再打印当前进程的名（这里用mName属性表示）。<br>打印完成之后，调用mSelf.notify()释放自身对象锁，唤醒下一个等待进程。接着调用mPre.wait()释放mPre对象锁，终止当前线程，等待再次被唤醒。</p>
+<p>最终打印出来的效果就是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br><span class="line">Thread-<span class="number">0</span>--&gt;A</span><br><span class="line">Thread-<span class="number">1</span>--&gt;B</span><br><span class="line">Thread-<span class="number">2</span>--&gt;C</span><br></pre></td></tr></table></figure>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/07/14/2015-07-13-JavaThreadWaitNotify/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/07/26/2015-07-26-ReactNativePreview/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    ReactNative初探
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/06/24/2015-06-24-JavaThreadYield/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Java线程中yield()方法的使用</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

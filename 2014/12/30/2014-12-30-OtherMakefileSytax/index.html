@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android Makefile Syntax | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="You can build JNI Application by NDK. In addition,if you have android source code environment,you can write a Android Makefile to build .so file and your application automatically.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Makefile Syntax">
+<meta property="og:url" content="http://ai.wisim.me/2014/12/30/2014-12-30-OtherMakefileSytax/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="You can build JNI Application by NDK. In addition,if you have android source code environment,you can write a Android Makefile to build .so file and your application automatically.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Makefile Syntax">
+<meta name="twitter:description" content="You can build JNI Application by NDK. In addition,if you have android source code environment,you can write a Android Makefile to build .so file and your application automatically.">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2014-12-30-OtherMakefileSytax" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android Makefile Syntax
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/12/30/2014-12-30-OtherMakefileSytax/">
+            <time datetime="2014-12-29T16:00:00.000Z" itemprop="datePublished">2014-12-30</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>You can build JNI Application by NDK.</p>
+<p>In addition,if you have android source code environment,you can write a Android Makefile to build .so file and your application automatically.</p>
+<a id="more"></a>
+<hr>
+<h3 id="Here-is-an-example-of-Andoird-mk-in-HelloJni"><a href="#Here-is-an-example-of-Andoird-mk-in-HelloJni" class="headerlink" title="Here is an example of Andoird.mk in HelloJni:"></a>Here is an example of Andoird.mk in HelloJni:</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH:= $(call my-dir)</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line">LOCAL_SRC_FILES := $(call all-java-files-under, src)</span><br><span class="line">LOCAL_JNI_SHARED_LIBRARIES := libhello</span><br><span class="line">LOCAL_PACKAGE_NAME := HelloJni</span><br><span class="line">include $(BUILD_PACKAGE)</span><br></pre></td></tr></table></figure>
+<h4 id="1-LOCAL-PATH-call-my-dir"><a href="#1-LOCAL-PATH-call-my-dir" class="headerlink" title="1.LOCAL_PATH:= $(call my-dir)"></a><strong>1.LOCAL_PATH:= $(call my-dir)</strong></h4><ul>
+<li>An Android makefile must begin with the definition of the LOCAL_PATH variable.</li>
+<li>It is used to locate source files in the development trees.</li>
+<li>The function <code>my-dir</code> ,provided by the build system,is used to return the path of the current directory.</li>
+</ul>
+<h4 id="2-include-CLEAR-VARS"><a href="#2-include-CLEAR-VARS" class="headerlink" title="2.include $(CLEAR_VARS)"></a><strong>2.include $(CLEAR_VARS)</strong></h4><p>The CLEAR_VARS vairable is provided by build system and points to a special GNU      Makefile thar will clear many LOCAL_XXX variable for you.</p>
+<h4 id="3-LOCAL-STATIC-JAVA-LIBRARIES-android-support-v4"><a href="#3-LOCAL-STATIC-JAVA-LIBRARIES-android-support-v4" class="headerlink" title="3.LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4"></a>3.LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4</h4><p>Use a static java library called <code>android-support-v4</code></p>
+<h4 id="4-LOCAL-MODULE-TAGS-：-optional"><a href="#4-LOCAL-MODULE-TAGS-：-optional" class="headerlink" title="4.LOCAL_MODULE_TAGS ：=optional"></a><strong>4.LOCAL_MODULE_TAGS ：=optional</strong></h4><ul>
+<li>optional: this module will be compiled in all version</li>
+<li>user: this module will be compiled only in user version</li>
+<li>eng: only in eng version</li>
+<li>tests: only in tests version</li>
+</ul>
+<h4 id="5-LOCAL-JNI-SHARED-LIBRARIES-libhellocas"><a href="#5-LOCAL-JNI-SHARED-LIBRARIES-libhellocas" class="headerlink" title="5.LOCAL_JNI_SHARED_LIBRARIES := libhellocas"></a><strong>5.LOCAL_JNI_SHARED_LIBRARIES := libhellocas</strong></h4><p>Use a shared library called <code>libhello</code></p>
+<h4 id="6-LOCAL-PACKAGE-NAME-HelloJni"><a href="#6-LOCAL-PACKAGE-NAME-HelloJni" class="headerlink" title="6.LOCAL_PACKAGE_NAME := HelloJni"></a><strong>6.LOCAL_PACKAGE_NAME := HelloJni</strong></h4><p>Name of the APK to build</p>
+<h4 id="7-include-BUILD-PACKAGE"><a href="#7-include-BUILD-PACKAGE" class="headerlink" title="7.include $(BUILD_PACKAGE)"></a><strong>7.include $(BUILD_PACKAGE)</strong></h4><p>Tell it to build an APK</p>
+<p>Finally,this package will generate <code>HelloJni.apk</code></p>
+<hr>
+<h4 id="Here-is-an-example-of-Android-mk-in-jni-folder"><a href="#Here-is-an-example-of-Android-mk-in-jni-folder" class="headerlink" title="Here is an example of Android.mk in jni folder:"></a>Here is an example of Android.mk in jni folder:</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH := $(call my-dir)</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE := libhello</span><br><span class="line">LOCAL_SRC_FILES := hello.c</span><br><span class="line">include $(BUILD_SHARED_LIBRARY)</span><br></pre></td></tr></table></figure>
+<h4 id="1-LOCAL-MODULE-libhello"><a href="#1-LOCAL-MODULE-libhello" class="headerlink" title="1.LOCAL_MODULE := libhello"></a><strong>1.LOCAL_MODULE := libhello</strong></h4><ul>
+<li>The LOCAL_MODULE variable must be defined to idenfy each module you describe in the Android.mk.</li>
+<li>The name must be unique and not contain any space.</li>
+<li>It determins the name of file which will genegrate.</li>
+</ul>
+<h4 id="2-include-BUILD-SHARED-LIBRARY"><a href="#2-include-BUILD-SHARED-LIBRARY" class="headerlink" title="2.include $(BUILD_SHARED_LIBRARY)"></a><strong>2.include $(BUILD_SHARED_LIBRARY)</strong></h4><p>Tell it to generate a shared library</p>
+<h4 id="3-LOCAL-SRC-FILES-hello-c"><a href="#3-LOCAL-SRC-FILES-hello-c" class="headerlink" title="3.LOCAL_SRC_FILES := hello.c"></a><strong>3.LOCAL_SRC_FILES := hello.c</strong></h4><p>The LOCAL_SRC_FILES variable must contain a list file of c and/or c++ source files that will be build and assembled into the module</p>
+<p>Finally,this module will generate <code>libhello.so</code></p>
+<hr>
+<h3 id="If-you-want-to-use-a-third-jar-package-how-to-add-compile-command-into-Android-mk"><a href="#If-you-want-to-use-a-third-jar-package-how-to-add-compile-command-into-Android-mk" class="headerlink" title="If you want to use a third jar package,how to add compile command into Android.mk:"></a>If you want to use a third jar package,how to add compile command into Android.mk:</h3><p>For example,there is a <code>nineoldandroids-2.4.0.jar</code> in the /libs,then we can compile it into the application by the Android.mk as follow.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_PATH := $(call my-dir)</span><br><span class="line"></span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE_TAGS := optional</span><br><span class="line">\#LOCAL_SDK_VERSION := current</span><br><span class="line">LOCAL_SRC_FILES := $(call all-java-files-under,src)</span><br><span class="line">LOCAL_PACKAGE_NAME := Todos</span><br><span class="line">LOCAL_CERTIFICATE := platform</span><br><span class="line">\#`nineo` is a tag we define below</span><br><span class="line">LOCAL_STATIC_JAVA_LIBRARIES := nineo</span><br><span class="line">include $(BUILD_PACKAGE)</span><br><span class="line"></span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">\#`libs` is the position of jar package</span><br><span class="line">LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := nineo:libs/nineoldandroids-<span class="number">2.4</span>.0.jar</span><br><span class="line">include $(BUILD_MULTI_PREBUILT)</span><br><span class="line"></span><br><span class="line">\# Use the following include to make our test apk.</span><br><span class="line">include $(call all-makefiles-under,$(LOCAL_PATH))</span><br></pre></td></tr></table></figure>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2014/12/30/2014-12-30-OtherMakefileSytax/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/01/07/2015-01-07-FrameworksSettingsAddDislplayOption/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Android Settings模块浅析-添加新的显示选项
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/12/29/2014-12-29-NDKAccessDriver/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android应用访问硬件驱动程序</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

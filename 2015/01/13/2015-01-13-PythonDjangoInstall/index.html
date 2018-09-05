@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Ubuntu 12.04 下配置Django开发环境 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Apache安装：第一步：安装Apache2。 sudo apt-get install apache2 第二步：安装mod_wsgi。 sudo apt-get install libapache2-mod-wsgi">
+<meta name="keywords" content="Ubuntu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 12.04 下配置Django开发环境">
+<meta property="og:url" content="http://ai.wisim.me/2015/01/13/2015-01-13-PythonDjangoInstall/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="Apache安装：第一步：安装Apache2。 sudo apt-get install apache2 第二步：安装mod_wsgi。 sudo apt-get install libapache2-mod-wsgi">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1503/13_django_install_result.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1503/13_run_first_django_app.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1503/13_django_welcome.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1503/13_django_syncdb.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1503/13_django_admin.png">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu 12.04 下配置Django开发环境">
+<meta name="twitter:description" content="Apache安装：第一步：安装Apache2。 sudo apt-get install apache2 第二步：安装mod_wsgi。 sudo apt-get install libapache2-mod-wsgi">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1503/13_django_install_result.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-01-13-PythonDjangoInstall" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Ubuntu 12.04 下配置Django开发环境
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/01/13/2015-01-13-PythonDjangoInstall/">
+            <time datetime="2015-01-12T16:00:00.000Z" itemprop="datePublished">2015-01-13</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/PYTHON/">PYTHON</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Ubuntu/">Ubuntu</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="Apache安装："><a href="#Apache安装：" class="headerlink" title="Apache安装："></a>Apache安装：</h3><p>第一步：安装Apache2。</p>
+<pre><code>sudo apt-get install apache2
+</code></pre><p>第二步：安装mod_wsgi。</p>
+<pre><code>sudo apt-get install libapache2-mod-wsgi
+</code></pre><a id="more"></a>
+<hr>
+<h3 id="MySQL安装："><a href="#MySQL安装：" class="headerlink" title="MySQL安装："></a>MySQL安装：</h3><p>第一步：安装MySQL server。</p>
+<pre><code>sudo apt-get install mysql-server
+</code></pre><blockquote>
+<p>注意这个过程会要求输入密码，之后登陆mysql都要输入这个密码</p>
+</blockquote>
+<p>第二步：安装MySQL的python接口。</p>
+<pre><code>sudo apt-get install python-mysqldb
+</code></pre><hr>
+<h3 id="Django安装："><a href="#Django安装：" class="headerlink" title="Django安装："></a>Django安装：</h3><p>Ubuntu下安装最新的django可以直接打开终端执行：</p>
+<pre><code>pip install  django
+</code></pre><p>或者指定安装版本：</p>
+<pre><code>pip install -v django==1.7.1
+</code></pre><p>也可手动下载安装包再进行安装：</p>
+<p>第一步：下载Django软件包。</p>
+<p>可以从Django的官网下载<a href="https://www.djangoproject.com/m/releases/1.7/Django-1.7.6.tar.gz" target="_blank" rel="noopener">Django-1.7.6.tar.gz</a></p>
+<p>第二步：解压缩Django软件包。</p>
+<p>第三步：安装Django软件包。</p>
+<p>cd进入解压缩得到的文件夹，然后输入</p>
+<pre><code>sudo python setup.py install
+</code></pre><p>安装完成！</p>
+<hr>
+<h3 id="测试Django安装结果："><a href="#测试Django安装结果：" class="headerlink" title="测试Django安装结果："></a>测试Django安装结果：</h3><p><img src="/src/imgs/1503/13_django_install_result.png" alt="13_django_install_result.png"></p>
+<hr>
+<h3 id="创建第一个Django项目："><a href="#创建第一个Django项目：" class="headerlink" title="创建第一个Django项目："></a>创建第一个Django项目：</h3><pre><code>django-admin.py startproject DjangoApp
+cd DjangoApp
+python manage.py runserver
+</code></pre><p><img src="/src/imgs/1503/13_run_first_django_app.png" alt="13_run_first_django_app.png"></p>
+<p>接着就在浏览器中打开<a href="http://127.0.0.1:8000/" target="_blank" rel="noopener">http://127.0.0.1:8000/</a>,会出现Django的欢迎界面了：</p>
+<p><img src="/src/imgs/1503/13_django_welcome.png" alt="13_django_welcome.png"></p>
+<hr>
+<h3 id="创建一个Django程序："><a href="#创建一个Django程序：" class="headerlink" title="创建一个Django程序："></a>创建一个Django程序：</h3><p>在项目的根目录下执行：</p>
+<pre><code>python manage.py startapp LV
+</code></pre><p>接着就会发现目录下面新建了一个LV程序</p>
+<blockquote>
+<p>还要记得在DjangoApp/DjangoApp/settings.py中找到INSTALLED_APPS，在其中添加<code>LV</code></p>
+</blockquote>
+<hr>
+<h3 id="配置数据库："><a href="#配置数据库：" class="headerlink" title="配置数据库："></a>配置数据库：</h3><p>第一步：登陆mysql。<br>    mysql -u root -p</p>
+<p>接着再输入安装mysql时输入的密码即可</p>
+<p>接着创建数据库，在终端继续执行：</p>
+<pre><code>create database django_app
+</code></pre><p>第二步：配置Django项目中的settings.py,在刚刚创建的DjangoApp/DjangoApp/目录下的settings.py文件中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">'default'</span>: &#123;</span><br><span class="line">        <span class="string">'ENGINE'</span>: <span class="string">'django.db.backends.mysql'</span>, <span class="comment"># Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.也就是告诉Django使用mysql数据库</span></span><br><span class="line">        <span class="string">'NAME'</span>: <span class="string">'django_app'</span>,                      <span class="comment"># Or path to database file if using sqlite3.填写刚刚创建的数据库名称</span></span><br><span class="line">        <span class="comment"># The following settings are not used with sqlite3:</span></span><br><span class="line">        <span class="string">'USER'</span>: <span class="string">'root'</span>,                      <span class="comment">#mysql用户名</span></span><br><span class="line">        <span class="string">'PASSWORD'</span>: <span class="string">'1992'</span>,                  <span class="comment">#msql密码</span></span><br><span class="line">        <span class="string">'HOST'</span>: <span class="string">'127.0.0.1'</span>,                 <span class="comment"># Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.本机地址</span></span><br><span class="line">        <span class="string">'PORT'</span>: <span class="string">'3306'</span>,                      <span class="comment"># Set to empty string for default.端口号</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第三步：现在自己定义一个表，并在通过Django自动在数据库中创建这个表。</p>
+<p>首先在/DjangoApp/LV/models.py中添加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your models here.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span><span class="params">(models.Model)</span> :</span></span><br><span class="line">    title = models.CharField(max_length = <span class="number">100</span>)  <span class="comment">#title</span></span><br><span class="line">    category = models.CharField(max_length = <span class="number">50</span>, blank = <span class="keyword">True</span>)  <span class="comment">#tags</span></span><br><span class="line">    date_time = models.DateTimeField(auto_now_add = <span class="keyword">True</span>)  <span class="comment">#date</span></span><br><span class="line">    content = models.TextField(blank = <span class="keyword">True</span>, null = <span class="keyword">True</span>)  <span class="comment">#content</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__unicode__</span><span class="params">(self)</span> :</span></span><br><span class="line">        <span class="keyword">return</span> self.title</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span>  <span class="comment">#order by date desc</span></span><br><span class="line">        ordering = [<span class="string">'-date_time'</span>]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>每个Django Model都继承自 django.db.models.Model都相当于一个表，而model的每一个属性都相当于这个表的一个字段</p>
+</li>
+<li><p>通过 Django Model API 可以执行数据库的增删改查, 而不需要写一些数据库的查询语句</p>
+</li>
+</ul>
+<p>第四步：在DjangoApp根目录下执行：</p>
+<pre><code>    python manage.py syncdb
+</code></pre><p>然后还会提示创建Django超级用户，依次输入相yes,root,邮箱,密码即可。</p>
+<p>!<img src="/src/imgs/1503/13_django_syncdb.png" alt="13_django_syncdb.png"></p>
+<p>接着就显示创建成功了。</p>
+<p>进入数据库即可发现，出现了一张新的表 <code>LV_article</code></p>
+<p><strong> 以后如果要创建一个新表，就不用执行<code>python manage.py syncdb</code>了,需要做以下几个步骤：</strong></p>
+<ol>
+<li>修改 models.py 文件</li>
+<li>运行 python manage.py makemigrations 创建迁移语句</li>
+<li>运行 python manage.py migrate ，将模型的改变迁移到数据库中</li>
+</ol>
+<hr>
+<h3 id="打开Django自带的管理界面"><a href="#打开Django自带的管理界面" class="headerlink" title="打开Django自带的管理界面"></a>打开Django自带的管理界面</h3><p>首先在DjangoApp/DjangoApp/settings.py中INSTALLED_APPS部分添加</p>
+<pre><code>&#39;django.contrib.admin&#39;,  #add admin function
+</code></pre><p>然后在DjangoApp/DjangoApp/urls.py中修改内容，原有的注释已被删除</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> patterns, include, url</span><br><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line">admin.autodiscover()</span><br><span class="line"></span><br><span class="line">urlpatterns = patterns(<span class="string">''</span>,</span><br><span class="line">    url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),  <span class="comment">#enter admin background through url</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>接着在浏览器中打开<a href="http://127.0.0.1:8000/admin/，再输入创建Django超级用户时填写的用户名和密码即可成功进入管理页面：" target="_blank" rel="noopener">http://127.0.0.1:8000/admin/，再输入创建Django超级用户时填写的用户名和密码即可成功进入管理页面：</a></p>
+<p><img src="/src/imgs/1503/13_django_admin.png" alt="13_django_admin.png"></p>
+<blockquote>
+<p>另外可以通过安装Bootstrap来改善界面： pip install bootstrap-admin</p>
+</blockquote>
+<h3 id="可以看到管理页面只有Groups和Users，下面将之前创建的Article也加入到管理页面来"><a href="#可以看到管理页面只有Groups和Users，下面将之前创建的Article也加入到管理页面来" class="headerlink" title="可以看到管理页面只有Groups和Users，下面将之前创建的Article也加入到管理页面来"></a>可以看到管理页面只有Groups和Users，下面将之前创建的Article也加入到管理页面来</h3><p>修改<code>DjangoApp/Lv/admin.py</code>内容，添加Article：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"><span class="keyword">from</span> LV.models <span class="keyword">import</span> Article</span><br><span class="line"><span class="comment"># Register your models here.</span></span><br><span class="line">admin.site.register(Article)</span><br></pre></td></tr></table></figure>
+<p>之后就可以直接添加Article数据了。</p>
+<hr>
+<h3 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h3><ul>
+<li><p>Django官网:<a href="https://www.djangoproject.com/" target="_blank" rel="noopener">https://www.djangoproject.com/</a></p>
+</li>
+<li><p>如何创建一个Django网站:<a href="http://blog.javachen.com/2014/01/11/how-to-create-a-django-site/" target="_blank" rel="noopener">http://blog.javachen.com/2014/01/11/how-to-create-a-django-site/</a></p>
+</li>
+<li><p>The Django Book:<a href="http://djangobook.py3k.cn/2.0/chapter02/" target="_blank" rel="noopener">http://djangobook.py3k.cn/2.0/chapter02/</a></p>
+</li>
+<li><p>开发环境和Django安装:<a href="http://andrew-liu.gitbooks.io/django-blog/content/kai_fa_huan_jing_he_django_an_zhuang.html" target="_blank" rel="noopener">http://andrew-liu.gitbooks.io/django-blog/content/kai_fa_huan_jing_he_django_an_zhuang.html</a></p>
+</li>
+<li><p>MySql命令行:<a href="http://baike.baidu.com/link?url=U1jfiMYK86lqZL-iK1KK9F0RtcIMZD2-k2C4JCXys5B0y2RiaHUhFZzNj4purQeFm-ERDzgCgHFRAWcStD0bkgcByA5V1rNboc1_3R73253qfIsqZCDBIGFA394Zgyp3#1" target="_blank" rel="noopener">http://baike.baidu.com/link?url=U1jfiMYK86lqZL-iK1KK9F0RtcIMZD2-k2C4JCXys5B0y2RiaHUhFZzNj4purQeFm-ERDzgCgHFRAWcStD0bkgcByA5V1rNboc1_3R73253qfIsqZCDBIGFA394Zgyp3#1</a></p>
+</li>
+</ul>
+<hr>
+<h3 id="Windows下安装Python以及Django的步骤："><a href="#Windows下安装Python以及Django的步骤：" class="headerlink" title="Windows下安装Python以及Django的步骤："></a>Windows下安装Python以及Django的步骤：</h3><ul>
+<li><a href="http://jingyan.baidu.com/article/466506580e7d29f549e5f8b6.html" target="_blank" rel="noopener">http://jingyan.baidu.com/article/466506580e7d29f549e5f8b6.html</a></li>
+</ul>
+<blockquote>
+<p>Windows如果要使用Mysql作为Django作为数据库，首先要安装这个包 <a href="/raw/attach/1505/setuptools-15.1.zip">/raw/attach/1505/setuptools-15.1.zip</a></p>
+</blockquote>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/01/13/2015-01-13-PythonDjangoInstall/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/03/10/2015-03-10-OtherUMLClassPoints/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    UML类图要点
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/01/09/2015-01-09-FrameworksSettingsUnlockMethods/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android设置模块解锁方式详细分析</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

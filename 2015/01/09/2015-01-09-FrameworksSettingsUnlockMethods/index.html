@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android设置模块解锁方式详细分析 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="我们先从无，也就是不使用锁屏方式，开始分析。 1. 首先进入设置-安全界面此时对应的就是Settings模块下的 SecuritySettings.java文件，点击屏幕锁定，执行onPreferenceTreeClick方法，可以看到走的是下面这段代码： startFragment(this, &amp;quot;com.android.settings.ChooseLockGeneric$Choose">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android设置模块解锁方式详细分析">
+<meta property="og:url" content="http://ai.wisim.me/2015/01/09/2015-01-09-FrameworksSettingsUnlockMethods/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="我们先从无，也就是不使用锁屏方式，开始分析。 1. 首先进入设置-安全界面此时对应的就是Settings模块下的 SecuritySettings.java文件，点击屏幕锁定，执行onPreferenceTreeClick方法，可以看到走的是下面这段代码： startFragment(this, &amp;quot;com.android.settings.ChooseLockGeneric$Choose">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_chooseunlock.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_quality_unspecified.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_clearLock.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_selected_unlock.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_isLockScreenDisabled.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_chooseanotherunlock.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_pattern_setlong.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_security_settings_pattern.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1501/09_getKeyguardStoredPasswordQuality.png">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android设置模块解锁方式详细分析">
+<meta name="twitter:description" content="我们先从无，也就是不使用锁屏方式，开始分析。 1. 首先进入设置-安全界面此时对应的就是Settings模块下的 SecuritySettings.java文件，点击屏幕锁定，执行onPreferenceTreeClick方法，可以看到走的是下面这段代码： startFragment(this, &amp;quot;com.android.settings.ChooseLockGeneric$Choose">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1501/09_chooseunlock.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-01-09-FrameworksSettingsUnlockMethods" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android设置模块解锁方式详细分析
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/01/09/2015-01-09-FrameworksSettingsUnlockMethods/">
+            <time datetime="2015-01-08T16:00:00.000Z" itemprop="datePublished">2015-01-09</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="我们先从无，也就是不使用锁屏方式，开始分析。"><a href="#我们先从无，也就是不使用锁屏方式，开始分析。" class="headerlink" title="我们先从无，也就是不使用锁屏方式，开始分析。"></a><strong>我们先从<code>无</code>，也就是不使用锁屏方式，开始分析。</strong></h3><hr>
+<h4 id="1-首先进入设置-安全界面"><a href="#1-首先进入设置-安全界面" class="headerlink" title="1. 首先进入设置-安全界面"></a><strong>1. 首先进入<code>设置-安全</code>界面</strong></h4><p>此时对应的就是Settings模块下的 SecuritySettings.java文件，点击<code>屏幕锁定</code>，执行<code>onPreferenceTreeClick</code>方法，可以看到走的是下面这段代码：</p>
+<pre><code>startFragment(this, &quot;com.android.settings.ChooseLockGeneric$ChooseLockGenericFragment&quot;,SET_OR_CHANGE_LOCK_METHOD_REQUEST, null);
+</code></pre><p>也就是进入了下面这个界面<code>选择屏幕锁定方式</code>这个界面。</p>
+<a id="more"></a>
+<blockquote>
+<p>位于 <code>选择屏幕锁定方式</code> 下的选择屏幕锁定方式界面中共有如下几种解锁方式：</p>
+</blockquote>
+<p><img src="/src/imgs/1501/09_chooseunlock.png" alt="09_chooseunlock.png"></p>
+<h4 id="2-上面图片显示的这个界面对应的就是ChooseLockGeneric-java文件，所以先从它开始。"><a href="#2-上面图片显示的这个界面对应的就是ChooseLockGeneric-java文件，所以先从它开始。" class="headerlink" title="2. 上面图片显示的这个界面对应的就是ChooseLockGeneric.java文件，所以先从它开始。"></a>2. 上面图片显示的这个界面对应的就是ChooseLockGeneric.java文件，所以先从它开始。</h4><p>它有一个内部类 <code>ChooseLockGenericFragment extends SettingsPreferenceFragment</code> 。</p>
+<h4 id="3-在ChooseLockGenericFragment的updatePreferencesOrFinish-方法中有这样一行代码用于显示所有的解锁方式："><a href="#3-在ChooseLockGenericFragment的updatePreferencesOrFinish-方法中有这样一行代码用于显示所有的解锁方式：" class="headerlink" title="3. 在ChooseLockGenericFragment的updatePreferencesOrFinish()方法中有这样一行代码用于显示所有的解锁方式："></a>3. 在ChooseLockGenericFragment的updatePreferencesOrFinish()方法中有这样一行代码用于显示所有的解锁方式：</h4><pre><code>addPreferencesFromResource(R.xml.security_settings_picker);
+</code></pre><p>/src/xml/security_settings_picker.xml这个文件，就是用来配置所有解锁方式的文件，来看看它的源码:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PreferenceScreen</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PreferenceScreen</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:key</span>=<span class="string">"unlock_set_off"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:title</span>=<span class="string">"@string/unlock_set_unlock_off_title"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:persistent</span>=<span class="string">"false"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PreferenceScreen</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:key</span>=<span class="string">"unlock_set_none"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:title</span>=<span class="string">"@string/unlock_set_unlock_none_title"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:persistent</span>=<span class="string">"false"</span>/&gt;</span></span><br><span class="line">    ............</span><br><span class="line">    <span class="tag">&lt;<span class="name">PreferenceScreen</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:key</span>=<span class="string">"unlock_set_fingerprint"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:title</span>=<span class="string">"@string/unlock_set_unlock_fingerprint_title"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:persistent</span>=<span class="string">"false"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PreferenceScreen</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>因此如果要添加一个新的解锁方式，首先在界面上添加就是要修改这个文件，这里的<code>unlock_set_fingerprint</code>就是我自己添加的，也就是指纹解锁。</p>
+<h4 id="4-继续看ChooseLockGenericFragment的-onPreferenceTreeClick-方法，这个方法就是处理每一项的点击事件的方法。"><a href="#4-继续看ChooseLockGenericFragment的-onPreferenceTreeClick-方法，这个方法就是处理每一项的点击事件的方法。" class="headerlink" title="4. 继续看ChooseLockGenericFragment的 onPreferenceTreeClick()方法，这个方法就是处理每一项的点击事件的方法。"></a>4. 继续看ChooseLockGenericFragment的 onPreferenceTreeClick()方法，这个方法就是处理每一项的点击事件的方法。</h4><p>如果我们选择<code>无</code>，也就是没有锁屏，点亮屏幕直接进入主屏，走的就是这个if语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> String key = preference.getKey();</span><br><span class="line"><span class="keyword">if</span> (KEY_UNLOCK_SET_OFF.equals(key) ) &#123;</span><br><span class="line">    updateUnlockMethodAndFinish(DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里直接将事件交给了 updateUnlockMethodAndFinish(int quality, boolean disabled)方法处理。</p>
+<p>这个方法的第一个参数表示解锁方式的等级，在android.app.admin.DevicePolicyManager.java中定义了各个解锁方式对应的等级值，从小到大，表示解锁方式安全性的由弱到强：</p>
+<p><code>无</code>和<code>滑动</code>两个对应的值都是<code>PASSWORD_QUALITY_UNSPECIFIED = 0</code></p>
+<p>注意这个方法的第二个参数disabled是一个boolean值，如果不使用任何解锁方式，也就是<code>无</code>，那么updateUnlockMethodAndFinish中的这个值就应该传入true；否则都应该传入false，所以源码中只有处理<code>无</code>选项的updateUnlockMethodAndFinish方法传入了true，其他都传入false。</p>
+<h4 id="5-那么下面理所当然就是看updateUnlockMethodAndFinish方法了。"><a href="#5-那么下面理所当然就是看updateUnlockMethodAndFinish方法了。" class="headerlink" title="5. 那么下面理所当然就是看updateUnlockMethodAndFinish方法了。"></a>5. 那么下面理所当然就是看updateUnlockMethodAndFinish方法了。</h4><p>由于我们这里分析的是<code>无</code>选项，所以只看它对应的代码：</p>
+<p><img src="/src/imgs/1501/09_quality_unspecified.png" alt="09_quality_unspecified.png"></p>
+<p>mChooseLockSettingsHelper.utils().clearLock(false);这行代码是用来清除所有的锁屏方式的，看一下它里面的代码：</p>
+<p><img src="/src/imgs/1501/09_clearLock.png" alt="09_clearLock.png"></p>
+<p>注释也写的很清楚：Clear any lock pattern or password;</p>
+<p>而 mChooseLockSettingsHelper.utils().setLockScreenDisabled(disabled);这个disabled值就是上面传进来的true，也就是意味着不使用任何解锁方法</p>
+<h4 id="6-接着finish之后会回调-SecuritySettings-中的onActivityResult-方法。"><a href="#6-接着finish之后会回调-SecuritySettings-中的onActivityResult-方法。" class="headerlink" title="6. 接着finish之后会回调 SecuritySettings 中的onActivityResult()方法。"></a>6. 接着finish之后会回调 SecuritySettings 中的onActivityResult()方法。</h4><p>这个方法里面会调用 createPreferenceHierarchy()方法，而这个方法中的<code>addPreferencesFromResource(resid);</code>就是在SecuritySettings界面显示刚刚选择的解锁方式,如图：</p>
+<p><img src="/src/imgs/1501/09_selected_unlock.png" alt="09_selected_unlock.png"></p>
+<p>我们来仔细看一下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!mLockPatternUtils.isSecure()) &#123;</span><br><span class="line">    <span class="comment">// if there are multiple users, disable "None" setting</span></span><br><span class="line">    UserManager mUm = (UserManager) getSystemService(Context.USER_SERVICE);</span><br><span class="line">    List&lt;UserInfo&gt; users = mUm.getUsers(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> singleUser = users.size() == <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (singleUser &amp;&amp; mLockPatternUtils.isLockScreenDisabled()) &#123;</span><br><span class="line">        resid = R.xml.security_settings_lockscreen;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      Log.e(<span class="string">"SecuritySettings"</span>,<span class="string">"SecuritySettings--&gt;createPreferenceHierarchy--&gt; security_settings_chooser()"</span>);</span><br><span class="line">        resid = R.xml.security_settings_chooser;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">addPreferencesFromResource(resid);</span><br></pre></td></tr></table></figure>
+<p>R.xml.security_settings_lockscreen是<code>无</code>对应的布局；resid = R.xml.security_settings_chooser是<code>滑动</code>解锁对应的布局。</p>
+<p>看一下mLockPatternUtils.isLockScreenDisabled()这个方法：</p>
+<p><img src="/src/imgs/1501/09_isLockScreenDisabled.png" alt="09_isLockScreenDisabled.png"></p>
+<p>也就是说如果是isSecure()为false，并且getLong的值不为0，就显示<code>无</code>。</p>
+<p>getLong的值在刚刚的setLockScreenDisabled(disabled)中已经设置为 1 了。所以就来看看isSecure()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isSecure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> mode = getKeyguardStoredPasswordQuality();</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> isPattern = mode == DevicePolicyManager.PASSWORD_QUALITY_SOMETHING;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> isPassword = mode == DevicePolicyManager.PASSWORD_QUALITY_NUMERIC</span><br><span class="line">            || mode == DevicePolicyManager.PASSWORD_QUALITY_ALPHABETIC</span><br><span class="line">            || mode == DevicePolicyManager.PASSWORD_QUALITY_ALPHANUMERIC</span><br><span class="line">            || mode == DevicePolicyManager.PASSWORD_QUALITY_COMPLEX;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> secure = isPattern &amp;&amp; isIphoneLockPatternEnabled() &amp;&amp; savedPatternExists()</span><br><span class="line">            || isPassword &amp;&amp; savedPasswordExists();</span><br><span class="line">    <span class="keyword">return</span> secure;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于当前的mode是DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED，所以isPattern为false，所以isSecure()肯定返回false了。</p>
+<p>最终我们看到的就是<code>无</code>这个选项了。</p>
+<h4 id="另外，滑动解锁与无的唯一区别就是-调用-updateUnlockMethodAndFinish-DevicePolicyManager-PASSWORD-QUALITY-UNSPECIFIED-true-是传入的是true，也就是使用锁屏，而无传入的这个值是false。"><a href="#另外，滑动解锁与无的唯一区别就是-调用-updateUnlockMethodAndFinish-DevicePolicyManager-PASSWORD-QUALITY-UNSPECIFIED-true-是传入的是true，也就是使用锁屏，而无传入的这个值是false。" class="headerlink" title="另外，滑动解锁与无的唯一区别就是,调用 updateUnlockMethodAndFinish(DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED, true) 是传入的是true，也就是使用锁屏，而无传入的这个值是false。"></a>另外，滑动解锁与无的唯一区别就是,调用 updateUnlockMethodAndFinish(DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED, true) 是传入的是<code>true</code>，也就是使用锁屏，而<code>无</code>传入的这个值是<code>false</code>。</h4><hr>
+<h3 id="接着来看一下选择图案解锁方式的流程"><a href="#接着来看一下选择图案解锁方式的流程" class="headerlink" title="接着来看一下选择图案解锁方式的流程"></a>接着来看一下选择<code>图案</code>解锁方式的流程</h3><h4 id="1-之前的步骤都一样，所以我们从上面的步骤4开始分析。"><a href="#1-之前的步骤都一样，所以我们从上面的步骤4开始分析。" class="headerlink" title="1. 之前的步骤都一样，所以我们从上面的步骤4开始分析。"></a>1. 之前的步骤都一样，所以我们从上面的<code>步骤4</code>开始分析。</h4><p>执行onPreferenceTreeClick方法之后，因为选择的是<code>图案</code>解锁，走的就是这个if语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (KEY_UNLOCK_SET_PATTERN.equals(key)) &#123;</span><br><span class="line">  updateUnlockMethodAndFinish(DevicePolicyManager.PASSWORD_QUALITY_SOMETHING, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>DevicePolicyManager.PASSWORD_QUALITY_SOMETHING的值是0x10000</p>
+<h4 id="2-看一下它调用调用updateUnlockMethodAndFinish-方法，走的是哪段代码："><a href="#2-看一下它调用调用updateUnlockMethodAndFinish-方法，走的是哪段代码：" class="headerlink" title="2. 看一下它调用调用updateUnlockMethodAndFinish()方法，走的是哪段代码："></a>2. 看一下它调用调用updateUnlockMethodAndFinish()方法，走的是哪段代码：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (quality == DevicePolicyManager.PASSWORD_QUALITY_SOMETHING) &#123;</span><br><span class="line">      Intent intent = <span class="keyword">new</span> Intent(getActivity(), ChooseLockPattern.class);</span><br><span class="line">      intent.putExtra(<span class="string">"key_lock_method"</span>, <span class="string">"pattern"</span>);</span><br><span class="line">      intent.putExtra(CONFIRM_CREDENTIALS, <span class="keyword">false</span>);</span><br><span class="line">      intent.putExtra(IphoneLockPatternUtils.LOCKSCREEN_WEAK_FALLBACK,</span><br><span class="line">              isFallback);   <span class="comment">//M: modify for voice unlock</span></span><br><span class="line">      <span class="keyword">if</span> (isFallback) &#123;</span><br><span class="line">          <span class="comment">//M: add for voice unlock @&#123;</span></span><br><span class="line">          String isFallbackFor = getActivity().getIntent().</span><br><span class="line">              getStringExtra(IphoneLockPatternUtils.LOCKSCREEN_WEAK_FALLBACK_FOR);</span><br><span class="line">          String commandKey = getActivity().getIntent().</span><br><span class="line">              getStringExtra(IphoneLockPatternUtils.SETTINGS_COMMAND_KEY);</span><br><span class="line">          String commandValue = getActivity().getIntent().</span><br><span class="line">              getStringExtra(IphoneLockPatternUtils.SETTINGS_COMMAND_VALUE);</span><br><span class="line">          intent.putExtra(IphoneLockPatternUtils.SETTINGS_COMMAND_KEY, commandKey);</span><br><span class="line">          intent.putExtra(IphoneLockPatternUtils.SETTINGS_COMMAND_VALUE, commandValue);</span><br><span class="line">          intent.putExtra(IphoneLockPatternUtils.LOCKSCREEN_WEAK_FALLBACK_FOR, isFallbackFor);</span><br><span class="line">          <span class="comment">//@&#125;</span></span><br><span class="line">          startActivityForResult(intent, FALLBACK_REQUEST);</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          mFinishPending = <span class="keyword">true</span>;</span><br><span class="line">          intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);</span><br><span class="line">          startActivity(intent);</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>来看一下这段代码中的<code>if (isFallback) {...}</code>部分：</p>
+<p>首先值得一提的是，如果我们选择一种安全性比较弱（介于 UNSPECIFIED 和SOMETHING之间）的解锁方式，例如<code>语音解锁</code>，那么我们不仅要录如自己的语音命令，还要选择一个备用的解锁方式，如图：</p>
+<p><img src="/src/imgs/1501/09_chooseanotherunlock.png" alt="09_chooseanotherunlock.png"></p>
+<p>这里的这个<code>isFallback</code>就是用来判断当前这个图案解锁方式，是直接选择的呢，还是其他解锁方式的备用解锁方式。如果是直接选择的，那就直接<code>startActivity(intent);</code>，否则就<code>startActivityForResult(intent, FALLBACK_REQUEST);</code></p>
+<p>我们暂且先考虑直接选择<code>图案</code>解锁这种情形，也就是走<code>else</code>部分。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);</span><br><span class="line">startActivity(intent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以这种方式启动Activity的意思就是说，因为ChooseLockGeneric是由SecuritySettings启动的，所以ChooseLockGeneric启动ChooseLockPattern之后，<br>ChooseLockPattern的setResult方法会将结果返回给SecuritySettings而不是ChooseLockGeneric.java,这是应该注意的。</p>
+<h4 id="3-接着就是绘制两次图案了，在ChooseLockPattern中的saveChosenPatternAndFinish-方法中有这样一行代码："><a href="#3-接着就是绘制两次图案了，在ChooseLockPattern中的saveChosenPatternAndFinish-方法中有这样一行代码：" class="headerlink" title="3. 接着就是绘制两次图案了，在ChooseLockPattern中的saveChosenPatternAndFinish()方法中有这样一行代码："></a>3. 接着就是绘制两次图案了，在ChooseLockPattern中的saveChosenPatternAndFinish()方法中有这样一行代码：</h4><pre><code>  utils.saveIphoneLockPattern(mChosenPattern, isFallback, isFallbackFor);
+</code></pre><p>看一下这个方法的内部：</p>
+<p><img src="/src/imgs/1501/09_pattern_setlong.png" alt="09_pattern_setlong.png"></p>
+<p>setLong(PASSWORD_TYPE_KEY, DevicePolicyManager.PASSWORD_QUALITY_SOMETHING);其实就是用来标识<code>图案</code>解锁这种方式的，在下面的显示解锁方式时会用到。</p>
+<h4 id="4-最后还是来看一下SecuritySettings-java中的createPreferenceHierarchy-方法："><a href="#4-最后还是来看一下SecuritySettings-java中的createPreferenceHierarchy-方法：" class="headerlink" title="4. 最后还是来看一下SecuritySettings.java中的createPreferenceHierarchy()方法："></a>4. 最后还是来看一下SecuritySettings.java中的createPreferenceHierarchy()方法：</h4><p><img src="/src/imgs/1501/09_security_settings_pattern.png" alt="09_security_settings_pattern.png"></p>
+<p>首先要判断mLockPatternUtils.getKeyguardStoredPasswordQuality()的值，来看一下这个方法的具体实现：</p>
+<p><img src="/src/imgs/1501/09_getKeyguardStoredPasswordQuality.png" alt="09_getKeyguardStoredPasswordQuality.png"></p>
+<p>一目了然，这个getLong获取的值就是上面我们提到的标识<code>图案</code>解锁的值，所以必然走的是这个case:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> DevicePolicyManager.PASSWORD_QUALITY_SOMETHING:</span><br><span class="line">    resid = R.xml.security_settings_pattern;</span><br><span class="line">    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p>最终显示出来的就是我们选择了<code>图案解锁</code>。</p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/01/09/2015-01-09-FrameworksSettingsUnlockMethods/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/01/13/2015-01-13-PythonDjangoInstall/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Ubuntu 12.04 下配置Django开发环境
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/01/07/2015-01-07-FrameworksSettingsAddDislplayOption/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android Settings模块浅析-添加新的显示选项</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

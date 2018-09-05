@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Django 视图Views和URL配置 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Django 中 views 里面的代码就是一个一个函数逻辑，处理客户端(浏览器)发送的 HTTPRequest，然后返回 HTTPResponse。  编写第一个视图 首先在/DjangoApp/LV/views.py中导入HttpResponse模块，再创建一个函数并返回HTTPResponse。：  123456from django.shortcuts import renderfrom">
+<meta name="keywords" content="Django">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django 视图Views和URL配置">
+<meta property="og:url" content="http://ai.wisim.me/2015/03/14/2015-03-14-PythonDjangpViewUrl/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="Django 中 views 里面的代码就是一个一个函数逻辑，处理客户端(浏览器)发送的 HTTPRequest，然后返回 HTTPResponse。  编写第一个视图 首先在/DjangoApp/LV/views.py中导入HttpResponse模块，再创建一个函数并返回HTTPResponse。：  123456from django.shortcuts import renderfrom">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1503/14_edit_article.png">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Django 视图Views和URL配置">
+<meta name="twitter:description" content="Django 中 views 里面的代码就是一个一个函数逻辑，处理客户端(浏览器)发送的 HTTPRequest，然后返回 HTTPResponse。  编写第一个视图 首先在/DjangoApp/LV/views.py中导入HttpResponse模块，再创建一个函数并返回HTTPResponse。：  123456from django.shortcuts import renderfrom">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1503/14_edit_article.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-03-14-PythonDjangpViewUrl" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Django 视图Views和URL配置
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/03/14/2015-03-14-PythonDjangpViewUrl/">
+            <time datetime="2015-03-13T16:00:00.000Z" itemprop="datePublished">2015-03-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/PYTHON/">PYTHON</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Django/">Django</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <blockquote>
+<p>Django 中 views 里面的代码就是一个一个函数逻辑，处理客户端(浏览器)发送的 HTTPRequest，然后返回 HTTPResponse。</p>
+</blockquote>
+<h3 id="编写第一个视图"><a href="#编写第一个视图" class="headerlink" title="编写第一个视图"></a>编写第一个视图</h3><p><strong> 首先在/DjangoApp/LV/views.py中导入HttpResponse模块，再创建一个函数并返回HTTPResponse。： </strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render</span><br><span class="line"><span class="keyword">from</span> django.http <span class="keyword">import</span> HttpResponse</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">"Hello World, Django"</span>)</span><br></pre></td></tr></table></figure>
+<p><strong> 接着在/DjangoApp/DjangoApp/urls.py中设置这个视图对应的url： </strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = patterns(<span class="string">''</span>,</span><br><span class="line">    url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),</span><br><span class="line">    url(<span class="string">r'^$'</span>, <span class="string">'LV.views.hello'</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>这里的匹配规则是：</p>
+<pre><code>^ ： 表示开始匹配字符串
+$ ： 表示结束匹配字符串
+</code></pre><p>也就是字符串为空，所以我们最终匹配的地址应该还是<code>127.0.0.1:8000</code></p>
+<p><strong> 然后在浏览器中打开127.0.0.1:8000，即可看页面上到输出<code>Hello World, Django</code> </strong></p>
+<ul>
+<li>url()函数有四个参数, 两个是必须的:regex和view, 两个可选的:kwargs和name</li>
+<li>第一个参数regex也就是正则匹配，Django将浏览器请求的URL从上倒下一次匹配，直到匹配出一个为止，另外即使有多个匹配，也知会匹配第一个符合条件的。</li>
+<li>第二个参数view，如果上面的过程完毕之后成功匹配到一个URL，就会调用这个view中指定的函数，比如上面执行了hello函数。</li>
+<li>第三个参数kwargs任意关键字参数可传一个字典至目标view</li>
+</ul>
+<hr>
+<h3 id="带参数的视图"><a href="#带参数的视图" class="headerlink" title="带参数的视图"></a>带参数的视图</h3><p><strong> 在/DjangoApp/LV/views.py中创建一个新的带参数的函数： </strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">answerme</span><span class="params">(request,name)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">"Hello Django, i am %s"</span>%name)</span><br></pre></td></tr></table></figure>
+<p><strong> 在/DjangoApp/DjangoApp/urls.py中添加url： </strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url(<span class="string">r'^(?P&lt;your_name&gt;\D+)/$'</span>,<span class="string">'LV.views.anserme'</span>,name=<span class="string">'anserme'</span>),</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>^(?P<my_args>\d+)/$这个正则表达式的意思是将传入的非数字字符作为参数传递到views中的<code>answerme</code>作为参数, 其中?P<my_args>定义名称用于标识匹配的内容</my_args></my_args></p>
+</blockquote>
+<p>这里的匹配规则是：</p>
+<pre><code>\D ： 匹配任意非数字的字符
++ ： 表示重复一次或更多次
+</code></pre><p>在浏览器中打开<code>127.0.0.1:8000/your_name</code>，就会显示<code>Hello Django, i am your_name</code>了，这里的<code>your_name</code>可以随便输入一个不为数字的字符串。</p>
+<h3 id="当然同样也可以定义另外一个函数，用于接受年龄"><a href="#当然同样也可以定义另外一个函数，用于接受年龄" class="headerlink" title="当然同样也可以定义另外一个函数，用于接受年龄"></a>当然同样也可以定义另外一个函数，用于接受年龄</h3><p><strong> 在/DjangoApp/LV/views.py中创建一个新的带参数的函数：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">answerme_age</span><span class="params">(request,age)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">"Hello Django, i am %s years old."</span>%age)</span><br></pre></td></tr></table></figure>
+<p><strong> 不过这时候的匹配规则就要变化了，在/DjangoApp/DjangoApp/urls.py中添加url： </strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url(<span class="string">r'^(?P&lt;age&gt;\d+)/$'</span>,<span class="string">'LV.views.answerme_age'</span>,name=<span class="string">'answerme_age'</span>),</span><br></pre></td></tr></table></figure>
+<p>在浏览器中打开<code>127.0.0.1:8000/24</code>，就会显示<code>Hello Django, i am 24 years old</code>了，这里的<code>24</code>就是我输入的年纪了。</p>
+<hr>
+<h3 id="传入参数访问数据库"><a href="#传入参数访问数据库" class="headerlink" title="传入参数访问数据库"></a>传入参数访问数据库</h3><p>之前已经在管理页面添加了Article的model了，所以我们在管理页面<a href="http://127.0.0.1:8000/admin/LV/article/" target="_blank" rel="noopener">http://127.0.0.1:8000/admin/LV/article/</a>就可以直接操作Article了，<br>Django会自动将我们的操作同步到数据库</p>
+<p><strong> 这里我们可以直接插入一条记录 </strong></p>
+<p><img src="/src/imgs/1503/14_edit_article.png" alt="14_edit_article.png"></p>
+<p><strong> 同样，在/DjangoApp/LV/views.py中创建一个新的带参数的函数，记得要导入Article：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> LV.models <span class="keyword">import</span> Article</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">detail</span><span class="params">(request, my_args)</span>:</span></span><br><span class="line">    post = Article.objects.all()[int(my_args)]</span><br><span class="line">    str = (<span class="string">"title = %s, category = %s, content = %s"</span>%(post.title,post.category,post.content))</span><br><span class="line">    <span class="keyword">return</span> HttpResponse(str)</span><br></pre></td></tr></table></figure>
+<p><strong> 在/DjangoApp/DjangoApp/urls.py中添加url： </strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url(<span class="string">r'^(?P&lt;my_args&gt;\d+)/$'</span>, <span class="string">'LV.views.detail'</span>, name=<span class="string">'detail'</span>),</span><br></pre></td></tr></table></figure></p>
+<p>在浏览器中打开<code>127.0.0.1:8000/0</code>，就会显示刚刚插入的那条记录的内容了</p>
+<blockquote>
+<p>title = wxp, category = blog, content = Hello Django i am wxp</p>
+</blockquote>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/03/14/2015-03-14-PythonDjangpViewUrl/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/03/20/2015-03-20-DesignPatternProxy/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    JAVA设计模式-代理模式
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/03/10/2015-03-10-OtherUMLClassPoints/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">UML类图要点</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

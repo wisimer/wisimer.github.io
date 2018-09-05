@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>res资源的使用 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="属性资源：attrs.xml1234567&amp;lt;attr name=”属性名字” format=“属性值限定的字符串“&amp;gt;    &amp;lt;定义全局的属性&amp;gt;&amp;lt;/attr&amp;gt;&amp;lt;declare-styleable name=”组件名称”	&amp;lt;attr name=”属性名字” format=“属性值限定的字符串“/&amp;gt;	&amp;lt; attr name=”全局定义的属性名称">
+<meta property="og:type" content="article">
+<meta property="og:title" content="res资源的使用">
+<meta property="og:url" content="http://ai.wisim.me/2014/04/13/2014-04-13-AndroidResourceUse/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="属性资源：attrs.xml1234567&amp;lt;attr name=”属性名字” format=“属性值限定的字符串“&amp;gt;    &amp;lt;定义全局的属性&amp;gt;&amp;lt;/attr&amp;gt;&amp;lt;declare-styleable name=”组件名称”	&amp;lt;attr name=”属性名字” format=“属性值限定的字符串“/&amp;gt;	&amp;lt; attr name=”全局定义的属性名称">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="res资源的使用">
+<meta name="twitter:description" content="属性资源：attrs.xml1234567&amp;lt;attr name=”属性名字” format=“属性值限定的字符串“&amp;gt;    &amp;lt;定义全局的属性&amp;gt;&amp;lt;/attr&amp;gt;&amp;lt;declare-styleable name=”组件名称”	&amp;lt;attr name=”属性名字” format=“属性值限定的字符串“/&amp;gt;	&amp;lt; attr name=”全局定义的属性名称">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2014-04-13-AndroidResourceUse" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            res资源的使用
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/04/13/2014-04-13-AndroidResourceUse/">
+            <time datetime="2014-04-12T16:00:00.000Z" itemprop="datePublished">2014-04-13</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="属性资源：attrs-xml"><a href="#属性资源：attrs-xml" class="headerlink" title="属性资源：attrs.xml"></a>属性资源：attrs.xml</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;attr name=”属性名字” format=“属性值限定的字符串“&gt;</span><br><span class="line">    &lt;定义全局的属性&gt;</span><br><span class="line">&lt;/attr&gt;</span><br><span class="line">&lt;declare-styleable name=”组件名称”</span><br><span class="line">	&lt;attr name=”属性名字” format=“属性值限定的字符串“/&gt;</span><br><span class="line">	&lt; attr name=”全局定义的属性名称”/&gt;</span><br><span class="line">&lt;/ declare-styleable &gt;</span><br></pre></td></tr></table></figure>
+<p>值得注意的是定义属性 需要定义自己的命名空间 原则上命名空间可以随便取但是 也有一定规则 命名空间必须以<a href="http://schemas.android.com/apk/res/" target="_blank" rel="noopener">http://schemas.android.com/apk/res/</a> 开头 后面是所要引用的R文件所在的路径 也就是包名   属性值限定的字符串的意思是属性的取值限定的类型 如reference 引用资源id类型 string float 等等 最后要在所要引用该属性的布局文件中加上自己的命名空间</p>
+<a id="more"></a>
+<ul>
+<li>使用方式﻿-CustomAttributes﻿：﻿﻿</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AttributeSet的一个对象先有 假设是attrs</span><br><span class="line"><span class="comment">//获得属性数组对象</span></span><br><span class="line">TypedArray typedArray=Context.obtainStyledAttributes（atts，R.styleable.组件名称）;</span><br><span class="line"><span class="comment">//获得&lt;declare-styleable&gt;标签下的属性值</span></span><br><span class="line">resourceid= typedArray.getResourceId（R.styleable.组件名称_属性名称,default_value）;</span><br></pre></td></tr></table></figure>
+<p>(布局)在视图的布局文件 加入命名空间 如app 那么引用的就是app：属性名称=“属性值”</p>
+<hr>
+<h4 id="菜单资源：-menu目录"><a href="#菜单资源：-menu目录" class="headerlink" title="菜单资源：/menu目录"></a>菜单资源：/menu目录</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;menu  xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span> &gt;</span><br><span class="line">   &lt;item  android:属性   /&gt;</span><br><span class="line">   &lt;item  android:属性   /&gt;</span><br><span class="line">     &lt;group id&gt;</span><br><span class="line">        &lt;item  android:属性   /&gt;</span><br><span class="line">        &lt;item  android:属性   /&gt;</span><br><span class="line">            &lt;menu&gt;</span><br><span class="line">               &lt;item  android:属性   /&gt;</span><br><span class="line">               &lt;item  android:属性   /&gt;</span><br><span class="line">                  &lt;group id&gt;</span><br><span class="line">                    &lt;item  android:属性   /&gt;</span><br><span class="line">                    &lt;item  android:属性   /&gt;</span><br><span class="line">                  &lt;/group&gt;</span><br><span class="line">     &lt;/group&gt;</span><br><span class="line">&lt;/menu&gt;</span><br></pre></td></tr></table></figure>
+<p>上面是一个完整的菜单方式 根据要求可以删减<br>比如说不需要设置子菜单项中间那个 menu的标签就不需要的  有的需要组 也可以删去 但是item内不可以有item<br>值得注意的是 命名空间 可以是安卓默认的 也可以是自己定义的 设置的属性 主要是菜单的属性 与在布局文件定义类似<br>Menu 标签没有任何属性 除了第一个跟标签需要命名空间 其他的不要 当然 菜单资源的文件 要以<code>&lt;menu&gt;</code> 为root标签 不是以<code>&lt;resource&gt;</code></p>
+<ul>
+<li><p>item的属性如下</p>
+<pre>
+<code>
+id 菜单项的id
+menuCategory 菜单项的种类 如设置成system 表示系统菜单 放在其他的后面
+orderInCategory 同种类菜单排列顺序
+title 菜单项的显示文本
+titleCondensed 菜单项的短标题 如果菜单项文本太长 会显示该值
+icon 菜单项图片的id
+alphabeticShortCut 菜单项的字母快捷键
+numericShortCut 菜单项数字快捷键
+checkable 菜单项是否带复选框
+checked 如果菜单项带复选框 表示该复选框是否被默认选中
+visible 菜单项是否可见
+enabled 菜单项是否可用
+</code>
+</pre>
+</li>
+<li><p>group的属性如下</p>
+<pre>
+<code>
+id 菜单组的id
+menuCategory 与item相同 只是作用域在菜单组
+orderInCategory  与item相同 只是作用域在菜单组
+visible 菜单组里的所有菜单项是否可见
+enable 菜单组里所有菜单是否可用
+CheckableBehavior 设置该菜单组上显示的选择组件 如果为all 显示checkbox
+如果为single 显示Radio Button 如果为none 正常显示菜单 不会显示选择组件（check    box  Radio Button）
+</code>
+</pre>
+</li>
+<li><p>使用方式：<br>如果是在onCreateOptionsMenu(Menu menu) 或者 onCreteContextMenu（）的回调方法里装载资源文件</p>
+<blockquote>
+<p>MenuInflater menuinflater=getMenuInflater（）<br>menuinflater.inflate（R.menu.菜单资源文件的名称）</p>
+</blockquote>
+</li>
+</ul>
+<p>如果是onCreteContextMenu里 要在onCreate（）方法里将上下文菜单注册到某个组件上</p>
+<blockquote>
+<p>registerForContextMenu（某个组件的名称）</p>
+</blockquote>
+<hr>
+<h4 id="数组资源：arrays-xml"><a href="#数组资源：arrays-xml" class="headerlink" title="数组资源：arrays.xml"></a>数组资源：arrays.xml</h4><ul>
+<li>定义形式：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;数组类型-array name=”array_name”&gt;</span><br><span class="line">	&lt;item&gt;</span><br><span class="line">		array_value1</span><br><span class="line">	&lt;/item&gt;</span><br><span class="line">	&lt;item&gt;</span><br><span class="line">		array_value2</span><br><span class="line">	&lt;/item&gt;</span><br><span class="line">&lt;/数组类型-array&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>使用方式:</p>
+<pre><code>  String []abc=getResource().getStringArray(R.array.array_name)﻿﻿
+</code></pre></li>
+</ul>
+<p>eg:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;resources&gt;</span><br><span class="line">	&lt;string-array name=<span class="string">"countries"</span>&gt;</span><br><span class="line">	    &lt;item &gt;中国&lt;/item&gt;</span><br><span class="line">	    &lt;item &gt;美国&lt;/item&gt;</span><br><span class="line">	&lt;/string-array&gt;</span><br><span class="line">    &lt;integer-array name=<span class="string">"numbs"</span>&gt;</span><br><span class="line">        &lt;item &gt;1&lt;/item&gt;</span><br><span class="line">        &lt;item &gt;2&lt;/item&gt;</span><br><span class="line">    &lt;/integer-array&gt;</span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="xml资源-使用方式"><a href="#xml资源-使用方式" class="headerlink" title="xml资源:使用方式"></a>xml资源:使用方式</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XmlResourceParser xml=getResources().getXml(R.xml.xml_file_name);</span><br></pre></td></tr></table></figure>
+<h4 id="raw资源-使用方式"><a href="#raw资源-使用方式" class="headerlink" title="raw资源:使用方式"></a>raw资源:使用方式</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">InputStream read= getResources().openRawResource（R.raw.file_name）;</span><br><span class="line"></span><br><span class="line">OutputStream write= getResources().openRawResource（R.raw.file_name）;</span><br></pre></td></tr></table></figure>
+<h4 id="assets资源-使用方式"><a href="#assets资源-使用方式" class="headerlink" title="assets资源:使用方式"></a>assets资源:使用方式</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">InputStream read=getAssets（）.open（“文件的名称“）</span><br><span class="line"><span class="comment">//如果assets下还有个文件目录 也要把目录名写上用 / 隔开 如abc/a.txt</span></span><br><span class="line">OutputStream write=getAssets（）.open（“文件的名称“）</span><br></pre></td></tr></table></figure>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2014/04/13/2014-04-13-AndroidResourceUse/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2014/04/21/2014-04-21-AndroidUbuntuConnectAndroidDevices/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Ubuntu 连接Android真机（华为C8813Q)
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/04/12/2014-04-20-UbuntuBashNote/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">bash note</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

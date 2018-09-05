@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>支持向量机 SVM：SVM简介 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="支持向量机(support vector machine)，一般简称SVM，通俗来讲，它是一种二类分类模型，其基本模型定义为特征空间上的间隔最大的线性分类器，其学习策略便是间隔最大化，最终可转化为一个凸二次规划问题的求解。 SVM 原理分为软间隔最大化、拉格朗日对偶、最优化问题求解、核函数、序列最小优化 SMO 等部分。">
+<meta name="keywords" content="SVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="支持向量机 SVM：SVM简介">
+<meta property="og:url" content="http://ai.wisim.me/2018/05/29/2018-05-29_SVM_part1/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="支持向量机(support vector machine)，一般简称SVM，通俗来讲，它是一种二类分类模型，其基本模型定义为特征空间上的间隔最大的线性分类器，其学习策略便是间隔最大化，最终可转化为一个凸二次规划问题的求解。 SVM 原理分为软间隔最大化、拉格朗日对偶、最优化问题求解、核函数、序列最小优化 SMO 等部分。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1805/0529_svm_intuition.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1805/0529_svm_yi.webp">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1805/0529_svm_no_linear.png">
+<meta property="og:updated_time" content="2018-08-02T10:42:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="支持向量机 SVM：SVM简介">
+<meta name="twitter:description" content="支持向量机(support vector machine)，一般简称SVM，通俗来讲，它是一种二类分类模型，其基本模型定义为特征空间上的间隔最大的线性分类器，其学习策略便是间隔最大化，最终可转化为一个凸二次规划问题的求解。 SVM 原理分为软间隔最大化、拉格朗日对偶、最优化问题求解、核函数、序列最小优化 SMO 等部分。">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1805/0529_svm_intuition.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-05-29_SVM_part1" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            支持向量机 SVM：SVM简介
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/29/2018-05-29_SVM_part1/">
+            <time datetime="2018-05-28T16:00:00.000Z" itemprop="datePublished">2018-05-29</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/SVM/">SVM</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>支持向量机(support vector machine)，一般简称SVM，通俗来讲，它是一种二类分类模型，其基本模型定义为特征空间上的间隔最大的线性分类器，其学习策略便是间隔最大化，最终可转化为一个凸二次规划问题的求解。</p>
+<p>SVM 原理分为软间隔最大化、拉格朗日对偶、最优化问题求解、核函数、序列最小优化 SMO 等部分。</p>
+<a id="more"></a>
+<h4 id="一、间隔和软间隔最大化"><a href="#一、间隔和软间隔最大化" class="headerlink" title="一、间隔和软间隔最大化"></a>一、间隔和软间隔最大化</h4><h5 id="1-分隔超平面"><a href="#1-分隔超平面" class="headerlink" title="1. 分隔超平面"></a>1. 分隔超平面</h5><p><img src="/src/imgs/1805/0529_svm_intuition.png" alt="svm_intuition.png"></p>
+<p>对于二分类问题来说，中间这条实线（或三维空间里的平面），就叫做分隔超平面，表达式为 $\vec w \cdot \vec x + b=0$。</p>
+<h5 id="2-函数间隔"><a href="#2-函数间隔" class="headerlink" title="2. 函数间隔"></a>2. 函数间隔</h5><p>SVM是通过超平面将样本分为两类。<br>在超平面 $w\cdot x+b=0$ 确定的情况下，$|w\cdot x+b|$ 可以相对地表示点x距离超平面的远近。对于两类分类问题，如果 $w\cdot x+b&gt;0$ ，则x的类别被判定为1；否则判定为-1。</p>
+<p>所以如果 $y(w\cdot x+b)&gt;0$ ，则认为x的分类结果是正确的，否则是错误的。且 $y(w\cdot x+b)$ 的值越大，分类结果的确信度越大。反之亦然。所以样本点 $(x_{i}, y_{i})$ 与超平面(w, b)之间的函数间隔定义为:</p>
+<script type="math/tex; mode=display">\gamma_i=y_i(wx_i+b) \tag{1.2.1}</script><p>我们用 $\hat{\gamma}$ 表示函数间隔，$\hat{\gamma}=y(w \cdot x+b)$。</p>
+<h5 id="3-几何间隔-软间隔"><a href="#3-几何间隔-软间隔" class="headerlink" title="3. 几何间隔(软间隔)"></a>3. 几何间隔(软间隔)</h5><p>上面函数间隔的定义存在问题：即w和b同时缩小或放大M倍后，超平面并没有变化，但是函数间隔却变化了。所以，需要将w的大小固定。例如||w||=1，使得函数间隔固定，这时的间隔也就是几何间隔 。几何间隔的定义如下:</p>
+<script type="math/tex; mode=display">\gamma_{i} = y_{i} (\frac{w}{||w||}\cdot x_{i} + \frac{b}{||w||}) = y_i(\frac{w\cdot x_i+b}{||w||}) \tag{1.3.1}</script><p>其中 xi 代表第 i 条数据，yi 代表第 i 条数据对应的目标变量的取值，取值有+1 和-1 两种。所以当第 i 条数据被正确分类时，y 取值和 w<em>x+b 取值的正负一致，几何间隔为正；当被错误分类时，y 取值和 w</em>x+b 取值的正负相反，几何间隔为负。如下图：</p>
+<p><img src="/src/imgs/1805/0529_svm_yi.webp" alt="0529_svm_yi"></p>
+<p>我们用 $\tilde{\gamma}$ 表示几何间隔，$\tilde{\gamma}=y\frac{w \cdot x+b}{||w||}$。由于 $\hat{\gamma}=y(w \cdot x+b)$，所以 $\tilde{\gamma}=\frac{\hat{\gamma}}{||w||}$。</p>
+<p>此外，函数间隔以及几何间隔其实并不是表示某种距离，真正的点到直线（或平面）的距离公式是：</p>
+<script type="math/tex; mode=display">\gamma=\frac{w \cdot x+b}{||w||}\tag{1.3.2}</script><p>小结一下：</p>
+<p>(1). 实际距离 ：$\gamma = \frac{w \cdot x + b}{||w||} \: (1.3.3)$</p>
+<p>(2). 函数距离 ：$\hat{\gamma}=y(w \cdot x+b) \: (1.3.4)$</p>
+<p>(3). 几何距离 ：$\tilde{\gamma}=y\frac{w \cdot x+b}{||w||}=\frac{\hat{\gamma}}{||w||} \: (1.3.5)$</p>
+<h5 id="4-软间隔最大化"><a href="#4-软间隔最大化" class="headerlink" title="4. 软间隔最大化"></a>4. 软间隔最大化</h5><p>SVM 的核心思路是最大化支持向量到分隔超平面的间隔。后面所有的推导都是以最大化此间隔为核心思想展开。</p>
+<p>(1). 首先定义几何间隔中最小的为：</p>
+<script type="math/tex; mode=display">\tilde{\gamma}=min\{\tilde{\gamma_i}\} \tag{1.4.1}</script><p>(2). 由此可以得到间隔最大化问题的目标函数 $max \{\tilde{\gamma_i}\}$，并遵循如下约束条件：$s.t.\tilde{\gamma_i} = \frac{y_i(w\cdot x_i+b)}{||w||}\geq \tilde{\gamma}$，（s.t.表示 subject to：满足…限制） 。</p>
+<p>这里重点解释一下上面这句话的意思：</p>
+<blockquote>
+<p>(1).几何间隔就是点到给定超平面的距离；几何间隔中最小值 $min\{\tilde{\gamma_i}\}$ 表示所有样本点中几何间隔的最小值。</p>
+<p>(2).间隔最大化问题 $max \{\tilde{\gamma}\}$ 表示要找到一种情况使得最小几何间隔在所有情况中取最大值，记为 $M = arg\:max_{w,b}\{\frac{min_{n}[y_i(w^T \cdot x_i+b)]}{||w||}\} \: (1.4.2)$。</p>
+</blockquote>
+<h5 id="5-目标函数"><a href="#5-目标函数" class="headerlink" title="5. 目标函数"></a>5. 目标函数</h5><p>为了方便计算，令函数距离的最小值 $min\{\hat{\gamma}\}=min\{y(w \cdot x+b) \}= 1$，则 $M=arg \: max_{w,b}{\{\frac{1}{||w||}\}}$。很显然，<code>软间隔最大化</code> 就是要求M这个最大值，也就是要求 $\frac{1}{||w||}$的最大值，也就是要求 ||w|| 的最小值。此时几何间隔的最大化情况就是：$\tilde{\gamma} = \frac{1}{||w||}$。</p>
+<p>于是就得出了目标函数 : </p>
+<script type="math/tex; mode=display">max \: {\frac{1}{||w||}},s.t.y_i(w \cdot x_i+b) \geq 1,i=1,2,...,n \tag{1.5.1}</script><p>等价于 : </p>
+<script type="math/tex; mode=display">min \: \frac{1}{2} ||w||^2,s.t.y_i(w \cdot x_i+b) \geq 1,i=1,2,...,n \tag{1.5.2}</script><p>这个公式描述的是一个典型的不等式约束条件下的二次型函数优化问题，同时也是 <code>支持向量机的基本数学模型</code>。</p>
+<p>可以看到这样的问题满足如下两个条件：</p>
+<p>(1). 它所最优化的问题是一个二次式</p>
+<p>(2). 它的限制条件是一个线性的一次式</p>
+<p>有这样特性的最优化问题就叫二次规划（quadratic programing ，简称QP）</p>
+<h4 id="二、拉格朗日对偶（Lagrange-duality）"><a href="#二、拉格朗日对偶（Lagrange-duality）" class="headerlink" title="二、拉格朗日对偶（Lagrange duality）"></a>二、拉格朗日对偶（Lagrange duality）</h4><h5 id="1-最优化问题的分类"><a href="#1-最优化问题的分类" class="headerlink" title="1. 最优化问题的分类"></a>1. 最优化问题的分类</h5><p>通常我们需要求解的最优化问题有如下几类：</p>
+<p>(1). 无约束优化问题，可以写为: </p>
+<script type="math/tex; mode=display">min\:f(x) \tag{2.1.1}</script><p>对于第(1)类的优化问题，常常使用的方法就是 <code>Fermat定理(费马定理)</code>，即使用求取f(x)的导数，然后令其为零，可以求得候选最优值，再在这些候选值中验证；如果是凸函数，可以保证是最优解。</p>
+<p>(2). 有等式约束的优化问题，可以写为: </p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} 
+& min\:f(x);\\
+& s.t. h_i(x) = 0; \\
+& i =1, ..., n \\
+\end{array}
+\tag{2.1.2}</script><p>对于第(2)类的优化问题，常常使用的方法就是 <code>拉格朗日乘子法（Lagrange Multiplier)</code> ，即把等式约束h_i(x)用一个系数与f(x)写为一个式子，称为 <code>拉格朗日函数</code>，而系数称为拉格朗日乘子。通过拉格朗日函数对各个变量求导，令其为零，可以求得候选值集合，然后验证求得最优值。</p>
+<p>(3). 有不等式约束的优化问题，可以写为：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} 
+& min\:f(x); \\
+& s.t. h_i(x) = 0; \\
+& g_j(x) \leq 0; \\
+& i =1, ..., n,j =1, ..., m \\
+\end{array}
+\tag{2.1.3}</script><p>对于第(3)类的优化问题，常常使用的方法就是 <code>KKT条件</code>。同样地，我们把所有的等式、不等式约束与f(x)写为一个式子，也叫 <code>拉格朗日函数</code>，系数也称拉格朗日乘子，通过一些条件，可以求出最优值的必要条件，这个条件称为KKT条件。</p>
+<h5 id="2-KKT条件"><a href="#2-KKT条件" class="headerlink" title="2. KKT条件"></a>2. KKT条件</h5><p>KKT条件的全称是Karush-Kuhn-Tucker条件，KKT条件是说最优值条件必须满足以下条件：</p>
+<ul>
+<li>条件一：经过拉格朗日函数处理之后的新目标函数L(w,b,a)对x求导为零;</li>
+<li>条件二：$h_i(x)=0$;</li>
+<li>条件三：$a*g_j(x)=0$;</li>
+</ul>
+<p>求取这三个等式之后就能得到候选最优值。其中第三个式子非常有趣，因为g(x)&lt;=0，如果要满足这个等式，必须a=0或者g(x)=0。</p>
+<h5 id="3-拉格朗日对偶"><a href="#3-拉格朗日对偶" class="headerlink" title="3. 拉格朗日对偶"></a>3. 拉格朗日对偶</h5><p>由于这个问题的特殊结构，还可以通过拉格朗日对偶性变换到对偶变量 (dual variable) 的优化问题，即通过求解与原问题等价的对偶问题（dual problem）得到原始问题的最优解，这就是 <code>线性可分</code> 条件下支持向量机的对偶算法，这样做的优点在于：一者对偶问题往往更容易求解；二者可以自然的引入 <code>核函数</code>，进而推广到 <code>非线性分类</code> 问题。</p>
+<p>1). 首先回顾一下我们要处理的问题是 <code>有不等式约束的的优化问题</code>,这类问题的一般描述是：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} 
+& min\:f(x); \\
+& s.t. h_i(x) = 0; \\
+& g_j(x) \leq 0; \\
+& i =1, ..., n,j =1, ..., m \\
+\end{array}
+\tag{2.3.1}</script><p>我们根据原来的目标函数来构造一个新的目标函数：</p>
+<script type="math/tex; mode=display">\theta_p(x)=max_{\alpha,\beta;\beta_j\geq0} \:L(x,\alpha,\beta)  \tag{2.3.2}</script><p>2). 其中 $L(\boldsymbol{x},\boldsymbol{\alpha},\boldsymbol{\beta})$ 为广义拉格朗日函数，定义为：</p>
+<script type="math/tex; mode=display">L(\boldsymbol{x},\boldsymbol{\alpha},\boldsymbol{\beta})=f(\boldsymbol{x})+\sum_{i=1}^m\alpha_i h_i(\boldsymbol{x})+\sum_{j=1}^n\beta_j g_j(\boldsymbol{x})  \tag{2.3.3}</script><p>这里，$\boldsymbol{\alpha}=[\alpha_1,\alpha_2,\ldots, \alpha_m]^T,~\boldsymbol{\beta}=[\beta_1,\beta_2,\ldots, \beta_n]^T$，是我们在构造新目标函数时加入的系数变量，也是我们要求的参数。另外不要忘了我们要求的是 $\theta_p(x)$ 的最小值。</p>
+<p>3). 根据上面(2.3.2)和(2.3.3)两个公式我们得到：</p>
+<script type="math/tex; mode=display">\theta_p(x)=max_{\alpha,\beta;\beta_j\geq0} \:\{f(\boldsymbol{x})+\sum_{i=1}^m\alpha_i h_i(\boldsymbol{x})+\sum_{j=1}^n\beta_j g_j(\boldsymbol{x})\}  \tag{2.3.4}</script><p>其中 $h_i(x) = 0;g_j(x) \leq 0;i =1, …, n,j =1, …, m$</p>
+<p>首先如果x不满足这两条限制，也就是在 <code>可行解区域外</code>,我们观察一下公式(2.3.4)，一定可以找到某一种情况下的参数 $(\alpha,\beta)$ 使得 $\theta_p(x)$ 取向于 $\infty$，这种情况下肯定不是我们要求的$\theta_p(x)$ 的最小值。</p>
+<p>再看一下x同时满足这两条显示，也就是在 <code>可行解区域内</code>,由于 $h_i(x) = 0;g_j(x) &lt;= 0$，并且 $\beta_j \geq0$，那么很显然 $max_{\alpha,\beta;\beta_j\geq0} \:\{\sum_{i=1}^m\alpha_i h_i(\boldsymbol{x})+\sum_{j=1}^n\beta_j g_j(\boldsymbol{x})\}=0$，于是可以得到 $\theta_p(x)$ 的取值分布情况：</p>
+<script type="math/tex; mode=display">\theta_P(x)=\left\{ \begin{array}{ll} f({x}) & {x}\in\Phi\\ \infty & \textrm{otherwise} \end{array} \right.</script><p>就这样原来有约束条件的 (2.3.1)问题求解现在就变成了没有约束条件求 $min \{\theta_p(x)\}$ 。</p>
+<p>同时，我们设 $\theta_d(x)=min\{L(w,\alpha,\beta)\} \:(2.3.5)$，同时将问题转化为先求 $L(w,\alpha,\beta)$ 的最小值，再求它的最大值。与公式(2.3.2) $\theta_p(x)=max\{L(w,\alpha,\beta)\}$比较一下：</p>
+<script type="math/tex; mode=display">min\{\theta_p(x)\}=min\{max\{L(w,\alpha,\beta)\}\} \tag{2.3.6}</script><script type="math/tex; mode=display">max\{\theta_d(x)\}=max\{min\{L(w,\alpha,\beta)\}\} \tag{2.3.7}</script><p>2.3.7 这个问题就是原问题 (2.3.6) 的对偶问题，相对于原问题只是更换了min和max的顺序，而一般更换顺序的结果是Max Min(X) &lt;= Min Max(X)。然而在这里两者相等。由此我们可以设如下：</p>
+<script type="math/tex; mode=display">d^*=max\{min\{L(w,\alpha,\beta)\}\} \leq min\{max\{L(w,\alpha,\beta)\}\}=p^*</script><p>所以在一定的条件下我们可以得到：$d^{<em>}=p^{</em>}$，值得注意的是这里的问题要满足上面所说的 <code>KKT条件</code>。</p>
+<h5 id="4-对偶问题求解"><a href="#4-对偶问题求解" class="headerlink" title="4. 对偶问题求解"></a>4. 对偶问题求解</h5><p>1). 根据上面的推导我们知道了对偶问题的原理，回到一开始的问题，看一下公式 (1.5.2)，再将其转换为它的对偶问题可得：</p>
+<script type="math/tex; mode=display">d^{*}=max\{min\{L(w,\alpha,b)\}\}</script><script type="math/tex; mode=display">L(x,\alpha,\beta)=\frac{1}{2}||w||^2-\sum_{i=1}^m\alpha_i [y_i(w^T \cdot x+b)-1] \tag{2.4.1}</script><p>2). 首先固定α，也就是将α视为常数，要让L(w,b,α)关于w和b最小化，我们分别对w和b偏导数，令其等于0，即：</p>
+<script type="math/tex; mode=display">\frac{\partial{L}}{\partial{w}}=0 \:=>\: w=\sum_{i=1}^{n}\alpha_i y_i x_i</script><script type="math/tex; mode=display">\frac{\partial{L}}{\partial{b}}=0 \:=>\: \sum_{i=1}^{n}\alpha_i y_i=0</script><p>3). 将上述结果带回L(w,b,α)得到：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} L(w,\alpha,b) 
+& =\frac{1}{2}||w||^2-\sum_{i=1}^m\alpha_i [y_i(w^T \cdot x+b)-1]\\ 
+& =\frac{1}{2}w^T \cdot w-w^T\sum\alpha_iy_ix_i-b\sum\alpha_iy_i+\sum\alpha_i\\
+& =\frac{1}{2}w^T \sum\alpha_iy_ix_i-w^T\sum\alpha_iy_ix_i-b\cdot0+\sum\alpha_i\\
+& =\sum\alpha_i-\frac{1}{2}(\sum\alpha_iy_ix_i)^T\sum\alpha_iy_ix_i\\
+& =\sum\alpha_i-\frac{1}{2}\sum_{i,j=1}^{n}\alpha_i \alpha_j y_i y_j x_i^T x_j\\
+\end{array} 
+\tag{2.4.2}</script><p>从上面的最后一个式子，我们可以看出，此时的L(w,α,b)函数只含有一个变量，即 $\alpha_i$。</p>
+<p>4). 现在内侧的最小值求解完成，我们求解外侧的最大值，从上面的式子得到:</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} 
+& max\{\sum\alpha_i-\frac{1}{2}\sum_{i,j=1}^{n}\alpha_i \alpha_j y_i y_j x_i^T x_j\} \\
+& s.t. \alpha_i\geq0,i=1,2,...,n \\
+& \sum_{i=1}^{n}\alpha_i y_i=0 \\
+\end{array} 
+\tag{2.4.3}</script><p>现在我们的优化问题变成了如上的形式。对于这个问题，我们有更高效的优化算法，即序列最小优化（SMO）算法。我们通过这个优化算法能得到α，再根据α，我们就可以求解出w和b，进而求得我们最初的目的：找到超平面，即”决策平面”。最终所求得的模型如下：</p>
+<script type="math/tex; mode=display">f(x) = w^T \cdot x + b = \sum_{i=1}^m \alpha_i y_i x_i^T  x + b \tag{2.4.4}</script><h4 id="三、线性不可分与核函数"><a href="#三、线性不可分与核函数" class="headerlink" title="三、线性不可分与核函数"></a>三、线性不可分与核函数</h4><p>我们上面讨论的都是线性可分的SVM，线性可分也就是<code>分割超平面和数据是在一个空间里</code>。事实上，大部分时候数据并不是线性可分的，这个时候满足这样条件的超平面就根本不存在。对于非线性的情况，SVM 的处理方法是选择一个<code>核函数 K()</code> ，通过<code>将数据映射到高维空间</code>，来解决在原始空间中线性不可分的问题。</p>
+<blockquote>
+<p>具体来说，在线性不可分的情况下，支持向量机首先在低维空间中完成计算，然后通过核函数将输入空间映射到高维特征空间，最终在高维特征空间中构造出最优分离超平面，从而把平面上本身不好分的非线性数据分开。</p>
+</blockquote>
+<p>如下图所示，一堆数据在二维空间无法划分，从而映射到三维空间里划分：</p>
+<p><img src="/src/imgs/1805/0529_svm_no_linear.png" alt="0529_svm_no_linear.png"></p>
+<h5 id="1-映射x"><a href="#1-映射x" class="headerlink" title="1. 映射x"></a>1. 映射x</h5><p>为了完成这个目的，用 $\phi(x)$ 表示将 x 映射后的特征向量。于是，在特征空间划分超平面所对应的模型可表示为：$f(x)=w^T\:\phi(x)+b \: (5.1.1)$。对比一下上面的原始向量的模型：$f(x)=w^T\:x+b$，就是x映射成为$\phi(x)$。</p>
+<p>同理公式(5.1.1)中引入拉格朗日乘子，求解整个方程后可得：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} f(x)
+& =w^T\cdot\phi(x)+b\\ 
+& = \sum_{i=1}^n \alpha_i y_i \phi(x_i)^T  \phi(x) + b\\
+& = \sum_{i=1}^n \alpha_i y_i k(x_i,x) + b\\
+\end{array} 
+\tag{5.1.2}</script><p>这里的这个 k(x_i,x) 就是我们所说的 <code>核函数</code>。</p>
+<p>再对比一下公式（2.4.3）：$f(x) = \sum_{i=1}^m \alpha_i y_i x_i^T  x + b$，其实这里的 $x_i^T  x$也是一个核函数,称作 <code>线性核</code>。</p>
+<p>简单理解就是：非线性 SVM = 核技巧 + 线性 SVM。核技巧的本质就是简化运算。</p>
+<h5 id="2-核函数"><a href="#2-核函数" class="headerlink" title="2. 核函数"></a>2. 核函数</h5><p>对于有限维的原始空间，一定存在更高维度的空间，使得前者中的样本映射到新空间后可分。但是新空间（特征空间）的维度也许很大，甚至可能是无限维的。这样的话，如在公式（5.1.2）中直接计算 $\phi(x_i)^T  \phi(x)$ 就会很困难。</p>
+<p>为了避免计算 $\phi(x_i)^T\phi(x)$的内积，我们需要设置一个新的函数$k(x_i,k_j)=\phi(x_i)^T\phi(x)$</p>
+<p>原始空间中的两个样本 xi和 xj经过 k(.,.)函数计算所得出的结果，是它们在特征空间中映射成的新向量的内积。</p>
+<p>如此一来，我们就不必真的计算出 $\phi(x_i)^T \cdot \phi(x)$ 的结果，而可以直接用 k(.,.)函数代替它们。这个函数 k(.,.) 就叫做<code>核函数</code>。现在我们正式给出它的正式定义：</p>
+<p>设：X为原始空间（又称输入空间）；H为特征空间（特征空间是一个带有内积的完备向量空间，又称完备内积空间或希尔伯特空间）；</p>
+<p>如果存在一个映射： $X \times X$，使得对所有 $x_i, x_j \in X$<br>，函数 k(x_i,x_j)满足条件：$k(x_i,k_j)=\phi(x_i)^T\phi(x)$<br>，即  k(.,.) 函数为输入空间中任意两个向量映射到特征空间后的内积。则称 k(.,.) 为 <code>核函数</code>，ϕ(⋅)为 <code>映射函数</code>。</p>
+<h5 id="3-非线性-SVM-的对偶问题"><a href="#3-非线性-SVM-的对偶问题" class="headerlink" title="3. 非线性 SVM 的对偶问题"></a>3. 非线性 SVM 的对偶问题</h5><p>上面已经求出了线性 SVM 的对偶问题：公式(2.4.3)</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} 
+& max\{\sum\alpha_i-\frac{1}{2}\sum_{i,j=1}^{n}\alpha_i \alpha_j y_i y_j x_i^T x_j\} \\
+& s.t. \alpha_i\geq0,i=1,2,...,n \\
+& \sum_{i=1}^{n}\alpha_i y_i=0 \\
+\end{array}</script><p>于是非线性 SVM 的对偶问题就变为：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} 
+& max\{\sum\alpha_i-\frac{1}{2}\sum_{i,j=1}^{n}\alpha_i \alpha_j y_i y_j \phi(x_i)\cdot \phi(x_j)\} \\
+& s.t. \alpha_i\geq0,i=1,2,...,n \\
+& \sum_{i=1}^{n}\alpha_i y_i=0 \\
+\end{array} 
+\tag{5.1.3}</script><p>大家可以看到，和线性 SVM 唯一的不同就是：之前的 $x_i$与 $x_j$的内积（点乘） 变成了 $\phi(x_i)$与$\phi(x_j)$的内积。</p>
+<hr>
+<p>参考：</p>
+<ol>
+<li><p><a href="https://zhuanlan.zhihu.com/p/29604517" target="_blank" rel="noopener">Python3《机器学习实战》学习笔记（八）：支持向量机原理篇之手撕线性SVM</a></p>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/zHCgOHsBYCkPouBFTmWgpw" target="_blank" rel="noopener">支持向量机的原理和实现</a></p>
+</li>
+<li><p><a href="https://wizardforcel.gitbooks.io/dm-algo-top10/content/svm-1.html" target="_blank" rel="noopener">机器学习与数据挖掘-支持向量机(SVM)</a></p>
+</li>
+<li><p><a href="https://www.zhihu.com/question/21094489" target="_blank" rel="noopener">支持向量机(SVM)是什么意思？</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/v_july_v/article/details/7624837" target="_blank" rel="noopener">支持向量机通俗导论（理解SVM的三层境界）</a></p>
+</li>
+<li><p><a href="http://cs229.stanford.edu/notes/cs229-notes3.pdf" target="_blank" rel="noopener">Support Vector Machines</a><br></p>
+</li>
+<li><a href="https://zhuanlan.zhihu.com/p/24638007" target="_blank" rel="noopener">零基础学SVM—Support Vector Machine(一)</a></li>
+</ol>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/05/29/2018-05-29_SVM_part1/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Want to Improve Your Memory?
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/05/18/2018-05-18_LogisticRegression/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Logistic回归算法</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

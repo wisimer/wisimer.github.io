@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android 使用aidl实现进程间通信-传递自定义的类 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="之前使用aidl传递的都是基本的数据类型比如int 、boolean之类的还有就是String类型的参数，并没有传递自己定义的class。最近在开发的过程中重构代码时遇到了这个问题，网上也有文章提供了解决的办法，不过不太全面。我东拼西凑才把问题给解决了。这里记录一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 使用aidl实现进程间通信-传递自定义的类">
+<meta property="og:url" content="http://ai.wisim.me/2015/08/24/2015-08-24-AndroidAidlImportClass/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="之前使用aidl传递的都是基本的数据类型比如int 、boolean之类的还有就是String类型的参数，并没有传递自己定义的class。最近在开发的过程中重构代码时遇到了这个问题，网上也有文章提供了解决的办法，不过不太全面。我东拼西凑才把问题给解决了。这里记录一下。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 使用aidl实现进程间通信-传递自定义的类">
+<meta name="twitter:description" content="之前使用aidl传递的都是基本的数据类型比如int 、boolean之类的还有就是String类型的参数，并没有传递自己定义的class。最近在开发的过程中重构代码时遇到了这个问题，网上也有文章提供了解决的办法，不过不太全面。我东拼西凑才把问题给解决了。这里记录一下。">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-08-24-AndroidAidlImportClass" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android 使用aidl实现进程间通信-传递自定义的类
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/08/24/2015-08-24-AndroidAidlImportClass/">
+            <time datetime="2015-08-23T16:00:00.000Z" itemprop="datePublished">2015-08-24</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>之前使用aidl传递的都是基本的数据类型比如int 、boolean之类的还有就是String类型的参数，并没有传递自己定义的class。<br>最近在开发的过程中重构代码时遇到了这个问题，网上也有文章提供了解决的办法，不过不太全面。我东拼西凑才把问题给解决了。这里记录一下。</p>
+<a id="more"></a>
+<h4 id="一、直接在aidl中的方法参数传递一个自定义类参数。"><a href="#一、直接在aidl中的方法参数传递一个自定义类参数。" class="headerlink" title="一、直接在aidl中的方法参数传递一个自定义类参数。"></a>一、直接在aidl中的方法参数传递一个自定义类参数。</h4><p>看一下我们的aidl文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// IJDMAService.aidl</span><br><span class="line">package com.jingdong.jdlogsys;</span><br><span class="line"></span><br><span class="line">import com.jingdong.jdlogsys.model.CommonParamInfo;</span><br><span class="line"></span><br><span class="line">interface IJDFileLogService &#123;</span><br><span class="line"></span><br><span class="line">    void setCommonParamInfo(CommonParamInfo info);</span><br><span class="line">    void changeUser(String uid,String uuid,String pin);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的setCommonParamInfo方法的参数就是一个我们自己定义的类CommonParamInfo，虽然上面import了这个类，但是编译项目时会报如下的错误信息（使用Android Studio）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Error:Execution failed for task &apos;:JDLogSys:compileReleaseAidl&apos;.</span><br><span class="line">&gt; com.android.ide.common.process.ProcessException: org.gradle.process.internal.ExecException: Process &apos;command &apos;D:\Android\sdk\build-tools\19.1.0\aidl.exe&apos;&apos; finished with non-zero exit value 1</span><br><span class="line">Error:(5) couldn&apos;t find import for class com.jingdong.jdlogsys.model.CommonParamInfo</span><br><span class="line">F:\JD_GIT\JDLogSys\JDLogSys\res\com\jingdong\jdlogsys\IJDFileLogService.aidl</span><br></pre></td></tr></table></figure>
+<p>看到这么一行信息<code>Error:(5) couldn&#39;t find import for class com.jingdong.jdlogsys.model.CommonParamInfo</code>。意思就是找不到这个类。</p>
+<h4 id="二、网上提供了一个解决这个问题的方法"><a href="#二、网上提供了一个解决这个问题的方法" class="headerlink" title="二、网上提供了一个解决这个问题的方法"></a>二、网上提供了一个解决这个问题的方法</h4><p>首先新建一个CommonParamInfo.aidl文件，文件的内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package com.jingdong.jdlogsys.model;</span><br><span class="line"></span><br><span class="line">parcelable CommonParamInfo;</span><br></pre></td></tr></table></figure>
+<p>要注意的是这里的package要和原本定义的类的包名一样，其次是下面的<code>parcelable CommonParamInfo;</code>这行代码。</p>
+<p>当然最重要的一点是你自己定义的类要实现Parcelable接口并按照规范重写一系列方法。这里我就不做介绍了。</p>
+<p>接着重新编译，是的不再报上面那个错误信息，但是报了另外一个错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">:JDLogSys:compileReleaseAidl</span><br><span class="line">F:\JD_GIT\JDLogSys\JDLogSys\res\com\jingdong\jdlogsys\IJDFileLogService.aidl:14 parameter 1: &apos;CommonParamInfo info&apos; can be an out parameter, so you must declare it as in, out or inout.</span><br><span class="line">Error:Execution failed for task &apos;:JDLogSys:compileReleaseAidl&apos;.</span><br><span class="line">&gt; com.android.ide.common.process.ProcessException: org.gradle.process.internal.ExecException: Process &apos;command &apos;D:\Android\sdk\build-tools\19.1.0\aidl.exe&apos;&apos; finished with non-zero exit value 1</span><br></pre></td></tr></table></figure>
+<p>看到这么一行信息<code>IJDFileLogService.aidl:14 parameter 1: &#39;CommonParamInfo info&#39; can be an out parameter, so you must declare it as in, out or inout.</code></p>
+<p>意思就是我们需要把这个参数声明成in或者inout类型的，</p>
+<h4 id="三、于是我们修改一下aidl中的setCommonParamInfo方法，一开始我是设置的inout："><a href="#三、于是我们修改一下aidl中的setCommonParamInfo方法，一开始我是设置的inout：" class="headerlink" title="三、于是我们修改一下aidl中的setCommonParamInfo方法，一开始我是设置的inout："></a>三、于是我们修改一下aidl中的setCommonParamInfo方法，一开始我是设置的inout：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void setCommonParamInfo(inout CommonParamInfo info);</span><br></pre></td></tr></table></figure>
+<p>于是，不出意外接着报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Error:(144, 5) 错误: 找不到符号</span><br><span class="line">符号:   方法 readFromParcel(Parcel)</span><br><span class="line">位置: 类型为 CommonParamInfo 的变量 info</span><br><span class="line">注: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。</span><br><span class="line">Error:Execution failed for task &apos;:JDLogSys:compileReleaseJava&apos;.</span><br><span class="line">&gt; Compilation failed; see the compiler error output for details.</span><br><span class="line">1 个错误</span><br><span class="line">注: 某些输入文件使用或覆盖了已过时的 API。</span><br><span class="line">F:\JD_GIT\JDLogSys\JDLogSys\build\generated\source\aidl\release\com\jingdong\jdlogsys\IJDFileLogService.java</span><br></pre></td></tr></table></figure>
+<p>啥状况呢，就是说找不到readFromParcel方法。我看了一下CommonParamInfo类，确实没有这个方法，但是之前该重写的方法都重写了啊，之前一直也是这么做的。<br>于是我又接着搜索，找到了解决这个问题的方法，就是在CommonParamInfo类中自己添加一个readFromParcel方法</p>
+<h4 id="四、修改CommonParamInfo类，添加readFromParcel方法"><a href="#四、修改CommonParamInfo类，添加readFromParcel方法" class="headerlink" title="四、修改CommonParamInfo类，添加readFromParcel方法"></a>四、修改CommonParamInfo类，添加readFromParcel方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jingdong.jdlogsys.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Parcel;</span><br><span class="line"><span class="keyword">import</span> android.os.Parcelable;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by zhengqing on 2014/12/18.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonParamInfo</span> <span class="keyword">implements</span> <span class="title">Parcelable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Parcelable.Creator&lt;CommonParamInfo&gt; CREATOR = <span class="keyword">new</span> Creator&lt;CommonParamInfo&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> CommonParamInfo[] newArray(<span class="keyword">int</span> size) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> CommonParamInfo[size];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> CommonParamInfo <span class="title">createFromParcel</span><span class="params">(Parcel in)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> CommonParamInfo(in);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">public</span> String strUid;           <span class="comment">//用户id</span></span><br><span class="line">    <span class="keyword">public</span> String strUuid;          <span class="comment">//用户唯一标识，根据设备串号等唯一编码</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CommonParamInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated constructor stub</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CommonParamInfo</span><span class="params">(Parcel in)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated constructor stub</span></span><br><span class="line">        strUid = in.readString();</span><br><span class="line">        strUuid = in.readString();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFromParcel</span><span class="params">(Parcel in)</span></span>&#123;</span><br><span class="line">        strUid = in.readString();</span><br><span class="line">        strUuid = in.readString();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        sb.append(strUid)</span><br><span class="line">          .append(strUuid);</span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getStrUid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> strUid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStrUid</span><span class="params">(String strUid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.strUid = strUid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getStrUuid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> strUuid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStrUuid</span><span class="params">(String strUuid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.strUuid = strUuid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">describeContents</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeToParcel</span><span class="params">(Parcel out, <span class="keyword">int</span> flags)</span> </span>&#123;</span><br><span class="line">        out.writeString(strUid);</span><br><span class="line">        out.writeString(strUuid);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实readFromParcel方法的实现和构造函数中的内容是一样的。这样我们再次编译运行，发现没有任何问题了。</p>
+<h4 id="五、接着我又把第三步中的inout修改成了in"><a href="#五、接着我又把第三步中的inout修改成了in" class="headerlink" title="五、接着我又把第三步中的inout修改成了in"></a>五、接着我又把第三步中的inout修改成了in</h4><p>发现并没有报找不到readFromParcel方法的错误。</p>
+<hr>
+<p>参考文章：</p>
+<p><a href="http://blog.csdn.net/jackyu613/article/details/6011606" target="_blank" rel="noopener">http://blog.csdn.net/jackyu613/article/details/6011606</a></p>
+<p><a href="http://blog.csdn.net/flowingflying/article/details/22276821" target="_blank" rel="noopener">http://blog.csdn.net/flowingflying/article/details/22276821</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/08/24/2015-08-24-AndroidAidlImportClass/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/08/28/2015-08-28-DesignPatternAdapter/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    JAVA设计模式-适配器模式
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/08/12/2015-08-11-AndroidRecyclerViewPre/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">RecyclerView Preview</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

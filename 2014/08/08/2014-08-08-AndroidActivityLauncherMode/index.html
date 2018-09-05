@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Activity任务栈以及启动方式 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="简单介绍一下Task:Task是一个具有栈结构的对象，一个Task可以管理多个Activity，启动一个应用也就创建了一个与之对应的task。 首先假设在当前Activity中启动自身 123Intent intent=new Intent();intent.setClass(MainActivity.this,MainAcicity.class);startActivity(intent);">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Activity任务栈以及启动方式">
+<meta property="og:url" content="http://ai.wisim.me/2014/08/08/2014-08-08-AndroidActivityLauncherMode/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="简单介绍一下Task:Task是一个具有栈结构的对象，一个Task可以管理多个Activity，启动一个应用也就创建了一个与之对应的task。 首先假设在当前Activity中启动自身 123Intent intent=new Intent();intent.setClass(MainActivity.this,MainAcicity.class);startActivity(intent);">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Activity任务栈以及启动方式">
+<meta name="twitter:description" content="简单介绍一下Task:Task是一个具有栈结构的对象，一个Task可以管理多个Activity，启动一个应用也就创建了一个与之对应的task。 首先假设在当前Activity中启动自身 123Intent intent=new Intent();intent.setClass(MainActivity.this,MainAcicity.class);startActivity(intent);">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2014-08-08-AndroidActivityLauncherMode" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Activity任务栈以及启动方式
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/08/08/2014-08-08-AndroidActivityLauncherMode/">
+            <time datetime="2014-08-07T16:00:00.000Z" itemprop="datePublished">2014-08-08</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>简单介绍一下Task:Task是一个具有栈结构的对象，一个Task可以管理多个Activity，启动一个应用也就创建了一个与之对应的task。</p>
+<p>首先假设在当前Activity中启动自身</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent=<span class="keyword">new</span> Intent();</span><br><span class="line">intent.setClass(MainActivity.<span class="keyword">this</span>,MainAcicity.class);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="Activity的启动模式一共有四种："><a href="#Activity的启动模式一共有四种：" class="headerlink" title="Activity的启动模式一共有四种："></a>Activity的启动模式一共有四种：</h3><p>1.standard：</p>
+<ul>
+<li>无需设置,是默认的启动模式。在上述代码的情况下，不管有没有已经存在的实例，都会生成新的实例。但是这种模式并不会使用新的Task。只有按下返回键（即结束当前Activity）才会回到上一个Activity。</li>
+</ul>
+<p>2.singleTop:</p>
+<ul>
+<li>在上述代码的情况下，如果当前Task只有一个Activity在其中，那启动Activty时并不产生新的实例，启动的还是当前自身。如果按下返回键就会立即退出程序（因为Task中只有当前这一个Activity）。</li>
+<li>如果当前Task有多个Activity在其中，只有在栈顶的Activity才会重复使用，也就时说如果要启动的Activity并不在栈顶，系统就会创建新的Activity实例并加载到栈顶（此时就与standard模式相同）。</li>
+</ul>
+<p>举个例子：比如说想要Activity的启动顺序是A-B-C-D-D-D，如果D的launcherMode设置为singleTop,那么最终的启动顺序其实是A-B-C-D，也就是重复利用了栈顶的ActivityD。</p>
+<p>3.singleTask:</p>
+<ul>
+<li>如果要启动的Activity不存在，则创建新的实例并加到栈顶。</li>
+<li>如果要启动的Activity已经位于栈顶，则与singleTop模式相同。</li>
+<li>如果要启动的Activity已经存在于栈中，则会弹出这个Activty上面的所有其他Activty，使此Activity变为栈顶对象，显示到屏幕前。</li>
+</ul>
+<p>举个例子：比如说想要Activity的启动顺序是A-B-C-D-A，如果A的launcherMode设置为singleTask，那么最终任务栈中只会剩下A,位于A上面的BCD都会被回收。</p>
+<p>4.singleInstance:</p>
+<ul>
+<li>首先要要注意的是采用singleInstance模式加载的Activity总是位于栈顶，并且该栈只包含这一个Activity。</li>
+<li>如果要启动的Activity不存在，则首先创建一个新的Task，再创建目标Activity实例，并加入栈顶。</li>
+<li>如果要启动的Activty已经存在，则无论它位于那个应用程序中，无论位于哪个Task中，系统都会把该Activity所在的Task转到前台并显示Acitivty。</li>
+</ul>
+<hr>
+<h3 id="有三种启动新的任务栈的方式："><a href="#有三种启动新的任务栈的方式：" class="headerlink" title="有三种启动新的任务栈的方式："></a>有三种启动新的任务栈的方式：</h3><p>第一种： 动作(Action)设置为“android.intent.action.MAIN”，类别(category)设置为“android.intent.category.LAUNCHER”，</p>
+<p>可以使这个Activity(ACT)实例称为一个任务栈的入口，拥有这种类型的intent-filter的Activity类型的图表和名字也会显示在application launcher中。</p>
+<p>第二种： activity的launchMode采用“singleInstance”模式，另外开个一个唯一Activity的栈.</p>
+<p>第三种： 在Intent中加入了“FLAG_ACTIVITY_NEW_TASK”。</p>
+<p>当传递给startActivity()的Intent对象包含FLAG_ACTIVITY_NEW_TASK标记时，系统会为需要启动的activity寻找与当前activity不同的task。<br>如果要启动的activity的affinity属性与当前所有的task的affinity属性都不相同，系统会新建一个带那个affinity属性的task，并将要启动的activity压到新建的task栈中；<br>否则将activity压入那个affinity属性相同的栈中</p>
+<h4 id="taskAffinity属性：字符串取值，在一个命名空间里唯一。"><a href="#taskAffinity属性：字符串取值，在一个命名空间里唯一。" class="headerlink" title="taskAffinity属性：字符串取值，在一个命名空间里唯一。"></a>taskAffinity属性：字符串取值，在一个命名空间里唯一。</h4><p>这个属性在以下2中情况下起作用：</p>
+<p>1.当启动一个Activity的Intent包含了FLAG_ACTIVITY_NEW_TASK标识.</p>
+<p>在默认情况下，新建一个Activity，会调用startActivity()方法进入Task当中。它放置到和启动它的Activity相同的back stack。但是，如果启动的Intent包含了FLAG_ACTIVITY_NEW_TASK标识，系统将为这个Activity寻找一个不同的Task。<br>通常是新建一个新的Task。但是也未必全是这样，如果存在一与之相同taskAffinity定义的Task，那么这个Activity将运行在那里，否则新建Task。</p>
+<p>2.当一个Activity的属性allowTaskReparenting设置为true时.</p>
+<p>举个例子说明这个属性的作用：<br>假设一个选择城市查看天气的Activity是一个旅游应用程序的一部分。这个Activity与这个应用中的其他Activity有相同affinity,并且设置了这个属性为true。<br>当你的其他Activity启动这个查看天气的Activity时，它和你的Activity属于同一个Task。<br>但是，当你的旅游应用程序再次展现在前端时，这个查看天气的Activity会重新分配到旅游应用程序的Task中，并显示天气情况。</p>
+<hr>
+<h3 id="清理任务栈有四种情形："><a href="#清理任务栈有四种情形：" class="headerlink" title="清理任务栈有四种情形："></a>清理任务栈有四种情形：</h3><p>情形一： 也是Android系统默认的情形，<br>如果一个任务栈在很长的一段时间都被用户保持在后台的，那么系统就会将这个任务栈中除了根Activity以外的其它所有ACT全部清除掉。<br>当用户再将任务栈切换到前台，则只能显示根activity了。</p>
+<p>情形二： 使用alwaysRetainTaskState属性，<br>如果将根ACT的alwaysRetainTaskState属性设置为“true”，则即便一个任务栈在很长的一段时间都被用户保持在后台的，系统也不会对这个任务栈进行清理。</p>
+<p>情形三： 使用clearTaskOnLaunch属性，<br>如果将根ACT的clearTaskOnLaunch属性设置为“true”，那么只要这个任务栈切换到了后台，那么系统就会将这个任务栈中除了根ACT以外的其它所有ACT全部清除掉。<br>即和alwaysRetainTaskState的行为完全相反。</p>
+<p>情形四： 使用finishOnTaskLaunch属性，<br>这个属性的行为类似于clearTaskOnLaunch，但是此属性作用于单个的ACT对象，而不是整个任务栈。<br>当这个任务栈切换到了后台，这个属性可以使任务栈清理包括根ACT在内的任何ACT对象。</p>
+<hr>
+<h3 id="跟-Task-有关的-Intent对象中设置的Flag"><a href="#跟-Task-有关的-Intent对象中设置的Flag" class="headerlink" title="跟 Task 有关的 Intent对象中设置的Flag"></a>跟 Task 有关的 Intent对象中设置的Flag</h3><p>1.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</p>
+<p>如果设置，新的Activity不会在最近启动的Activity的列表中保存。</p>
+<p>2.FLAG_ACTIVITY_FORWARD_RESULT<br>    如果设置，并且这个Intent用于从一个存在的Activity启动一个新的Activity，那么，这个作为答复目标的Activity将会传到这个新的Activity中。这种方式下，新的Activity可以调用setResult(int)，并且这个结果值将发送给那个作为答复目标的Activity。</p>
+<p>3.FLAG_ACTIVITY_NO_HISTORY</p>
+<p>如果设置，新的Activity将不再历史stack中保留。用户一离开它，这个Activity就关闭了。这也可以通过设置noHistory特性。</p>
+<p>4.FLAG_ACTIVITY_REORDER_TO_FRONT</p>
+<p>如果在Intent中设置，并传递给Context.startActivity()，这个标志将引发已经运行的Activity移动到历史stack的顶端。</p>
+<p>例如，假设一个Task由四个Activity组成：A,B,C,D。如果D调用startActivity()来启动ActivityB，那么，B会移动到历史stack的顶端，现在的次序变成A,C,D,B。如果FLAG_ACTIVITY_CLEAR_TOP标志也设置的话，那么这个标志将被忽略。</p>
+<p>5.FLAG_ACTIVITY_NEW_TASK<br>    如果设置，这个Activity会成为历史stack中一个新Task的开始。一个Task（从启动它的Activity到下一个Task中的Activity）定义了用户可以迁移的Activity原子组。Task可以移动到前台和后台；在某个特定Task中的所有Activity总是保持相同的次序。</p>
+<p>这个标志一般用于呈现“启动”类型的行为：它们提供用户一系列可以单独完成的事情，与启动它们的Activity完全无关。<br>使用这个标志，如果正在启动的Activity的Task已经在运行的话，那么，新的Activity将不会启动；代替的，当前Task会简单的移入前台。参考FLAG_ACTIVITY_MULTIPLE_TASK标志，可以禁用这一行为。<br>这个标志不能用于调用方对已经启动的Activity请求结果。</p>
+<p>6.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET</p>
+<p>如果设置，这将在Task的Activity stack中设置一个还原点，当Task恢复时，需要清理Activity。<br>也就是说，下一次Task带着FLAG_ACTIVITY_RESET_TASK_IF_NEEDED标记进入前台时（典型的操作是用户在主画面重启它），这个Activity和它之上的都将关闭，以至于用户不能再返回到它们，但是可以回到之前的Activity。<br>    这在你的程序有分割点的时候很有用。例如，一个e-mail应用程序可能有一个操作是查看一个附件，需要启动图片浏览Activity来显示。这个Activity应该作为e-mail应用程序Task的一部分，因为这是用户在这个Task中触发的操作。然而，当用户离开这个Task，然后从主画面选择e-mail app，我们可能希望回到查看的会话中，但不是查看图片附件，因为这让人困惑。通过在启动图片浏览时设定这个标志，浏览及其它启动的Activity在下次用户返回到mail程序时都将全部清除。</p>
+<p>7.FLAG_ACTIVITY_CLEAR_TOP<br>    如果设置，并且这个Activity已经在当前的Task中运行，因此，不再是重新启动一个这个Activity的实例，而是在这个Activity上方的所有Activity都将关闭，然后这个Intent会作为一个新的Intent投递到老的Activity（现在位于顶端）中。</p>
+<p>例如，假设一个Task中包含这些Activity：A，B，C，D。如果D调用了startActivity()，并且包含一个指向Activity B的Intent，那么，C和D都将结束，然后B接收到这个Intent，因此，目前stack的状况是：A，B。上例中正在运行的Activity B既可以在onNewIntent()中接收到这个新的Intent，也可以把自己关闭然后重新启动来接收这个Intent。如果它的启动模式声明为“multiple”(默认值)，并且你没有在这个Intent中设置FLAG_ACTIVITY_SINGLE_TOP标志，那么它将关闭然后重新创建；对于其它的启动模式，或者在这个Intent中设置FLAG_ACTIVITY_SINGLE_TOP标志，都将把这个Intent投递到当前这个实例的onNewIntent()中。</p>
+<p>这个启动模式还可以与FLAG_ACTIVITY_NEW_TASK结合起来使用：用于启动一个Task中的根Activity，它会把那个Task中任何运行的实例带入前台，然后清除它直到根Activity。这非常有用，例如，当从Notification Manager处启动一个Activity。</p>
+<p>参考文章： <a href="http://blog.csdn.net/ghj1976/article/details/6371549" target="_blank" rel="noopener">http://blog.csdn.net/ghj1976/article/details/6371549</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2014/08/08/2014-08-08-AndroidActivityLauncherMode/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2014/08/15/2014-08-15-AndroidWidgetPreview/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    桌面插件AppWidget初探
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">BroadcastReceiver 的简单使用</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Java使用wait()以及notifyAll()实现生产者消费者模型 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="之前已经简单介绍过wait()以及notifyAll()的使用，下面通过它们来实现进程间通信，从而解决生产者消费者问题。">
+<meta name="keywords" content="MultiThread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java使用wait()以及notifyAll()实现生产者消费者模型">
+<meta property="og:url" content="http://ai.wisim.me/2015/08/10/2015-08-10-JavaThreadProducerConsumer/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="之前已经简单介绍过wait()以及notifyAll()的使用，下面通过它们来实现进程间通信，从而解决生产者消费者问题。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java使用wait()以及notifyAll()实现生产者消费者模型">
+<meta name="twitter:description" content="之前已经简单介绍过wait()以及notifyAll()的使用，下面通过它们来实现进程间通信，从而解决生产者消费者问题。">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-08-10-JavaThreadProducerConsumer" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Java使用wait()以及notifyAll()实现生产者消费者模型
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/08/10/2015-08-10-JavaThreadProducerConsumer/">
+            <time datetime="2015-08-09T16:00:00.000Z" itemprop="datePublished">2015-08-10</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/JAVA/">JAVA</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/MultiThread/">MultiThread</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>之前已经简单介绍过wait()以及notifyAll()的使用，下面通过它们来实现进程间通信，从而解决生产者消费者问题。</p>
+<a id="more"></a>
+<h4 id="一、首先定义一个生产者线程"><a href="#一、首先定义一个生产者线程" class="headerlink" title="一、首先定义一个生产者线程"></a>一、首先定义一个生产者线程</h4><p>生产者负责生产商品，每次生产一个商品之后都会通知消费者可以来取商品了，如果保存商品的队列满了则停止生产，等待消费者来取走商品。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyProducer</span>&lt;<span class="title">T</span>&gt;  <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;T&gt; mQueue;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> MAX = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> String mName = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">private</span> T mGoods = <span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyProducer</span><span class="params">(Queue&lt;T&gt; queue, <span class="keyword">int</span> max,String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">        <span class="keyword">this</span>.mQueue = queue;</span><br><span class="line">        <span class="keyword">this</span>.MAX = max;</span><br><span class="line">        <span class="keyword">this</span>.mName = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setGoods</span><span class="params">(T goods)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mGoods = goods;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(mQueue) &#123;</span><br><span class="line">                <span class="keyword">while</span>(mQueue.size() == MAX) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        mQueue.wait();</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> time = (<span class="keyword">int</span>)System.currentTimeMillis();</span><br><span class="line">                System.out.println(time+ <span class="string">" | "</span>+mName+<span class="string">" --&gt; queue.size() : "</span> + mQueue.size() + <span class="string">" | Add : "</span>+mGoods);</span><br><span class="line">                mQueue.add(mGoods);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    sleep(<span class="number">100</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                mQueue.notify();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>run()方法中使用一个while(true)循环让生产者一直运行。如果队列满了则执行<code>mQueue.wait();</code>，否则执行<code>mQueue.add(mGoods);</code>。</p>
+<!--值得注意的是在synchronized(mQueue)里面的while(mQueue.size() == MAX)循环，我们是要判断当前队列有没有满，为什么不使用if语句来判断呢？
+但if语句存在一些微妙的小问题，导致即使条件没被满足，你的线程你也有可能被错误地唤醒。所以如果你不在线程被唤醒后再次使用while循环检查唤醒条件是否被满足，你的程序就有可能会出错-->
+<h4 id="二、接着定义一个消费者线程"><a href="#二、接着定义一个消费者线程" class="headerlink" title="二、接着定义一个消费者线程"></a>二、接着定义一个消费者线程</h4><p>消费者负责消费商品，每次消费一个商品之后都会通知生产者，如果保存商品的队列空了，则等待生产者生产商品。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyConsumer</span> &lt;<span class="title">T</span>&gt;  <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;T&gt; mQueue;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> MAX = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> String mName = <span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyConsumer</span><span class="params">(Queue&lt;T&gt; queue , <span class="keyword">int</span> max,String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">        <span class="keyword">this</span>.mQueue = queue;</span><br><span class="line">        <span class="keyword">this</span>.MAX = max;</span><br><span class="line">        <span class="keyword">this</span>.mName = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(mQueue) &#123;</span><br><span class="line">                <span class="keyword">if</span>(mQueue.isEmpty()) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        mQueue.wait();</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">int</span> time = (<span class="keyword">int</span>)System.currentTimeMillis();</span><br><span class="line">                System.out.println(time+<span class="string">" | "</span>+mName+<span class="string">" --&gt; queue.size() : "</span> + mQueue.size()+<span class="string">" | mQueue.remove() : "</span>+mQueue.remove());</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    sleep(<span class="number">100</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                mQueue.notify();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>run()方法中使用一个while(true)循环让消费者一直运行。如果队列空了则执行<code>mQueue.wait();</code>，否则执行<code>mQueue.remove();</code>。</p>
+<h4 id="三、最后来测试一下"><a href="#三、最后来测试一下" class="headerlink" title="三、最后来测试一下"></a>三、最后来测试一下</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Queue;</span><br><span class="line"><span class="keyword">import</span> java.util.LinkedList;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyProducerConsumer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> max = <span class="number">20</span>;</span><br><span class="line">        Queue&lt;String&gt; queue = <span class="keyword">new</span> LinkedList&lt;String&gt;();</span><br><span class="line">        MyProducer&lt;String&gt; p = <span class="keyword">new</span> MyProducer&lt;String&gt;(queue,max,<span class="string">"Producer"</span>);</span><br><span class="line">        p.setGoods(<span class="string">"hello world"</span>);</span><br><span class="line">        MyConsumer&lt;String&gt; c1 = <span class="keyword">new</span> MyConsumer&lt;String&gt;(queue,max,<span class="string">"Consumer1"</span>);</span><br><span class="line">        <span class="comment">//MyConsumer&lt;String&gt; c2 = new MyConsumer&lt;String&gt;(queue,max,"Consumer2");</span></span><br><span class="line">        p.start();</span><br><span class="line">        c1.start();</span><br><span class="line">        <span class="comment">//c2.start();</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每次都向商品队列中添加”hello world”字符串。也可以同时启动两个消费者线程。</p>
+<p>看一下运行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">$ java MyProducerConsumer</span><br><span class="line">397223348 | Producer --&gt; queue.size() : 0 | Add : hello world</span><br><span class="line">397223448 | Producer --&gt; queue.size() : 1 | Add : hello world</span><br><span class="line">397223548 | Producer --&gt; queue.size() : 2 | Add : hello world</span><br><span class="line">397223648 | Producer --&gt; queue.size() : 3 | Add : hello world</span><br><span class="line">397223748 | Producer --&gt; queue.size() : 4 | Add : hello world</span><br><span class="line">397223848 | Producer --&gt; queue.size() : 5 | Add : hello world</span><br><span class="line">397223948 | Consumer1 --&gt; queue.size() : 6 | mQueue.remove() : hello world</span><br><span class="line">397224048 | Producer --&gt; queue.size() : 5 | Add : hello world</span><br><span class="line">397224148 | Producer --&gt; queue.size() : 6 | Add : hello world</span><br><span class="line">397224248 | Producer --&gt; queue.size() : 7 | Add : hello world</span><br><span class="line">397224348 | Producer --&gt; queue.size() : 8 | Add : hello world</span><br><span class="line">397224448 | Producer --&gt; queue.size() : 9 | Add : hello world</span><br><span class="line">397224548 | Producer --&gt; queue.size() : 10 | Add : hello world</span><br><span class="line">397224648 | Producer --&gt; queue.size() : 11 | Add : hello world</span><br><span class="line">397224748 | Producer --&gt; queue.size() : 12 | Add : hello world</span><br><span class="line">397224848 | Producer --&gt; queue.size() : 13 | Add : hello world</span><br><span class="line">397224948 | Producer --&gt; queue.size() : 14 | Add : hello world</span><br><span class="line">397225048 | Producer --&gt; queue.size() : 15 | Add : hello world</span><br><span class="line">397225148 | Producer --&gt; queue.size() : 16 | Add : hello world</span><br><span class="line">397225248 | Producer --&gt; queue.size() : 17 | Add : hello world</span><br><span class="line">397225348 | Producer --&gt; queue.size() : 18 | Add : hello world</span><br><span class="line">397225448 | Producer --&gt; queue.size() : 19 | Add : hello world</span><br><span class="line">397225548 | Consumer1 --&gt; queue.size() : 20 | mQueue.remove() : hello world</span><br><span class="line">397225648 | Consumer1 --&gt; queue.size() : 19 | mQueue.remove() : hello world</span><br><span class="line">397225748 | Consumer1 --&gt; queue.size() : 18 | mQueue.remove() : hello world</span><br><span class="line">397225848 | Consumer1 --&gt; queue.size() : 17 | mQueue.remove() : hello world</span><br><span class="line">397225948 | Consumer1 --&gt; queue.size() : 16 | mQueue.remove() : hello world</span><br><span class="line">397226048 | Producer --&gt; queue.size() : 15 | Add : hello world</span><br><span class="line">397226148 | Producer --&gt; queue.size() : 16 | Add : hello world</span><br><span class="line">397226248 | Producer --&gt; queue.size() : 17 | Add : hello world</span><br><span class="line">397226348 | Producer --&gt; queue.size() : 18 | Add : hello world</span><br><span class="line">397226448 | Producer --&gt; queue.size() : 19 | Add : hello world</span><br><span class="line">397226548 | Consumer1 --&gt; queue.size() : 20 | mQueue.remove() : hello world</span><br><span class="line">397226648 | Consumer1 --&gt; queue.size() : 19 | mQueue.remove() : hello world</span><br><span class="line">397226748 | Consumer1 --&gt; queue.size() : 18 | mQueue.remove() : hello world</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/08/10/2015-08-10-JavaThreadProducerConsumer/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/08/12/2015-08-11-AndroidRecyclerViewPre/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    RecyclerView Preview
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/08/10/2015-08-10-ReactNativeCSS/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">ReactNative中的布局样式</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

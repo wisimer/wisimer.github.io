@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android应用访问硬件驱动程序 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在应用层访问驱动程序有两种实现架构： (1).直接在使用JNI访问底层驱动，然后在Java代码中调用JNI的方法来实现最终访问驱动的目的。 (2).通过硬件抽象层来访问硬件，然后在Framework层实现访问硬件抽象层的JNI方法。  不管那种方法，都要添加新的系统级硬件访问服务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android应用访问硬件驱动程序">
+<meta property="og:url" content="http://ai.wisim.me/2014/12/29/2014-12-29-NDKAccessDriver/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="在应用层访问驱动程序有两种实现架构： (1).直接在使用JNI访问底层驱动，然后在Java代码中调用JNI的方法来实现最终访问驱动的目的。 (2).通过硬件抽象层来访问硬件，然后在Framework层实现访问硬件抽象层的JNI方法。  不管那种方法，都要添加新的系统级硬件访问服务。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android应用访问硬件驱动程序">
+<meta name="twitter:description" content="在应用层访问驱动程序有两种实现架构： (1).直接在使用JNI访问底层驱动，然后在Java代码中调用JNI的方法来实现最终访问驱动的目的。 (2).通过硬件抽象层来访问硬件，然后在Framework层实现访问硬件抽象层的JNI方法。  不管那种方法，都要添加新的系统级硬件访问服务。">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2014-12-29-NDKAccessDriver" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android应用访问硬件驱动程序
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/12/29/2014-12-29-NDKAccessDriver/">
+            <time datetime="2014-12-28T16:00:00.000Z" itemprop="datePublished">2014-12-29</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="在应用层访问驱动程序有两种实现架构："><a href="#在应用层访问驱动程序有两种实现架构：" class="headerlink" title="在应用层访问驱动程序有两种实现架构："></a>在应用层访问驱动程序有两种实现架构：</h3><ul>
+<li>(1).直接在使用JNI访问底层驱动，然后在Java代码中调用JNI的方法来实现最终访问驱动的目的。</li>
+<li>(2).通过硬件抽象层来访问硬件，然后在Framework层实现访问硬件抽象层的JNI方法。</li>
+</ul>
+<p>不管那种方法，都要添加新的系统级硬件访问服务。</p>
+<a id="more"></a>
+<h4 id="1-对于第一种架构，先来看一个简单的例子：JNI访问重力感应驱动libgsensor-jni-cpp"><a href="#1-对于第一种架构，先来看一个简单的例子：JNI访问重力感应驱动libgsensor-jni-cpp" class="headerlink" title="1. 对于第一种架构，先来看一个简单的例子：JNI访问重力感应驱动libgsensor_jni.cpp"></a>1. 对于第一种架构，先来看一个简单的例子：JNI访问重力感应驱动<code>libgsensor_jni.cpp</code></h4><pre><code>#define LOG_TAG &quot;libproximity_jni&quot;
+
+#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;sys/ioctl.h&gt;
+#include &lt;utils/misc.h&gt;
+#include &lt;utils/Log.h&gt;
+
+#include &quot;jni.h&quot;
+#include &quot;JNIHelp.h&quot;
+#include &lt;linux/ioctl.h&gt;
+
+#define GSENSOR 0x85
+#define GSENSOR_IOCTL_SET_CALIBARION _IO(GSENSOR, 0x0A)
+
+#ifdef __cplusplus
+    extern &quot;C&quot; {
+#endif
+
+static jboolean gcalibrateSensor(JNIEnv *env, jobject clazz) {
+    ALOGI(&quot;[Proximity] gcalibrateSensor\n&quot;);
+          int fd = open(&quot;/dev/gsensor&quot;, O_RDWR, 0);
+       ALOGE(&quot;[Proximity] callgcalibrateSensor, fd:%d\n&quot;, fd);
+    if (fd &gt;= 0) {
+        if (ioctl(fd, GSENSOR_IOCTL_SET_CALIBARION) == -1) {
+            ALOGE(&quot;[Proximity] gcalibrateSensor 1111failed\n&quot;);
+            return JNI_FALSE;
+        }
+        close(fd);
+    } else {
+        ALOGE(&quot;[Proximity] gcalibrateSensor 1111 open als_ps failed\n&quot;);
+        return JNI_FALSE;
+    }
+    return JNI_TRUE;
+}
+
+// --------------------------------------------------------------------------
+
+static JNINativeMethod gsensorNotify[] = {
+    { &quot;gcalibrateSensor&quot;, &quot;()Z&quot;, (void*)gcalibrateSensor },
+};
+
+jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+    JNIEnv* env = NULL;
+    jint result = -1;
+    if (vm-&gt;GetEnv((void**) &amp;env, JNI_VERSION_1_4) != JNI_OK) {
+        ALOGE(&quot;GetEnv failed!&quot;);
+        return result;
+    }
+
+    int ret = jniRegisterNativeMethods(
+        env, &quot;com/bird/gsensor/GSensorNative&quot;, gsensorNotify, NELEM(gsensorNotify));
+
+    if (ret) {
+        ALOGE(&quot;[Proximity] call jniRegisterNativeMethods() failed, ret:%d\n&quot;, ret);
+    }
+
+    return JNI_VERSION_1_4;
+}
+
+#ifdef __cplusplus
+    }
+#endif
+</code></pre><h4 id="2-由于上面这个-cpp文件会在编译的时候生成一个动态链接库，接着定义一个Java类来加载这个动态库"><a href="#2-由于上面这个-cpp文件会在编译的时候生成一个动态链接库，接着定义一个Java类来加载这个动态库" class="headerlink" title="2. 由于上面这个.cpp文件会在编译的时候生成一个动态链接库，接着定义一个Java类来加载这个动态库"></a>2. 由于上面这个.cpp文件会在编译的时候生成一个动态链接库，接着定义一个Java类来加载这个动态库</h4><pre><code>public class GSensorNative {
+    static {
+    System.loadLibrary(&quot;gsensorjni&quot;);
+    }
+    public native boolean gcalibrateSensor();
+}
+</code></pre><h4 id="3-最后如果要访问重力感应硬件，只要调用实例化一个GSensorNative对象，再调用它的gcalibrateSensor-即可"><a href="#3-最后如果要访问重力感应硬件，只要调用实例化一个GSensorNative对象，再调用它的gcalibrateSensor-即可" class="headerlink" title="3. 最后如果要访问重力感应硬件，只要调用实例化一个GSensorNative对象，再调用它的gcalibrateSensor()即可"></a>3. 最后如果要访问重力感应硬件，只要调用实例化一个GSensorNative对象，再调用它的gcalibrateSensor()即可</h4><pre><code>mGCali.gcalibrateSensor();
+</code></pre><hr>
+<h3 id="如果只是对于单纯某个应用要访问硬件，我们只要采用第一种架构。但是现实开发中，通常是要将访问硬件的服务添加到系统服务中去，以便系统里所有应用都可以通过调用系统服务的方式来访问硬件。"><a href="#如果只是对于单纯某个应用要访问硬件，我们只要采用第一种架构。但是现实开发中，通常是要将访问硬件的服务添加到系统服务中去，以便系统里所有应用都可以通过调用系统服务的方式来访问硬件。" class="headerlink" title="如果只是对于单纯某个应用要访问硬件，我们只要采用第一种架构。但是现实开发中，通常是要将访问硬件的服务添加到系统服务中去，以便系统里所有应用都可以通过调用系统服务的方式来访问硬件。"></a>如果只是对于单纯某个应用要访问硬件，我们只要采用第一种架构。但是现实开发中，通常是要将访问硬件的服务添加到系统服务中去，以便系统里所有应用都可以通过调用系统服务的方式来访问硬件。</h3><p>由于硬件抽象层并不在本文的涉及范围之内，我们这里只讨论如何使用JNI访问硬件抽象层模块的接口。</p>
+<h4 id="0-framework-base-下面新增一个包的话，要在build-core-pathmap-mk下面去注册-在FRAMEWORKS-BASE-SUBDIRS后添加新增的目录名"><a href="#0-framework-base-下面新增一个包的话，要在build-core-pathmap-mk下面去注册-在FRAMEWORKS-BASE-SUBDIRS后添加新增的目录名" class="headerlink" title="0. /framework/base/下面新增一个包的话，要在build/core/pathmap.mk下面去注册,在FRAMEWORKS_BASE_SUBDIRS后添加新增的目录名"></a>0. /framework/base/下面新增一个包的话，要在build/core/pathmap.mk下面去注册,在FRAMEWORKS_BASE_SUBDIRS后添加新增的目录名</h4><h4 id="1-定义硬件访问服务-frameworks-base-core-java-android-os-IFingerprintService-aidl"><a href="#1-定义硬件访问服务-frameworks-base-core-java-android-os-IFingerprintService-aidl" class="headerlink" title="1. 定义硬件访问服务/frameworks/base/core/java/android/os/IFingerprintService.aidl"></a>1. 定义硬件访问服务/frameworks/base/core/java/android/os/IFingerprintService.aidl</h4><pre><code>package android.os;
+interface IFingerprintService {
+    boolean recordNewFingerprint();
+    boolean compareFingerprints();
+}
+</code></pre><ul>
+<li>注意：要在/framework/base/Android.mk中添加，修改LOCAL_SRC_FILES变量的值：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_SRC_FILES += \</span><br><span class="line">...</span><br><span class="line">core/java/android/os/IFingerprintService.aidl</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>接口中有两个方法，一个是用于录取指纹，另一个用于比对指纹。</p>
+<h4 id="2-实现硬件访问服务-framewoks-base-services-java-com-android-server-FingerprintService-java"><a href="#2-实现硬件访问服务-framewoks-base-services-java-com-android-server-FingerprintService-java" class="headerlink" title="2. 实现硬件访问服务/framewoks/base/services/java/com/android/server/FingerprintService.java"></a>2. 实现硬件访问服务/framewoks/base/services/java/com/android/server/FingerprintService.java</h4><pre><code>package com.android.server;
+
+import android.os.IFingerprintService;
+import android.util.Log;
+
+public class FingerprintService extends IFingerprintService.Stub {
+    private static final String TAG = &quot;FingerprintService&quot;;
+    private int mPtr = 0;
+    FingerprintService(){
+        mPtr = init_native();
+        if (mPtr == 0) {
+            Log.e(&quot;TAG&quot;,&quot;init_fail&quot;);
+        } else {
+          Log.e(&quot;TAG&quot;,&quot;init_success&quot;);
+        }
+    }
+
+    public boolean recordNewFingerprint(){
+        if (mPtr == 0) {
+            return false;
+        }
+        return recordNewFingerprint_native();
+    }
+
+    public boolean compareFingerprints(){
+        if (mPtr == 0) {
+            return false;
+        }
+        return compareFingerprints_native();
+    }
+
+    private static native int init_native();
+    private static native boolean recordNewFingerprint_native();
+    private static native boolean compareFingerprints_native();
+}
+</code></pre><h4 id="3-实现硬件访问服务的JNI方法-framewoks-base-services-jni-com-android-server-FingerprintService-cpp"><a href="#3-实现硬件访问服务的JNI方法-framewoks-base-services-jni-com-android-server-FingerprintService-cpp" class="headerlink" title="3. 实现硬件访问服务的JNI方法/framewoks/base/services/jni/com_android_server_FingerprintService.cpp"></a>3. 实现硬件访问服务的JNI方法/framewoks/base/services/jni/com_android_server_FingerprintService.cpp</h4><pre><code>#define LOG_TAG &quot;FingerprintServiceJNI&quot;
+
+#include &quot;jni.h&quot;
+#include &quot;JNIHelp.h&quot;
+#include &quot;android_runtime/AndroidRuntime.h&quot;
+
+#include &lt;utils/misc.h&gt;
+#include &lt;utils/Log.h&gt;
+#include &lt;hardware/hardware.h&gt;
+#include &lt;stdio.h&gt;
+
+namespace android
+{
+    static jboolean fingerprint_recordNewFingerprint(JNIEnv* env,jobject clazz){
+        boolean result = false;
+        /*录取指纹
+         *......
+         *result = recordNewFingerprint
+         *......
+         */
+        return result;
+    }
+
+    static jboolean fingerprint_compareFingerprints(JNIEnv* env,jobject clazz){
+        boolean result = false;
+        /*比对指纹
+         *......
+         *result = compareFingerprints
+         *......
+         */
+        return result;
+    }
+
+    static jint fingerprint_init(JNIEnv* env,jobject clazz){
+        /*进行一些初始化工作
+         *......
+         *if(open_success) return (jint) device;
+         *else return 0;
+         *......
+         */
+        return 0;
+    }
+
+    static const JNINativeMethod method_table[] = {
+        {&quot;init_native&quot;,&quot;()I&quot;,(void*)fingerprint_init},
+        {&quot;recordNewFingerprint_native&quot;,&quot;()Z&quot;,(void*)fingerprint_recordNewFingerprint},
+        {&quot;compareFingerprints_native&quot;,&quot;()Z&quot;,(void*)fingerprint_compareFingerprints}
+    };
+
+    int register_android_server_FingerprintService (JNIEnv* env) {
+        return jniRegisterNativeMethods(env,&quot;com/android/server/FingerprintService&quot;,method_table,NELEM(method_table));
+    }
+};
+</code></pre><h4 id="4-接着还要在-framewoks-base-services-jni-onload-cpp中增加register-android-server-FingerprintService函数的声明和调用，这样系统加载libandroid-servers模块时，就会调用和实现在onload-cpp文件中的JNI-OnLoad函数。这样，就可以将前面定义的三那个JNI方法注册到Java虚拟机中。"><a href="#4-接着还要在-framewoks-base-services-jni-onload-cpp中增加register-android-server-FingerprintService函数的声明和调用，这样系统加载libandroid-servers模块时，就会调用和实现在onload-cpp文件中的JNI-OnLoad函数。这样，就可以将前面定义的三那个JNI方法注册到Java虚拟机中。" class="headerlink" title="4. 接着还要在/framewoks/base/services/jni/onload.cpp中增加register_android_server_FingerprintService函数的声明和调用，这样系统加载libandroid_servers模块时，就会调用和实现在onload.cpp文件中的JNI_OnLoad函数。这样，就可以将前面定义的三那个JNI方法注册到Java虚拟机中。"></a>4. 接着还要在/framewoks/base/services/jni/onload.cpp中增加register_android_server_FingerprintService函数的声明和调用，这样系统加载libandroid_servers模块时，就会调用和实现在onload.cpp文件中的JNI_OnLoad函数。这样，就可以将前面定义的三那个JNI方法注册到Java虚拟机中。</h4><pre><code>namespace android {
+......
+int register_android_server_FingerprintService(JNIEnv* env);
+......
+};
+
+using namespace android;
+
+extern &quot;C&quot; jint JNI_OnLoad(JavaVM* vm, void* reserved)
+{
+    JNIEnv* env = NULL;
+    jint result = -1;
+
+    if (vm-&gt;GetEnv((void**) &amp;env, JNI_VERSION_1_4) != JNI_OK) {
+        ALOGE(&quot;GetEnv failed!&quot;);
+        return result;
+    }
+    ALOG_ASSERT(env, &quot;Could not retrieve the env!&quot;);
+......
+register_android_server_FingerprintService(env);
+......
+    return JNI_VERSION_1_4;
+}
+</code></pre><h4 id="5-在系统中启用硬件访问服务，在-framewoks-base-services-java-com-android-server-SystemServer-java的initAndLoop方法中添加"><a href="#5-在系统中启用硬件访问服务，在-framewoks-base-services-java-com-android-server-SystemServer-java的initAndLoop方法中添加" class="headerlink" title="5. 在系统中启用硬件访问服务，在/framewoks/base/services/java/com/android/server/SystemServer.java的initAndLoop方法中添加"></a>5. 在系统中启用硬件访问服务，在/framewoks/base/services/java/com/android/server/SystemServer.java的initAndLoop方法中添加</h4><pre><code>public void initAndLoop() {
+    ......
+    if (factoryTest != SystemServer.FACTORY_TEST_LOW_LEVEL) {
+        //if (!disableNonCoreServices) { // TODO: View depends on these; mock them?
+        if (true) {
+            try {
+                Slog.i(TAG, &quot;FingerprintService&quot;);
+                ServiceManager.addService(&quot;FingerprintService&quot;, new FingerprintService());
+            } catch (Throwable e) {
+                reportWtf(&quot;starting FingerprintService&quot;, e);
+            }
+
+        }
+    }
+    ......
+}
+</code></pre><h4 id="6-系统层的服务已经添加完毕，接着先make-update-api，然后要重新编译整个源码。"><a href="#6-系统层的服务已经添加完毕，接着先make-update-api，然后要重新编译整个源码。" class="headerlink" title="6. 系统层的服务已经添加完毕，接着先make update-api，然后要重新编译整个源码。"></a>6. 系统层的服务已经添加完毕，接着先make update-api，然后要重新编译整个源码。</h4><p>最终基于源码开发的应用调用这个服务。</p>
+<pre><code>IFingerprintService mIFingerprintService = IFingerprintService.Stub.asInterface(ServiceManager.getService(&quot;FingerprintService&quot;));
+mIFingerprintService.recordNewFingerprint()
+</code></pre><hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2014/12/29/2014-12-29-NDKAccessDriver/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2014/12/30/2014-12-30-OtherMakefileSytax/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Android Makefile Syntax
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/12/27/2014-12-27-NDKPreview/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">NDK开发起步</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

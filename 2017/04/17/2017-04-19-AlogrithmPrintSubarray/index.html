@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Print all sub-array with 0 sum | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="1234567891011121314151617Given an array of integers, print all subarrays having 0 sum.For example,Input:  &amp;#123; 4, 2, -3, -1, 0, 4 &amp;#125;Sub-arrays with 0 sum are&amp;#123; -3, -1, 0, 4 &amp;#125;&amp;#123; 0 &amp;#">
+<meta name="keywords" content="DynamicProgramming">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Print all sub-array with 0 sum">
+<meta property="og:url" content="http://ai.wisim.me/2017/04/17/2017-04-19-AlogrithmPrintSubarray/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="1234567891011121314151617Given an array of integers, print all subarrays having 0 sum.For example,Input:  &amp;#123; 4, 2, -3, -1, 0, 4 &amp;#125;Sub-arrays with 0 sum are&amp;#123; -3, -1, 0, 4 &amp;#125;&amp;#123; 0 &amp;#">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1704/0419_print_subarray.png">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Print all sub-array with 0 sum">
+<meta name="twitter:description" content="1234567891011121314151617Given an array of integers, print all subarrays having 0 sum.For example,Input:  &amp;#123; 4, 2, -3, -1, 0, 4 &amp;#125;Sub-arrays with 0 sum are&amp;#123; -3, -1, 0, 4 &amp;#125;&amp;#123; 0 &amp;#">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1704/0419_print_subarray.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2017-04-19-AlogrithmPrintSubarray" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Print all sub-array with 0 sum
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/17/2017-04-19-AlogrithmPrintSubarray/">
+            <time datetime="2017-04-16T16:00:00.000Z" itemprop="datePublished">2017-04-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ALGORITHM/">ALGORITHM</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/DynamicProgramming/">DynamicProgramming</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Given an array of integers, print all subarrays having 0 sum.</span><br><span class="line"></span><br><span class="line">For example,</span><br><span class="line"></span><br><span class="line">Input:  &#123; 4, 2, -3, -1, 0, 4 &#125;</span><br><span class="line">Sub-arrays with 0 sum are</span><br><span class="line">&#123; -3, -1, 0, 4 &#125;</span><br><span class="line">&#123; 0 &#125;</span><br><span class="line"></span><br><span class="line">Input:  &#123; 3, 4, -7, 3, 1, 3, 1, -4, -2, -2 &#125;</span><br><span class="line">Sub-arrays with 0 sum are</span><br><span class="line">&#123; 3, 4, -7 &#125;</span><br><span class="line">&#123; 4, -7, 3 &#125;</span><br><span class="line">&#123; -7, 3, 1, 3 &#125;</span><br><span class="line">&#123; 3, 1, -4 &#125;</span><br><span class="line">&#123; 3, 1, 3, 1, -4, -2, -2 &#125;</span><br><span class="line">&#123; 3, 4, -7, 3, 1, 3, 1, -4, -2, -2 &#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>意思就是给定一个数组，找到所有和为0的子数组。</p>
+<h4 id="解法1：暴力求解"><a href="#解法1：暴力求解" class="headerlink" title="解法1：暴力求解"></a>解法1：暴力求解</h4><p>双重循环，从当前数组开始往后遍历，找到和为0的子数组。时间复杂度是O(n^3)，其中O(n^2)用于遍历出子数组，O(n)用于计算和。</p>
+<h4 id="解法2：使用HashMap来解决"><a href="#解法2：使用HashMap来解决" class="headerlink" title="解法2：使用HashMap来解决"></a>解法2：使用HashMap来解决</h4><p>构造一个 <code>Map&lt;Integer, ArrayList&gt; hashMap</code> 用来存放<br>遍历数组，以当前位置（包含当前位置）之前的所有元素之和sum为key，如果hashMap中不存在这个key，则将这个key插入到hashMap中，并将这个元素所在位置插入到对应的ArrayList中。如果hashMap中已经存在这个key，则遍历key对应的ArrayList，以ArrayList中(每个元素所在位置+1)为起始值，当前元素所在位置为结束值，这之间的子数组的和就是0，接着还是要把当前位置插入到已经存在的key所对应的ArrayList中。</p>
+<h5 id="举个例子：数组-3-4-7-3-1-3-1-4-2-2"><a href="#举个例子：数组-3-4-7-3-1-3-1-4-2-2" class="headerlink" title="举个例子：数组{ 3, 4, -7, 3, 1, 3, 1, -4, -2, -2 }"></a>举个例子：数组{ 3, 4, -7, 3, 1, 3, 1, -4, -2, -2 }</h5><p>我们来一步一步的分析：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">(1)首先初始化的时候插入key为0，对应的ArrayList中插入-1，这样以后如果找到子数组就是从位置0开始了。插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1]&#125;</span><br><span class="line"></span><br><span class="line">(2)位置0的元素为3，hashMap中不含(0+3=3)。插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1]&#125;,</span><br><span class="line">&#123;3,[0]&#125;</span><br><span class="line"></span><br><span class="line">(3)位置1的元素是4,hashMap中不含(3+4=7)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1]&#125;,</span><br><span class="line">&#123;3,[0]&#125;,</span><br><span class="line">&#123;7,[1]&#125;</span><br><span class="line"></span><br><span class="line">(4)位置2的元素是-7,hashMap包含(-7+7=0)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1,2]&#125;,</span><br><span class="line">&#123;3,[0]&#125;,</span><br><span class="line">&#123;7,[1]&#125;</span><br><span class="line">并且此时有一个满足条件的子数组，对应的位置序列：</span><br><span class="line">[0,1,2]</span><br><span class="line"></span><br><span class="line">(5)位置3的元素是3,hashMap包含(0+3=3)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1,2]&#125;,</span><br><span class="line">&#123;3,[0,3]&#125;,</span><br><span class="line">&#123;7,[1]&#125;</span><br><span class="line">并且此时有一个满足条件的子数组，对应的位置序列：</span><br><span class="line">[1,2,3]</span><br><span class="line"></span><br><span class="line">(6)位置4的元素是1,hashMap不含(1+3=4)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1,2]&#125;,</span><br><span class="line">&#123;3,[0,3]&#125;,</span><br><span class="line">&#123;7,[1]&#125;,</span><br><span class="line">&#123;4,[4]&#125;</span><br><span class="line"></span><br><span class="line">(7)位置5的元素是3,hashMap包含(4+3=7)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1,2]&#125;,</span><br><span class="line">&#123;3,[0,3]&#125;,</span><br><span class="line">&#123;7,[1,5]&#125;,</span><br><span class="line">&#123;4,[4]&#125;</span><br><span class="line">并且此时有一个满足条件的子数组，对应的位置序列：</span><br><span class="line">[2,3,4,5]</span><br><span class="line"></span><br><span class="line">(8)位置6的元素是1,hashMap不含(7+1=8)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1,2]&#125;,</span><br><span class="line">&#123;3,[0,3]&#125;,</span><br><span class="line">&#123;7,[1,5]&#125;,</span><br><span class="line">&#123;4,[4]&#125;,</span><br><span class="line">&#123;8,[6]&#125;</span><br><span class="line"></span><br><span class="line">(9)位置7的元素是-4,hashMap包含(-4+8=4)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1,2]&#125;,</span><br><span class="line">&#123;3,[0,3]&#125;,</span><br><span class="line">&#123;7,[1,5]&#125;,</span><br><span class="line">&#123;4,[4,7]&#125;,</span><br><span class="line">&#123;8,[6]&#125;</span><br><span class="line">并且此时有一个满足条件的子数组，对应的位置序列：</span><br><span class="line">[5,6,7]</span><br><span class="line"></span><br><span class="line">(10)位置8的元素是-2,hashMap包含(-2+4=2)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1,2]&#125;,</span><br><span class="line">&#123;3,[0,3]&#125;,</span><br><span class="line">&#123;7,[1,5]&#125;,</span><br><span class="line">&#123;4,[4,7]&#125;,</span><br><span class="line">&#123;8,[6]&#125;,</span><br><span class="line">&#123;2,[8]&#125;</span><br><span class="line"></span><br><span class="line">(11)位置9的元素是-2,hashMap包含(-2+2=0)，插入之后hashMap的内容是：</span><br><span class="line">&#123;0,[-1,2,9]&#125;,</span><br><span class="line">&#123;3,[0,3]&#125;,</span><br><span class="line">&#123;7,[1,5]&#125;,</span><br><span class="line">&#123;4,[4,7]&#125;,</span><br><span class="line">&#123;8,[6]&#125;,</span><br><span class="line">&#123;2,[8]&#125;</span><br><span class="line">并且此时有两个满足条件的子数组，对应的位置序列：</span><br><span class="line">[0,1,2,3,4,5,6,7,8,9]</span><br><span class="line">[3,4,5,6,7,8,9]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>来总结一下这种解法的:这种解法的时间复杂度是O(n)。<br>初始化的时候向hashMap中插入了key为0的一个元素，这一步很重要。之后从数组中遍历出的元素累加，每次累加得到的结果肯定会发生变化。如果发现某一次累加之后的值之前已经出现过一次，说明什么，说明在第一次出现这个值之后中间的累加操作一定会使得第一次之后（不包含第一次）到第二次（包含第二次）的和的值为0。</p>
+</blockquote>
+<p>￼￼结合下面这张折线图来看一下：<br><img src="/src/imgs/1704/0419_print_subarray.png" alt="rint_subarray"></p>
+<p>从-1位置开始，初始sum为0，经过了0，1，2三个位置的元素累加之后，sum又重新变为0。这期间发生了什么呢，依次发生了+3，+4，-7的操作，所以一旦发现两次的累加的和相等的话，表明这之间一定经过了和为0的加减操作。同理，其他几个位置的变化也是如此。</p>
+<h4 id="我们再用数学公式抽象一下："><a href="#我们再用数学公式抽象一下：" class="headerlink" title="我们再用数学公式抽象一下："></a>我们再用数学公式抽象一下：</h4><p>设从 0 到 i 位置的累加和为 Si且i位置的元素为e[i]，从 0 到 n 位置的累加和为 Sn且n位置的元素为e[n]，Si = Sn。</p>
+<p>从累加的定义我们知道：</p>
+<script type="math/tex; mode=display">S_{i} + e[i+1] = S_{i+1}</script><p>于是可以得到：</p>
+<script type="math/tex; mode=display">S_i + e[i+1] + e[i+2] + ... + e[n] = S_n</script><p>又有：<script type="math/tex">S_i = S_n</script></p>
+<p>所以 <code>e[i+1] + e[i+2] + ... + e[n]  = 0</code> 。<br>也就是从 i+1 开始到 n 的子数组之和为0</p>
+<hr>
+<p>Link : <a href="http://www.techiedelight.com/find-sub-array-with-0-sum/" target="_blank" rel="noopener">find-sub-array-with-0-sum</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2017/04/17/2017-04-19-AlogrithmPrintSubarray/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/04/17/2017-04-17-AlogrithmSunday/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Sunday 算法
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/03/30/2017-03-30-AndroidServiceProblems/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android Service相关问题</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

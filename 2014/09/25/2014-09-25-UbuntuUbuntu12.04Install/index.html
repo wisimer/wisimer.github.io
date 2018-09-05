@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Ubuntu12.04系统安装和Anroid系统源码编译环境配置 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="准备工作： 1.备份当前系统的文件 2.导出xp虚拟机的虚拟介质，以便安装12.04之后直接恢复   一：USB启动盘制作 1.拷贝服务器上的安装镜像ubuntu-12.04-desktop-amd64.iso到本地 2.插入Ｕ盘 3.Ubuntu系统中打开　系统－系统管理－启动盘制作器 4.选择第１步中拷贝的镜像，并选择第２步中插入的Ｕ盘 5.格式化掉U盘后，点击制作就可以了">
+<meta name="keywords" content="Ubuntu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu12.04系统安装和Anroid系统源码编译环境配置">
+<meta property="og:url" content="http://ai.wisim.me/2014/09/25/2014-09-25-UbuntuUbuntu12.04Install/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="准备工作： 1.备份当前系统的文件 2.导出xp虚拟机的虚拟介质，以便安装12.04之后直接恢复   一：USB启动盘制作 1.拷贝服务器上的安装镜像ubuntu-12.04-desktop-amd64.iso到本地 2.插入Ｕ盘 3.Ubuntu系统中打开　系统－系统管理－启动盘制作器 4.选择第１步中拷贝的镜像，并选择第２步中插入的Ｕ盘 5.格式化掉U盘后，点击制作就可以了">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu12.04系统安装和Anroid系统源码编译环境配置">
+<meta name="twitter:description" content="准备工作： 1.备份当前系统的文件 2.导出xp虚拟机的虚拟介质，以便安装12.04之后直接恢复   一：USB启动盘制作 1.拷贝服务器上的安装镜像ubuntu-12.04-desktop-amd64.iso到本地 2.插入Ｕ盘 3.Ubuntu系统中打开　系统－系统管理－启动盘制作器 4.选择第１步中拷贝的镜像，并选择第２步中插入的Ｕ盘 5.格式化掉U盘后，点击制作就可以了">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2014-09-25-UbuntuUbuntu12.04Install" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Ubuntu12.04系统安装和Anroid系统源码编译环境配置
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/09/25/2014-09-25-UbuntuUbuntu12.04Install/">
+            <time datetime="2014-09-24T16:00:00.000Z" itemprop="datePublished">2014-09-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Ubuntu/">Ubuntu</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h2><ul>
+<li>1.备份当前系统的文件</li>
+<li>2.导出xp虚拟机的虚拟介质，以便安装12.04之后直接恢复</li>
+</ul>
+<hr>
+<h2 id="一：USB启动盘制作"><a href="#一：USB启动盘制作" class="headerlink" title="一：USB启动盘制作"></a>一：USB启动盘制作</h2><ul>
+<li>1.拷贝服务器上的安装镜像ubuntu-12.04-desktop-amd64.iso到本地</li>
+<li>2.插入Ｕ盘</li>
+<li>3.Ubuntu系统中打开　系统－系统管理－启动盘制作器</li>
+<li>4.选择第１步中拷贝的镜像，并选择第２步中插入的Ｕ盘</li>
+<li>5.格式化掉U盘后，点击制作就可以了</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h2 id="二：系统安装"><a href="#二：系统安装" class="headerlink" title="二：系统安装"></a>二：系统安装</h2><ul>
+<li>1.插入Ｕ盘开机，在开机界面按F12进入启动菜单，选择U盘启动</li>
+<li>2.进入安装界面，如果选择自定义的话，可以参考如下磁盘分配</li>
+</ul>
+<blockquote>
+<ul>
+<li>(1)./分区，50G,方便以后重装系统</li>
+<li>(2).SWAP分区，物理内存的2倍就行。可以先分一个分区出来，在文件系统选项里面选择swap</li>
+<li>(3).剩下的单独做一个分区，待系统安装完成后，格式化并配置自动挂载</li>
+</ul>
+</blockquote>
+<ul>
+<li>3.安装完成后，拔掉U盘重启</li>
+</ul>
+<hr>
+<h2 id="三：环境配置"><a href="#三：环境配置" class="headerlink" title="三：环境配置"></a>三：环境配置</h2><p> (1)激活root账户</p>
+<ul>
+<li>A.在终端中，执行　<code>sudo passwd root</code></li>
+<li>B.根据提示，输入密码，以及root账户的密码，可以一样，也可以不同</li>
+<li><p>C.(12.04需要此步骤开启root账户登录)</p>
+<p>  sudo gedit /etc/lightdm/lightdm.conf</p>
+</li>
+</ul>
+<p><em>在文件中添加下面这两行</em></p>
+<pre><code>greeter-show-manual-login=true
+allow-guest=false
+</code></pre><p><em>另外还要检查系统设置中的自动登录，关闭自动登录选项</em></p>
+<p> (2)点击屏幕右上角的电源图标，选择注销，并以root帐户登录</p>
+<p> (3)JDK</p>
+<ul>
+<li>拷贝jdk-6u32-linux-x64.bin到/usr/lib/jvm分区中</li>
+<li>赋予可执行权限　<code>chmod u+x jdk-6u32-linux-x64.bin</code></li>
+<li>在终端中执行　<code>./jdk-6u32-linux-x64.bin</code></li>
+<li><p>将JDK相关的命令配置到环境变量中</p>
+<p>A.打开/etc/environment,<br>  gedit /etc/environment</p>
+<p>B.在Path末尾添加jdk的路径</p>
+<blockquote>
+<p>PATH=”/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/lib/jvm/jdk1.6.0_32/bin”</p>
+</blockquote>
+<p>C.保存并退出</p>
+<p>D.在终端执行</p>
+<pre><code>source /etc/environment
+</code></pre><p>E.然后就是要告诉系统，我们使用的sun的JDK，而非OpenJDK了：</p>
+<pre><code>$ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.6.0_32/bin/java 300
+$ sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.6.0_32/bin/javac 300
+$ sudo update-alternatives --config java
+</code></pre></li>
+</ul>
+<p>  E.敲入<code>java -version</code>看是否有相应输出</p>
+<p> (4)交叉编译器</p>
+<ul>
+<li>拷贝arm-eabi-4.4.3到/opt分区中</li>
+<li><p>给该文件夹中的相关文件赋权限</p>
+<pre><code>  chmod u+x -R arm-eabi-4.4.3/
+</code></pre></li>
+<li><p>将arm 相关的命令配置到环境变量中</p>
+<p>   A.gedit /etc/environment</p>
+<p>   B.Path末尾添加arm-eabi的路径</p>
+<blockquote>
+<p>PATH=”/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/lib/jvm/jdk1.6.0_32/bin:/opt/arm-eabi-4.4.3/bin:/opt/arm-eabi-4.4.3/arm-eabi/bin”</p>
+</blockquote>
+<p>   C.保存并退出</p>
+<p>   D.在终端执行　<br>  source /etc/environment</p>
+<p>   E.这一步需要重启，可以稍后安装完成之后再重启</p>
+<p>(5).gawk的安装(82以后的需要)</p>
+</li>
+<li><p>A.拷贝gawk-4.1.0.tar.7z到/opt目录</p>
+</li>
+<li>B.chmod u+x -R gawk-4.1.0/</li>
+<li>C.右键选择后，解压到此处</li>
+<li>D.进入解压后的目录，依次执行如下命令</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>(6)虚拟机安装及配置</p>
+<ul>
+<li>A.拷贝VirtualBox-4.3.8-92456-Linux_amd64.run到/opt目录</li>
+<li>B.chmod u+x VirtualBox-4.3.8-92456-Linux_amd64.run</li>
+<li>C. ./VirtualBox-4.3.8-92456-Linux_amd64.run</li>
+<li>D.打开虚拟机软件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.选择“新建”,根据提示输入该虚拟机的名字，内存大小，XP给512M就可以了，</span><br><span class="line">2.选择硬盘时，选择已存在的硬盘，即已经拷贝过来的XP_NEW.vdi</span><br><span class="line">3.之后就可以直接开机了</span><br></pre></td></tr></table></figure>
+<ul>
+<li>E.Notes已经安装好，参照桌面中的文档完成配置即可</li>
+</ul>
+<p>(7)编译相关</p>
+<p>  <strong>以下过程需要联网</strong></p>
+<pre><code>    apt-get install build-essential libc6-dev-i386 lib32ncurses5-dev ia32-libs x11proto-core-dev libx11-dev  lib32z-dev lib32readline-gplv2-dev gnupg tofrodos flex bison gperf  zip curl zlib1g-dev git-core gcc-4.4 g++-4.4 g++-4.4-multilib wine mingw32 libxml2-utils
+</code></pre><p>(8)切换gcc版本</p>
+<pre><code>ls /usr/bin/gcc*
+/usr/bin/gcc   /usr/bin/gcc-4.6    /usr/bin/gcc-4.4
+</code></pre><p><strong>增加gcc4.6和gcc4.4的可选项</strong></p>
+<pre><code>sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 46
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.4 44
+</code></pre><p>如果没有第一句的话，也能行。但是系统默认的4.6版本的GCC就不能使用了。为了以后能用得着，还是加上第一句。</p>
+<p><strong>切换版本到gcc-4.4</strong></p>
+<pre><code> $ update-alternatives   --config   gcc
+ There are 2 choices for the alternative gcc (providing /usr/bin/gcc).
+  选择          路径               优先级      状态
+  ------------------------------------------------------------
+* 0            /usr/bin/gcc-4.6   46        自动模式
+  1            /usr/bin/gcc-4.4   44        手动模式
+</code></pre><p><em>输入1即可</em></p>
+<hr>
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><p>(1)修复root用户音量问题</p>
+<pre><code>gedit /etc/default/pulseaudio
+</code></pre><p>修改：</p>
+<blockquote>
+<p>PULSEAUDIO_SYSTEM_START=1</p>
+<p>DISALLOW_MODULE_LOADING=0</p>
+</blockquote>
+<p>将root加到pulse和pulse-access组：</p>
+<pre><code>sudo usermod -a -G pulse-access root
+gpasswd -a root pulse
+gpasswd -a root pulse-access
+</code></pre><p>(2)编译如果报这个错的话：<code>/bin/bash: xmllint: 未找到命令</code>,终端输入：</p>
+<pre><code>sudo apt-get install libxml2-utils
+</code></pre><p>(3)访问nbtemp</p>
+<p>打开一个文件夹并全屏，顶部栏-&gt;转到-&gt;位置<br>在文件位置处输入:</p>
+<blockquote>
+<p>smb://192.168.50.150/nbbsw_temp/</p>
+</blockquote>
+<p>依次三个选项为：93218—&gt;NBBD—&gt; home</p>
+<p> (4)git账户配置</p>
+<pre><code> git config --global user.name whisper
+ git config --global user.email whisper@nbbsw.com
+ git config --list
+</code></pre><p> (5)取消gedit创建备份文件</p>
+<pre><code> 菜单-编辑-首选项-编辑器：在保存前创建备份文件前面的勾去掉
+</code></pre><p> (6)修改文件的默认打开方式：</p>
+<pre><code> gedit /etc/gnome/defaults.list
+ gedit ~/.local/share/applications/mimeapps.list
+ 在这两个文件中修改默认打开方式
+</code></pre><p> (7)解决Ubuntu默认播放器无法播放视频的问题：</p>
+<p>  下载这个文件<a href="/raw/attach/1410/31_gstreamer0.10-ffmpeg_0.10.13-5_amd64.deb">gstreamer0.10-ffmpeg_0.10.13-5_amd64.deb</a>并手动安装即可。</p>
+<p> (8)Ubuntu Chrome不能以根用户启动</p>
+<p>  在<code>/usr/share/applications/checkbox-qt.desktop</code>的快捷图标上右键，点击属性，修改命令属性，在后面加上 <code>-user-data-dir</code> 就OK了。</p>
+<p> (9)解决vim无法安装问题</p>
+<p>  在/etc/apt/sources.list中添加<code>deb http://cz.archive.ubuntu.com/ubuntu lucid main</code><br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install vim</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2014/09/25/2014-09-25-UbuntuUbuntu12.04Install/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2014/10/08/2014-10-08-AndroidFloatTag/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    自定义View-浮动标签
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/09/23/2014-09-23-AndroidDraw.9png/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Make a .9.png</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

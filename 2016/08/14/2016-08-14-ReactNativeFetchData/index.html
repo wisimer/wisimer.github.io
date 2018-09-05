@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>ReactNative从网络获取数据并显示 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="这里我们来实现一个极其简单的天气预报的小例子。获取网络接口天气预报的json数据，再显示在Text上。同时有个输入框，可以输入城市信息，再按确认，则会更新数据。同时还可以以列表形式展示未来几天的天气预报。">
+<meta name="keywords" content="ReactNative">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReactNative从网络获取数据并显示">
+<meta property="og:url" content="http://ai.wisim.me/2016/08/14/2016-08-14-ReactNativeFetchData/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="这里我们来实现一个极其简单的天气预报的小例子。获取网络接口天气预报的json数据，再显示在Text上。同时有个输入框，可以输入城市信息，再按确认，则会更新数据。同时还可以以列表形式展示未来几天的天气预报。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1608/0814_rn_fetch.gif">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1608/0814_RNListView.jpg">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ReactNative从网络获取数据并显示">
+<meta name="twitter:description" content="这里我们来实现一个极其简单的天气预报的小例子。获取网络接口天气预报的json数据，再显示在Text上。同时有个输入框，可以输入城市信息，再按确认，则会更新数据。同时还可以以列表形式展示未来几天的天气预报。">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1608/0814_rn_fetch.gif">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2016-08-14-ReactNativeFetchData" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            ReactNative从网络获取数据并显示
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/08/14/2016-08-14-ReactNativeFetchData/">
+            <time datetime="2016-08-13T16:00:00.000Z" itemprop="datePublished">2016-08-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ReactNative/">ReactNative</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>这里我们来实现一个极其简单的天气预报的小例子。获取网络接口天气预报的json数据，再显示在Text上。同时有个输入框，可以输入城市信息，再按确认，则会更新数据。同时还可以以列表形式展示未来几天的天气预报。</p>
+<a id="more"></a>
+<h4 id="一、首先是单个元素，来布个局吧"><a href="#一、首先是单个元素，来布个局吧" class="headerlink" title="一、首先是单个元素，来布个局吧"></a>一、首先是单个元素，来布个局吧</h4><p>这里我们用到了聚合API的天气预报接口 ：<br><a href="http://v.juhe.cn/weather/index?format=2&amp;cityname=%E4%B8%8A%E6%B5%B7&amp;key=71efbb690b9bc9a389ad90502306c8cd" target="_blank" rel="noopener">http://v.juhe.cn/weather/index?format=2&amp;cityname=%E4%B8%8A%E6%B5%B7&amp;key=71efbb690b9bc9a389ad90502306c8cd</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class FetchData extends Component &#123;</span><br><span class="line">    constructor(props) &#123;</span><br><span class="line">        super(props);</span><br><span class="line">        this.state = &#123;weather: &apos;天气&apos;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">        this.fetchWeatherData(&quot;上海&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    render() &#123;</span><br><span class="line">        return(</span><br><span class="line">            &lt;View style=&#123;styles.containerStyle&#125;&gt;</span><br><span class="line">            &lt;TextInput</span><br><span class="line">                style=&#123;styles.textInputStyle&#125;</span><br><span class="line">                onChangeText=&#123;(text) =&gt; this.handleTextChange(text)&#125; &gt;</span><br><span class="line">            &lt;/TextInput&gt;</span><br><span class="line">            &lt;TouchableHighlight</span><br><span class="line">                style=&#123;styles.confirmStyle&#125;</span><br><span class="line">                onPress=&#123;() =&gt; this.fetchWeatherData(this.state.address)&#125; &gt;</span><br><span class="line">                &lt;Text &gt;确认&lt;/Text&gt;</span><br><span class="line">            &lt;/TouchableHighlight&gt;</span><br><span class="line">            &lt;Text&gt;&#123;this.state.weather&#125;&lt;/Text&gt;</span><br><span class="line">            &lt;/View&gt;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">｝</span><br></pre></td></tr></table></figure>
+<p>这里的构造函数值得注意一下。一开始我还犯二，用的是ES5的格式写的，一直报错。后来网上查了一下<a href="http://www.cnblogs.com/Mrs-cc/p/4969755.html" target="_blank" rel="noopener">ES5和ES6</a>的差别。</p>
+<p><code>componentDidMount()</code> 表示组件加载好了第一次请求数据。</p>
+<p>（1）最上面是一个 <code>TextInput</code> ，用来输入地名。这里为了能够让下面的确认按钮拿到TextInput里面的内容，要为它添加一个onChangeText监听函数handleTextChange:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">handleTextChange(addressText) &#123;</span><br><span class="line">    this.setState(&#123;</span><br><span class="line">        address:addressText</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样每次TextInput的内容改变了都会更新到 <code>address</code> 属性中去。</p>
+<p>（2）中间是一个确认按钮，这里要复习一下 <code>TouchableHighlight</code> 只能作为一个容器，里面放Text来实现按钮。TouchableHighlight的点击时间就是onPress函数了，为onPress绑定 <code>fetchWeatherData</code> 函数，这样每次点击确认按钮都会重新去请求天气数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">fetchWeatherData(address) &#123;</span><br><span class="line">    var url = &quot;http://v.juhe.cn/weather/index?format=2&amp;cityname=&quot;+address+&quot;&amp;key=71efbb690b9bc9a389ad90502306c8cd&quot;;</span><br><span class="line">    fetch(url)</span><br><span class="line">    .then((response) =&gt; response.json())</span><br><span class="line">    .then((responseData) =&gt; &#123;</span><br><span class="line">        this.setState(&#123;</span><br><span class="line">            weather: !responseData.result ? &quot;&quot; : responseData.result.sk</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;)</span><br><span class="line">    .done();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每次获取到json数据之后都会将sk字段更新到 <code>weather</code> 状态。</p>
+<p>（3）最下面就是用来显示天气预报的 <code>Text</code> 了。直接显示 <code>this.state.weather</code> 即可。</p>
+<p>看看效果图:</p>
+<p><img src="/src/imgs/1608/0814_rn_fetch.gif" alt="0814_rn_fetch.gif"></p>
+<h4 id="二、下面顺理成章就是加载列表数据了，也来布个局吧"><a href="#二、下面顺理成章就是加载列表数据了，也来布个局吧" class="headerlink" title="二、下面顺理成章就是加载列表数据了，也来布个局吧"></a>二、下面顺理成章就是加载列表数据了，也来布个局吧</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">class WxpListView extends Component &#123;</span><br><span class="line">    constructor(props) &#123;</span><br><span class="line">        super(props);</span><br><span class="line">        this.state = &#123;</span><br><span class="line">          preWeather: &quot;&quot;,</span><br><span class="line">          fecthedData: false</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">        this.fetchWeatherData(&quot;上海&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    renderListRow(rowData) &#123;</span><br><span class="line">        return(</span><br><span class="line">            &lt;Text&gt;&#123;rowData.week&#125;:&#123;rowData.weather&#125;&lt;/Text&gt;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">        if(this.state.fecthedData) &#123;</span><br><span class="line">            return(</span><br><span class="line">                &lt;View style = &#123;styles.containerStyle&#125;&gt;</span><br><span class="line">                    &lt;ListView</span><br><span class="line">                        dataSource=&#123;this.state.preWeather&#125;</span><br><span class="line">                        renderRow=&#123;this.renderListRow.bind(this)&#125;</span><br><span class="line">                        &gt;ListView&lt;/ListView&gt;</span><br><span class="line">                &lt;/View&gt;</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">        return(&lt;View style = &#123;styles.containerStyle&#125;&gt;</span><br><span class="line">            &lt;Text&gt;ListView&lt;/Text&gt;</span><br><span class="line">        &lt;/View&gt;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（1）这里的<code>fecthedData</code>判断语句是用来保证未加载好数据时，页面不会展示ListView，因为如果ListView的 <code>dataSource</code> 属性为空的话是会报render函数错误滴。同时<code>renderRow</code>函数是用来绑定每个Item的布局的，也就是上面的<code>renderListRow</code>函数。</p>
+<p>（2）来看一下比较重要的<code>fetchWeatherData</code>函数里面返回Json数据的代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">fetchWeatherData(address) &#123;</span><br><span class="line">    var url = &quot;http://v.juhe.cn/weather/index?format=2&amp;cityname=&quot;+address+&quot;&amp;key=71efbb690b9bc9a389ad90502306c8cd&quot;;</span><br><span class="line">    fetch(url)</span><br><span class="line">    .then((response) =&gt; response.json())</span><br><span class="line">    .then((responseData) =&gt; &#123;</span><br><span class="line">        var dataSource = new ListView.DataSource(</span><br><span class="line">            &#123;rowHasChanged: (r1, r2) =&gt; r1.date !== r2.date&#125;);</span><br><span class="line">        this.setState(&#123;</span><br><span class="line">            preWeather: !responseData.result ? &quot;&quot; : dataSource.cloneWithRows(responseData.result.future),</span><br><span class="line">            fecthedData: true</span><br><span class="line">        &#125;);</span><br><span class="line">        console.log(responseData.result.future)</span><br><span class="line">    &#125;)</span><br><span class="line">    .done();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意这里直接返回Json数据之后是要把Json转换成 <code>ListView.DataSource</code> 类型的对象的。否则的话ListView会报一个不能接受其他类型的数据的错误。解析完数据之后，将 <code>fecthedData</code> 置为true，ListView就可以展示数据了。如图：</p>
+<p><img src="/src/imgs/1608/0814_RNListView.jpg" alt="0814_RNListView.jpg"></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2016/08/14/2016-08-14-ReactNativeFetchData/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/08/18/2016-08-18-LeetCodeMinParser/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    LeetCode:385. Mini Parser
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2016/08/13/2016-08-13-LeetCodeKthSmallest/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">LeetCode:378. Kth Smallest Element in a Sorted Matrix</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

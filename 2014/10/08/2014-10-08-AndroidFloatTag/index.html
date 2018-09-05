@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>自定义View-浮动标签 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="1.继承LinearLayout自定义一个FloatTag类有如下几个成员变量 1234567891011121314151617181920212223Context mContext;/* * 放置内容，可以滑动的父布局 */ScrollView mScrollView;/* * 显示和隐藏的视图 */View mFloatTagView;/* * 控制显示或隐藏 mFloatTagView">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义View-浮动标签">
+<meta property="og:url" content="http://ai.wisim.me/2014/10/08/2014-10-08-AndroidFloatTag/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="1.继承LinearLayout自定义一个FloatTag类有如下几个成员变量 1234567891011121314151617181920212223Context mContext;/* * 放置内容，可以滑动的父布局 */ScrollView mScrollView;/* * 显示和隐藏的视图 */View mFloatTagView;/* * 控制显示或隐藏 mFloatTagView">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1410/08_floatlabel.gif">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义View-浮动标签">
+<meta name="twitter:description" content="1.继承LinearLayout自定义一个FloatTag类有如下几个成员变量 1234567891011121314151617181920212223Context mContext;/* * 放置内容，可以滑动的父布局 */ScrollView mScrollView;/* * 显示和隐藏的视图 */View mFloatTagView;/* * 控制显示或隐藏 mFloatTagView">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1410/08_floatlabel.gif">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2014-10-08-AndroidFloatTag" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            自定义View-浮动标签
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/10/08/2014-10-08-AndroidFloatTag/">
+            <time datetime="2014-10-07T16:00:00.000Z" itemprop="datePublished">2014-10-08</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="1-继承LinearLayout自定义一个FloatTag类"><a href="#1-继承LinearLayout自定义一个FloatTag类" class="headerlink" title="1.继承LinearLayout自定义一个FloatTag类"></a>1.继承LinearLayout自定义一个FloatTag类</h4><p>有如下几个成员变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Context mContext;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 放置内容，可以滑动的父布局</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">ScrollView mScrollView;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 显示和隐藏的视图</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">View mFloatTagView;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 控制显示或隐藏 mFloatTagView 的回调接口</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">StayViewListener mStayViewListener;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 首次进入页面，应该是向上滑动，直到到达 mFloatTagView 的位置</span></span><br><span class="line"><span class="comment"> * 设置一个标记，未到达时mScrollUp为true，mFloatTagView 是隐藏状态，</span></span><br><span class="line"><span class="comment"> * 到达之后mScrollUp为false， mFloatTagView 是可见状态</span></span><br><span class="line"><span class="comment"> */</span>  </span><br><span class="line"><span class="keyword">boolean</span> mScrollUp = <span class="keyword">true</span>;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="2-进行一些初始化工作"><a href="#2-进行一些初始化工作" class="headerlink" title="2.进行一些初始化工作"></a>2.进行一些初始化工作</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">//在构造方法中调用init()方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ScrollView scrollView,View floatTagView,FloatTagStateListener listener)</span></span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.mScrollView=scrollView;</span><br><span class="line">  <span class="keyword">this</span>.mFloatTagView=floatTagView;</span><br><span class="line">  <span class="keyword">this</span>.mFloatTagStateListener=listener;</span><br><span class="line">  setOrientation(LinearLayout.VERTICAL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-重写computeScroll-方法"><a href="#3-重写computeScroll-方法" class="headerlink" title="3.重写computeScroll()方法"></a>3.重写computeScroll()方法</h4><p>  其中mScrollView.getScrollY()得到的数值是mScrollView的纵坐标距离初始原点的纵坐标（也就是0）的距离。所以，如果是网上滑动的话，这个数值会一直增大；<br>如果向下滑动的话，这个数值会减小。而mFloatTagView.getTop()的到的是布局中固定的标签的上边缘的纵坐标，这个纵坐标是一个固定值，也就是mFloatTagView距离mScrollView顶部的距离。<br>所以，只要mScrollView向上滑动的距离等于mFloatTagView.getTop()这个值的时候，就是mFloatTagView滑动到屏幕顶部的时候，这个时候就要把布局文件中隐藏的标签头显示出来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">computeScroll</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">if</span>(mFloatTagView!=<span class="keyword">null</span>&amp;&amp;mScrollView!=<span class="keyword">null</span>&amp;&amp;mStayViewListener!=<span class="keyword">null</span>)&#123;  </span><br><span class="line">        <span class="keyword">int</span> y = mScrollView.getScrollY();  </span><br><span class="line">        <span class="keyword">if</span>(up)&#123;  </span><br><span class="line">            <span class="keyword">int</span> top = mFloatTagView.getTop();  </span><br><span class="line">            <span class="keyword">if</span>(y&gt;=top)&#123;</span><br><span class="line">              <span class="comment">//如果向上滑动到mFloatTagView的顶端则调用mStayViewListener的显示浮动标签的方法</span></span><br><span class="line">            	mStayViewListener.onStayViewShow();  </span><br><span class="line">                up = <span class="keyword">false</span>;  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">if</span>(!up)&#123;  </span><br><span class="line">            <span class="keyword">int</span> bottom = mFloatTagView.getBottom();  </span><br><span class="line">            <span class="keyword">if</span>(y&lt;=mFloatTagView.getTop())&#123;</span><br><span class="line">              <span class="comment">//如果向下滑动到stayView的顶端则调用mStayViewListener的隐藏浮动标签的方法</span></span><br><span class="line">            	mStayViewListener.onStayViewGone();  </span><br><span class="line">                up = <span class="keyword">true</span>;  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-定义一个接口供外部使用OrderView时显示或隐藏浮动标签"><a href="#4-定义一个接口供外部使用OrderView时显示或隐藏浮动标签" class="headerlink" title="4.定义一个接口供外部使用OrderView时显示或隐藏浮动标签"></a>4.定义一个接口供外部使用OrderView时显示或隐藏浮动标签</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FloatTagStateListener</span></span>&#123;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFloatTagShow</span><span class="params">()</span></span>;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFloatTagHide</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-使用"><a href="#5-使用" class="headerlink" title="5.使用"></a>5.使用</h4><p><em>5.1 定义主布局文件中activity_main.xml</em></p>
+<p>布局文件中id为id_btn_tag的View是一直显示的，就是通过得到他的上边缘坐标与mScrollView滑动距离相比较，来控制id为id_btn_float_tag的View的隐藏和显示。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&lt;RelativeLayout xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    xmlns:tools=<span class="string">"http://schemas.android.com/tools"</span></span><br><span class="line">    android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">    android:layout_height=<span class="string">"match_parent"</span></span><br><span class="line">    tools:context=<span class="string">".MainActivity"</span> &gt;</span><br><span class="line">    &lt;com.wxp.floattag.FloatTag</span><br><span class="line">        android:id=<span class="string">"@+id/id_ft_floattag"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"match_parent"</span> &gt;</span><br><span class="line">        &lt;ScrollView</span><br><span class="line">            android:id=<span class="string">"@+id/id_sv_mainscrolleview"</span></span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"match_parent"</span> &gt;</span><br><span class="line">            &lt;LinearLayout</span><br><span class="line">                android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">                android:layout_height=<span class="string">"wrap_content"</span></span><br><span class="line">                android:orientation=<span class="string">"vertical"</span> &gt;</span><br><span class="line">                &lt;ImageView</span><br><span class="line">                    android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">                    android:layout_height=<span class="string">"200px"</span></span><br><span class="line">                    android:src=<span class="string">"@drawable/ic_launcher"</span> /&gt;</span><br><span class="line">                &lt;Button</span><br><span class="line">                    android:id=<span class="string">"@+id/id_btn_tag"</span></span><br><span class="line">                    android:background=<span class="string">"#000000"</span></span><br><span class="line">                    android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">                    android:layout_height=<span class="string">"wrap_content"</span></span><br><span class="line">                    android:text=<span class="string">"float_tag"</span> /&gt;</span><br><span class="line">                &lt;TextView</span><br><span class="line">                    android:layout_width=<span class="string">"wrap_content"</span></span><br><span class="line">                    android:layout_height=<span class="string">"wrap_content"</span></span><br><span class="line">                    android:text=<span class="string">"@string/hello_world"</span> /&gt;</span><br><span class="line">                &lt;ImageView</span><br><span class="line">                    android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">                    android:layout_height=<span class="string">"2000px"</span></span><br><span class="line">                    android:src=<span class="string">"@drawable/ic_launcher"</span> /&gt;</span><br><span class="line">            &lt;/LinearLayout&gt;</span><br><span class="line">        &lt;/ScrollView&gt;</span><br><span class="line">    &lt;/com.wxp.floattag.FloatTag&gt;</span><br><span class="line">    &lt;Button</span><br><span class="line">        android:id=<span class="string">"@+id/id_btn_float_tag"</span></span><br><span class="line">        android:visibility=<span class="string">"gone"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"wrap_content"</span></span><br><span class="line">        android:background=<span class="string">"#000000"</span></span><br><span class="line">        android:text=<span class="string">"float_tag"</span></span><br><span class="line">         /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/RelativeLayout&gt;</span><br></pre></td></tr></table></figure>
+<p><em>5.2 MainActivity.java</em></p>
+<p>要在FloatTagStateListener接口的两个回调方法中控制布局文件中标签头的隐藏和显示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 注意：这里的第二个参数的View是固定显示的，而下面控制隐藏和显示的是另一个id为id_btn_float_tag的View</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">mFloatTag.init(mScrollView, findViewById(R.id.id_btn_tag), <span class="keyword">new</span> FloatTagStateListener() &#123;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFloatTagShow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   findViewById(R.id.id_btn_float_tag).setVisibility(View.VISIBLE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFloatTagHide</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   findViewById(R.id.id_btn_float_tag).setVisibility(View.GONE);</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>效果图:</p>
+<p><img src="/src/imgs/1410/08_floatlabel.gif" alt="floatlabel.gif"></p>
+<blockquote>
+<p>github：<a href="https://github.com/whisper92/FloatTag.git" target="_blank" rel="noopener">https://github.com/whisper92/FloatTag.git</a></p>
+</blockquote>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2014/10/08/2014-10-08-AndroidFloatTag/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2014/10/16/2014-10-16-JavaRegularExpression/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Java正则表达式
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/09/25/2014-09-25-UbuntuUbuntu12.04Install/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Ubuntu12.04系统安装和Anroid系统源码编译环境配置</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

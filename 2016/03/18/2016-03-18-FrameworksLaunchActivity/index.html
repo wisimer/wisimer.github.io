@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>由主线程更新UI所想到的Window和RootViewImpl的创建过程 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="之前在项目里写了一段错误的代码，是使用异步线程下载图片之后直接更新UI，导致应用崩溃。报错信息是 Only the original thread that created a view hierarchy can touch its views. ，意思就是只有主线程可以更新UI。大家肯定都遇到这个错误过，也符合我们的认识：子线程不能更新UI。但是实际上这个崩溃并不是必现的，不管是用户反馈还是我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="由主线程更新UI所想到的Window和RootViewImpl的创建过程">
+<meta property="og:url" content="http://ai.wisim.me/2016/03/18/2016-03-18-FrameworksLaunchActivity/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="之前在项目里写了一段错误的代码，是使用异步线程下载图片之后直接更新UI，导致应用崩溃。报错信息是 Only the original thread that created a view hierarchy can touch its views. ，意思就是只有主线程可以更新UI。大家肯定都遇到这个错误过，也符合我们的认识：子线程不能更新UI。但是实际上这个崩溃并不是必现的，不管是用户反馈还是我">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1603/0318_activity_window.png">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="由主线程更新UI所想到的Window和RootViewImpl的创建过程">
+<meta name="twitter:description" content="之前在项目里写了一段错误的代码，是使用异步线程下载图片之后直接更新UI，导致应用崩溃。报错信息是 Only the original thread that created a view hierarchy can touch its views. ，意思就是只有主线程可以更新UI。大家肯定都遇到这个错误过，也符合我们的认识：子线程不能更新UI。但是实际上这个崩溃并不是必现的，不管是用户反馈还是我">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1603/0318_activity_window.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2016-03-18-FrameworksLaunchActivity" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            由主线程更新UI所想到的Window和RootViewImpl的创建过程
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/03/18/2016-03-18-FrameworksLaunchActivity/">
+            <time datetime="2016-03-17T16:00:00.000Z" itemprop="datePublished">2016-03-18</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>之前在项目里写了一段错误的代码，是使用异步线程下载图片之后直接更新UI，导致应用崩溃。报错信息是 <code>Only the original thread that created a view hierarchy can touch its views.</code> ，意思就是只有主线程可以更新UI。大家肯定都遇到这个错误过，也符合我们的认识：子线程不能更新UI。但是实际上这个崩溃并不是必现的，不管是用户反馈还是我后来自己重现，都只有第一次进入界面的时候才会引起崩溃，后面都可以正常显示图片，所以带着疑问来一起看看这里面的具体分析吧。</p>
+<a id="more"></a>
+<p>报错信息如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.</span><br><span class="line">    at android.view.ViewRootImpl.checkThread(ViewRootImpl.java:<span class="number">6556</span>)</span><br><span class="line">    at android.view.ViewRootImpl.invalidateChildInParent(ViewRootImpl.java:<span class="number">942</span>)</span><br><span class="line">    at android.view.ViewGroup.invalidateChild(ViewGroup.java:<span class="number">5081</span>)</span><br><span class="line">    at android.view.View.invalidateInternal(View.java:<span class="number">12717</span>)</span><br><span class="line">    at android.view.View.invalidate(View.java:<span class="number">12681</span>)</span><br><span class="line">    at android.view.View.invalidate(View.java:<span class="number">12665</span>)</span><br><span class="line">    at android.widget.TextView.checkForRelayout(TextView.java:<span class="number">7159</span>)</span><br><span class="line">    at android.widget.TextView.setText(TextView.java:<span class="number">4342</span>)</span><br><span class="line">    at android.widget.TextView.setText(TextView.java:<span class="number">4199</span>)</span><br><span class="line">    at android.widget.TextView.setText(TextView.java:<span class="number">4174</span>)</span><br><span class="line">    at com.wxp.uioperation.OpActivity$<span class="number">2</span>.run(OpActivity.java:<span class="number">60</span>)</span><br><span class="line">    at java.lang.Thread.run(Thread.java:<span class="number">818</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="一、先来分析一下上面的堆栈信息里面所显示出来的代码"><a href="#一、先来分析一下上面的堆栈信息里面所显示出来的代码" class="headerlink" title="一、先来分析一下上面的堆栈信息里面所显示出来的代码"></a>一、先来分析一下上面的堆栈信息里面所显示出来的代码</h3><p>看看TextView的setText()方法中的line:4342</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setText</span><span class="params">(CharSequence text, BufferType type , <span class="keyword">boolean</span> notifyBefore, <span class="keyword">int</span> oldlen)</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mLayout != <span class="keyword">null</span>) &#123;</span><br><span class="line">        checkForRelayout();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>checkForRelayout方法中里面又调用了invalidate()方法，接着又调用了ViewRootImpl中的invalidateChildInParent()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ViewParent <span class="title">invalidateChildInParent</span><span class="params">(<span class="keyword">int</span>[] location, Rect dirty)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    checkThread();</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到invalidateChildInParent()方法的第一行就是checkThread()方法，也就是说我们每次setText()的时候都会检查当前线程是不是mThread这个线程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">checkThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mThread != Thread. currentThread()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> CalledFromWrongThreadException(</span><br><span class="line">                <span class="string">"Only the original thread that created a view hierarchy can touch its views."</span> );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而mThread变量是在ViewRootImpl的构造函数中初始化的。所以上面的checkThread()方法实际判断的是实例化ViewRootImpl对象所在的线程和当前操作UI，也就是执行setText()的线程是不是同一个线程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ViewRootImpl</span><span class="params">(Context context, Display display)</span> </span>&#123;</span><br><span class="line">    mContext = context;</span><br><span class="line">    mWindowSession = WindowManagerGlobal.getWindowSession();</span><br><span class="line">    mDisplay = display;</span><br><span class="line">    mBasePackageName = context.getBasePackageName();</span><br><span class="line"></span><br><span class="line">    mDisplayAdjustments = display.getDisplayAdjustments();</span><br><span class="line"></span><br><span class="line">    mThread = Thread.currentThread();</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面的代码中也可以看出在ViewRootImpl中更新UI的时候会checkThread()检查线程。那ViewRootImpl是不是主线程呢？那就要分析一下RootViewImpl是怎么创建出来的了。先看看Activity的布局创建的过程。</p>
+<hr>
+<h3 id="二、Activity的布局加载过程以及Window的创建过程"><a href="#二、Activity的布局加载过程以及Window的创建过程" class="headerlink" title="二、Activity的布局加载过程以及Window的创建过程"></a>二、Activity的布局加载过程以及Window的创建过程</h3><h4 id="1-先来看看在Activity是怎么设置布局文件的"><a href="#1-先来看看在Activity是怎么设置布局文件的" class="headerlink" title="1.先来看看在Activity是怎么设置布局文件的"></a>1.先来看看在Activity是怎么设置布局文件的</h4><p>Activity.setContentView()里面的代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentView</span><span class="params">(@LayoutRes <span class="keyword">int</span> layoutResID)</span> </span>&#123;</span><br><span class="line">    getWindow().setContentView(layoutResID);</span><br><span class="line">    initWindowDecorActionBar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>getWindow()实际得到的是一个Window ，所以Activity的setContentView实际是交给了mWindow的setContentView处理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Window <span class="title">getWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mWindow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么Window和Activity还有Activity的布局有什么关系呢？来看看下面这张图：</p>
+<p><img src="/src/imgs/1603/0318_activity_window.png" alt="0318_activity_window"></p>
+<p>Activity还有Dialog,Toast以及PopupWindow都对应着一个Window。而它们的视图是不能单独存在的，必须依附在Window上。也就是说Activity的布局会被添加到它对应的Window里面。</p>
+<h4 id="2-再来看看Window是怎么创建出来的"><a href="#2-再来看看Window是怎么创建出来的" class="headerlink" title="2.再来看看Window是怎么创建出来的"></a>2.再来看看Window是怎么创建出来的</h4><p>在Activity的启动过程中会通过ActivityThread这个类的handleLaunchActivity方法来启动Activity：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">handleLaunchActivity</span><span class="params">(ActivityClientRecord r, Intent customIntent)</span> </span>&#123;</span><br><span class="line">    unscheduleGcIdler();</span><br><span class="line">    mSomeActivitiesChanged = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (r.profilerInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mProfiler.setProfiler(r.profilerInfo);</span><br><span class="line">        mProfiler.startProfiling();</span><br><span class="line">    &#125;</span><br><span class="line">    handleConfigurationChanged(<span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">    WindowManagerGlobal.initialize();</span><br><span class="line"></span><br><span class="line">    Activity a = performLaunchActivity(r, customIntent);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (a != <span class="keyword">null</span>) &#123;</span><br><span class="line">        r.createdConfig = <span class="keyword">new</span> Configuration(mConfiguration);</span><br><span class="line">        Bundle oldState = r.state;</span><br><span class="line">        handleResumeActivity(r.token, <span class="keyword">false</span>, r.isForward,!r.activity.mFinished &amp;&amp; !r.startsNotResumed);</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中performLaunchActivity()这个方法比较重要，完成了Activity对象的创建，并且调用了Activity的attach()方法，为它关联了上下文Context。handleResumeActivity()会在下面说到。来看看performLaunchActivity：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Activity <span class="title">performLaunchActivity</span><span class="params">(ActivityClientRecord r, Intent customIntent)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    Activity activity = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        java.lang.ClassLoader cl = r.packageInfo.getClassLoader();</span><br><span class="line">        activity = mInstrumentation.newActivity(cl, component.getClassName(), r.intent);</span><br><span class="line">        StrictMode.incrementExpectedActivityCount(activity.getClass());</span><br><span class="line">        r.intent.setExtrasClassLoader(cl);</span><br><span class="line">        r.intent.prepareToEnterProcess();</span><br><span class="line">        <span class="keyword">if</span> (r.state != <span class="keyword">null</span>) &#123;</span><br><span class="line">            r.state.setClassLoader(cl);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Application app = r.packageInfo.makeApplication(<span class="keyword">false</span>, mInstrumentation);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (activity != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Context appContext = createBaseContextForActivity(r, activity);</span><br><span class="line">            CharSequence title = r.activityInfo.loadLabel(appContext.getPackageManager());</span><br><span class="line">            Configuration config = <span class="keyword">new</span> Configuration(mCompatConfiguration);</span><br><span class="line"></span><br><span class="line">            activity.attach(appContext, <span class="keyword">this</span>, getInstrumentation(), r.token,</span><br><span class="line">                    r.ident, app, r.intent, r.activityInfo, title, r.parent,</span><br><span class="line">                    r.embeddedID, r.lastNonConfigurationInstances, config,</span><br><span class="line">                    r.referrer, r.voiceInteractor);</span><br><span class="line"></span><br><span class="line">            ......</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (r.isPersistable()) &#123;</span><br><span class="line">                mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                mInstrumentation.callActivityOnCreate(activity, r.state);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ......</span><br><span class="line">       &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SuperNotCalledException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> e;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> activity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到这里使用类加载器创建了一个Activity对象，并通过调用createBaseContextForActivity() 方法创建了一个上下文。<br>注意到后面的mInstrumentation.callActivityOnCreate()方法，其实它是在Activity创建完成之后调用了Activity的onCreate()方法。</p>
+<p>再看看attach()方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">attach</span><span class="params">(Context context, ActivityThread aThread,</span></span></span><br><span class="line"><span class="function"><span class="params">        Instrumentation instr, IBinder token, <span class="keyword">int</span> ident,</span></span></span><br><span class="line"><span class="function"><span class="params">        Application application, Intent intent, ActivityInfo info,</span></span></span><br><span class="line"><span class="function"><span class="params">        CharSequence title, Activity parent, String id,</span></span></span><br><span class="line"><span class="function"><span class="params">        NonConfigurationInstances lastNonConfigurationInstances,</span></span></span><br><span class="line"><span class="function"><span class="params">        Configuration config, String referrer, IVoiceInteractor voiceInteractor)</span> </span>&#123;</span><br><span class="line">    attachBaseContext(context);</span><br><span class="line"></span><br><span class="line">    mFragments.attachHost(<span class="keyword">null</span> <span class="comment">/*parent*/</span>);</span><br><span class="line"></span><br><span class="line">    mWindow = <span class="keyword">new</span> PhoneWindow(<span class="keyword">this</span>);</span><br><span class="line">    mWindow.setCallback(<span class="keyword">this</span>);</span><br><span class="line">    mWindow.setOnWindowDismissedCallback(<span class="keyword">this</span>);</span><br><span class="line">    mWindow.getLayoutInflater().setPrivateFactory(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">if</span> (info.softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED) &#123;</span><br><span class="line">        mWindow.setSoftInputMode(info.softInputMode);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (info.uiOptions != <span class="number">0</span>) &#123;</span><br><span class="line">        mWindow.setUiOptions(info.uiOptions);</span><br><span class="line">    &#125;</span><br><span class="line">    mUiThread = Thread.currentThread();</span><br><span class="line"></span><br><span class="line">    mMainThread = aThread;</span><br><span class="line">    mInstrumentation = instr;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在attach方法中也可以看到Activity的成员变量mWindow其实是一个PhoneWindow对象。到这里PhoneWindow已经有了。那我们是如何将自己的布局添加到Window中的？其实在Activity创建的时候会为它的Window添加一个DecorView作为Activity的根布局。DecorView是一个“装饰（Decoration）过的View”，比如说它还包含标题栏以及最重要的内容区域，而我们的布局文件则会添加到这个DecorView的内容区域里面。</p>
+<h4 id="3-DecorView的创建"><a href="#3-DecorView的创建" class="headerlink" title="3.DecorView的创建"></a>3.DecorView的创建</h4><p>先来看看Window的setContentView()的具体实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentView</span><span class="params">(<span class="keyword">int</span> layoutResID)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mContentParent == <span class="keyword">null</span>) &#123;</span><br><span class="line">        installDecor();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!hasFeature(FEATURE_CONTENT_TRANSITIONS)) &#123;</span><br><span class="line">        mContentParent.removeAllViews();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (hasFeature(FEATURE_CONTENT_TRANSITIONS)) &#123;</span><br><span class="line">        <span class="keyword">final</span> Scene newScene = Scene.getSceneForLayout(mContentParent, layoutResID,</span><br><span class="line">                getContext());</span><br><span class="line">        transitionTo(newScene);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mLayoutInflater.inflate(layoutResID, mContentParent);</span><br><span class="line">    &#125;</span><br><span class="line">    mContentParent.requestApplyInsets();</span><br><span class="line">    <span class="keyword">final</span> Callback cb = getCallback();</span><br><span class="line">    <span class="keyword">if</span> (cb != <span class="keyword">null</span> &amp;&amp; !isDestroyed()) &#123;</span><br><span class="line">        cb.onContentChanged();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先就是通过installDecor()方法来生成Window的根布局DecorView：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">installDecor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mDecor == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mDecor = generateDecor();</span><br><span class="line">        mDecor.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);</span><br><span class="line">        mDecor.setIsRootNamespace(<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">if</span> (!mInvalidatePanelMenuPosted &amp;&amp; mInvalidatePanelMenuFeatures != <span class="number">0</span>) &#123;</span><br><span class="line">            mDecor.postOnAnimation(mInvalidatePanelMenuRunnable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mContentParent == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mContentParent = generateLayout(mDecor);</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>mDecor作为PhoneWindow的一个成员变量，如果mDecor为空，则调用generateDecor()直接返回一个DecorView对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> DecorView <span class="title">generateDecor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DecorView(getContext(), -<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那这个mContentParent是什么呢？看看generateLayout()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> ViewGroup <span class="title">generateLayout</span><span class="params">(DecorView decor)</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    View in = mLayoutInflater.inflate(layoutResource, <span class="keyword">null</span>);</span><br><span class="line">    decor.addView(in, <span class="keyword">new</span> ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));</span><br><span class="line">    mContentRoot = (ViewGroup) in;</span><br><span class="line"></span><br><span class="line">    ViewGroup contentParent = (ViewGroup)findViewById(ID_ANDROID_CONTENT);</span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> contentParent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的layoutResource是上文（省略）根据Window的属性从系统中选择出的一个布局文件，而这些布局文件有一个共同的特征：都含有一个id为<code>android.R.id.content</code>的FrameLayout。然后把这个布局文件添加到DecorView中，并且找到android.R.id.content这个FrameLayout赋值给contentParent。</p>
+<p>而上面Window中的setContentView()方法中有这段代码：</p>
+<blockquote>
+<p>mLayoutInflater.inflate(layoutResID, mContentParent);</p>
+</blockquote>
+<p>很明显，是将我们设置的布局添加到mContentPartent中。</p>
+<p>到这里我们已经知道了Window是如何产生的，还有我们的布局是如何添加到DecorView中的。那么DecorView又是如何添加到Window中的呢？那就通过下面要说的ViewRootImpl来实现了。</p>
+<hr>
+<h3 id="三、ViewRootImpl的创建"><a href="#三、ViewRootImpl的创建" class="headerlink" title="三、ViewRootImpl的创建"></a>三、ViewRootImpl的创建</h3><p>上文在Activity的初始化过程中的performLaunchActivity()方法中已经把Window和DecorView创建好了，但是并没有看到ViewRootImpl的身影。我们往下看，在ActivityThread的handleResumeActivity()方法中直接获取到Activity中的Window所包含的DecorView:</p>
+<blockquote>
+<p>r.window.getDecorView();</p>
+</blockquote>
+<p>接着通过ViewManager的addView方法将DecorView添加到Window中，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">handleResumeActivity</span><span class="params">(IBinder token, <span class="keyword">boolean</span> clearHide, <span class="keyword">boolean</span> isForward, <span class="keyword">boolean</span> reallyResume)</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (r != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">final</span> Activity a = r.activity;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">if</span> (r.window == <span class="keyword">null</span> &amp;&amp; !a.mFinished &amp;&amp; willBeVisible) &#123;</span><br><span class="line">            r.window = r.activity.getWindow();</span><br><span class="line">            View decor = r.window.getDecorView();</span><br><span class="line">            decor.setVisibility(View.INVISIBLE);</span><br><span class="line">            ViewManager wm = a.getWindowManager();</span><br><span class="line">            WindowManager.LayoutParams l = r.window.getAttributes();</span><br><span class="line">            a.mDecor = decor;</span><br><span class="line">            l.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION;</span><br><span class="line">            l.softInputMode |= forwardBit;</span><br><span class="line">            <span class="keyword">if</span> (a.mVisibleFromClient) &#123;</span><br><span class="line">                a.mWindowAdded = <span class="keyword">true</span>;</span><br><span class="line">                wm.addView(decor, l);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!willBeVisible) &#123;</span><br><span class="line">            r.hideForNow = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!r.activity.mFinished &amp;&amp; willBeVisible</span><br><span class="line">                &amp;&amp; r.activity.mDecor != <span class="keyword">null</span> &amp;&amp; !r.hideForNow) &#123;</span><br><span class="line">            ......</span><br><span class="line">            <span class="keyword">if</span> (r.activity.mVisibleFromClient) &#123;</span><br><span class="line">                r.activity.makeVisible();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ViewManager是一个接口。它定义了Window对View几个基本的操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(View view, ViewGroup.LayoutParams params)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateViewLayout</span><span class="params">(View view, ViewGroup.LayoutParams params)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeView</span><span class="params">(View view)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>WindowManager也是一个接口，它继承自ViewManager接口。而WindowManagerImpl则是WindowManager的具体实现。<br>看到WindowManagerImpl的addView方法中，直接调用了mGlobal.addView()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(@NonNull View view, @NonNull ViewGroup.LayoutParams params)</span> </span>&#123;</span><br><span class="line">    applyDefaultToken(params);</span><br><span class="line">    mGlobal.addView(view, params, mDisplay, mParentWindow);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>mGlobal是一个WindowManagerGlobal对象，重点来了，看看它的addView()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(View view, ViewGroup.LayoutParams params ,</span></span></span><br><span class="line"><span class="function"><span class="params">        Display display , Window parentWindow)</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    ViewRootImpl root;</span><br><span class="line">    View panelParentView = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> ( mLock) &#123;</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">        root = <span class="keyword">new</span> ViewRootImpl(view.getContext() , display);</span><br><span class="line"></span><br><span class="line">        view.setLayoutParams(wparams) ;</span><br><span class="line"></span><br><span class="line">        mViews .add(view);</span><br><span class="line">        mRoots .add(root);</span><br><span class="line">        mParams .add(wparams) ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// do this last because it fires off messages to start doing things</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        root.setView(view, wparams, panelParentView) ;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在WindowManagerGlobal的addView方法中会实例化ViewRootImpl对象。然后将这个对象添加到mRoots这个集合中去。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mView存储的是所有Window对应的View</span><br><span class="line">mRoots存储的是所有Window对应的ViewRootImpl</span><br><span class="line">mParams存储的是所有Window对应的布局参数</span><br></pre></td></tr></table></figure>
+<p>也就是说WindowManagerGlobal作为一个单例会把应用程序中的所有Window保存起来统一管理。</p>
+<p>接着看到最后的root.setView方法，就是将DecorView传递给RootViewImpl，看到这里我们可以知道RootViewImpl实际上是作为一个媒介来替Window管理的它的布局。所以在上面的报错信息里，更新布局的时候才会执行到ViewRootImpl.invalidateChildInParent()方法</p>
+<hr>
+<p>从上面的分析可以看到ViewRootImpl所在的线程其实就是ActivityThread所在的线程，也就是主线程。所以上面说的checkThread()方法是判断ViewRootImpl对象所在的线程和操作UI的线程是不是同一个线程，确实就是每次操作UI的时候都要检查是否处在UI线程。</p>
+<p>那在ViewRootImpl创建之前我们去更新UI呢？其实可以在任意线程更新UI，这也就是我一开始说的，为什么只有第一次进入界面才会报错，是因为从网络下载图片需要一定的时间，而下载完成之后RootViewImpl已经创建完成，这个时候再去更新UI必然会报错。而第二次进入界面的时候，由于本地已由图片缓存，在RootViewImpl创建之前直接加载图片更新UI，就没有报错了。</p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2016/03/18/2016-03-18-FrameworksLaunchActivity/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/08/08/2016-08-08-JavaJDBDebug/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    直接在终端对Java代码进行Debug
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/10/23/2015-10-23-TouchEventListViewInScrollView/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">ScrollView嵌套ListView处理事件冲突</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

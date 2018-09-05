@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android触摸事件分发流程详细分析 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="触摸事件的分发主要涉及到的就是dispatchTouchEvent,onInterceptTouchEvent,onTouchEvent这三个方法。下面通过Log来详细分析一下触摸事件的分发流程,为了更直观的现实事件的分发路径，这里我们将每个方法中都加入Log 1. 首先继承LinearLayout自定义一个 MyChildLayout然后重写它的三个方法 dispatchTouchEvent,o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android触摸事件分发流程详细分析">
+<meta property="og:url" content="http://ai.wisim.me/2014/12/25/2014-12-25-AndroidTouchEventAnalysis/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="触摸事件的分发主要涉及到的就是dispatchTouchEvent,onInterceptTouchEvent,onTouchEvent这三个方法。下面通过Log来详细分析一下触摸事件的分发流程,为了更直观的现实事件的分发路径，这里我们将每个方法中都加入Log 1. 首先继承LinearLayout自定义一个 MyChildLayout然后重写它的三个方法 dispatchTouchEvent,o">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/layout_pic.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case_default.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case_error_false.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case_error_true.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case00_1.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case00_2_1.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case00_2_2.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case01_1.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case01_2.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case_03.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case_04.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/case_05.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/touch_click_long.png">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android触摸事件分发流程详细分析">
+<meta name="twitter:description" content="触摸事件的分发主要涉及到的就是dispatchTouchEvent,onInterceptTouchEvent,onTouchEvent这三个方法。下面通过Log来详细分析一下触摸事件的分发流程,为了更直观的现实事件的分发路径，这里我们将每个方法中都加入Log 1. 首先继承LinearLayout自定义一个 MyChildLayout然后重写它的三个方法 dispatchTouchEvent,o">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1412/03_TouchEvent/layout_pic.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2014-12-25-AndroidTouchEventAnalysis" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android触摸事件分发流程详细分析
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/12/25/2014-12-25-AndroidTouchEventAnalysis/">
+            <time datetime="2014-12-24T16:00:00.000Z" itemprop="datePublished">2014-12-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="触摸事件的分发主要涉及到的就是dispatchTouchEvent-onInterceptTouchEvent-onTouchEvent这三个方法。"><a href="#触摸事件的分发主要涉及到的就是dispatchTouchEvent-onInterceptTouchEvent-onTouchEvent这三个方法。" class="headerlink" title="触摸事件的分发主要涉及到的就是dispatchTouchEvent,onInterceptTouchEvent,onTouchEvent这三个方法。"></a>触摸事件的分发主要涉及到的就是dispatchTouchEvent,onInterceptTouchEvent,onTouchEvent这三个方法。</h3><p>下面通过Log来详细分析一下触摸事件的分发流程,为了更直观的现实事件的分发路径，这里我们将每个方法中都加入Log</p>
+<h4 id="1-首先继承LinearLayout自定义一个-MyChildLayout"><a href="#1-首先继承LinearLayout自定义一个-MyChildLayout" class="headerlink" title="1. 首先继承LinearLayout自定义一个 MyChildLayout"></a>1. 首先继承LinearLayout自定义一个 MyChildLayout</h4><p>然后重写它的三个方法 dispatchTouchEvent,onInterceptTouchEvent,onTouchEvent</p>
+<blockquote>
+<p>值得注意的是，onInterceptTouchEvent方法是ViewGroup才有而View没有的</p>
+</blockquote>
+<p>为了详细分析每一步，这里将所有的触摸事件以及相应的方法的返回值全部打印出来</p>
+<a id="more"></a>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- dispatchTouchEvent : ACTION_DOWN"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- dispatchTouchEvent : ACTION_MOVE"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- dispatchTouchEvent : ACTION_UP"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- dispatchTouchEvent : ACTION_CANCEL"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//这里默认返回值为 false,也就是事件不分发给自己而分发给子View</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> f = <span class="keyword">false</span>;</span><br><span class="line">    Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onInterceptTouchEvent : "</span> +f);</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onInterceptTouchEvent : ACTION_DOWN"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onInterceptTouchEvent : ACTION_MOVE"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onInterceptTouchEvent : ACTION_UP"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onInterceptTouchEvent : ACTION_CANCEL"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> f;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> f = <span class="keyword">false</span>;</span><br><span class="line">    Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onTouchEvent : true"</span>);</span><br><span class="line">    <span class="keyword">switch</span> (event.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onTouchEvent : ACTION_DOWN"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onTouchEvent : ACTION_MOVE"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onTouchEvent : ACTION_UP"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</span><br><span class="line">            Log.e(<span class="string">"wxp"</span>, <span class="string">"mylayout- onTouchEvent : ACTION_CANCEL"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> f;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-然后继承Butoon自定义一个-MyButton-并重写它的两个个方法-dispatchTouchEvent-onTouchEvent"><a href="#2-然后继承Butoon自定义一个-MyButton-并重写它的两个个方法-dispatchTouchEvent-onTouchEvent" class="headerlink" title="2. 然后继承Butoon自定义一个 MyButton,并重写它的两个个方法 dispatchTouchEvent,onTouchEvent"></a>2. 然后继承Butoon自定义一个 MyButton,并重写它的两个个方法 dispatchTouchEvent,onTouchEvent</h4><p>MyButton这两个方法内部的实现和 MyChildLayout 一样，接着只要改变各个方法的返回值，来观察触摸事件的传导路线即可。</p>
+<h4 id="3-布局文件如下"><a href="#3-布局文件如下" class="headerlink" title="3.  布局文件如下"></a>3.  布局文件如下</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;custom.MyLayout xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    android:id=<span class="string">"@+id/id_mylayout"</span></span><br><span class="line">    android:background=<span class="string">"#056f00"</span></span><br><span class="line">    android:orientation=<span class="string">"vertical"</span></span><br><span class="line">    android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">    android:layout_height=<span class="string">"match_parent"</span>&gt;</span><br><span class="line"></span><br><span class="line">    &lt;custom.MyChildLayout</span><br><span class="line">        android:id=<span class="string">"@+id/id_childlayout"</span></span><br><span class="line">        android:background=<span class="string">"#e00032"</span></span><br><span class="line">        android:orientation=<span class="string">"vertical"</span></span><br><span class="line">        android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">        android:layout_height=<span class="string">"400dp"</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;custom.MyButton</span><br><span class="line">            android:background=<span class="string">"#4d69ff"</span></span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"200dp"</span></span><br><span class="line">            android:id=<span class="string">"@+id/id_btn"</span></span><br><span class="line">            android:text=<span class="string">"Button"</span> /&gt;</span><br><span class="line">    &lt;/custom.MyChildLayout&gt;</span><br><span class="line">&lt;/custom.MyLayout&gt;</span><br></pre></td></tr></table></figure>
+<p>效果图：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/layout_pic.png" alt="layout_pic.png"></p>
+<ul>
+<li>绿色部分为顶层父布局,也就是MyLinearLayout，同样是继承LinearLayout，但是这里所有的事件传导都是按照系统的默认值流程执行，我们并不做任何修改。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">    Log.e(<span class="string">"wxp"</span>, <span class="string">"MyLayout- onTouchEvent : false"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    Log.e(<span class="string">"wxp"</span>, <span class="string">"MyLayout- onInterceptTouchEvent : false"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    Log.e(<span class="string">"wxp"</span>, <span class="string">"MyLayout- dispatchTouchEvent : false"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>红色部分为子布局，也就是MyChildLayout,我们要在这里修改事件的传导过程以观察现象。</li>
+<li>蓝色部分是位于子布局中一个MyButton。</li>
+</ul>
+<hr>
+<h3 id="准备工作已经完成，下面来实际操作一下"><a href="#准备工作已经完成，下面来实际操作一下" class="headerlink" title="准备工作已经完成，下面来实际操作一下"></a>准备工作已经完成，下面来实际操作一下</h3><blockquote>
+<p>每次操作都是点击蓝色的Button区域</p>
+</blockquote>
+<h4 id="1-首先，我们将所有方法的返回值均设置成系统默认的返回值，也就是返回相应的父类方法返回值即可。看一下Log"><a href="#1-首先，我们将所有方法的返回值均设置成系统默认的返回值，也就是返回相应的父类方法返回值即可。看一下Log" class="headerlink" title="1. 首先，我们将所有方法的返回值均设置成系统默认的返回值，也就是返回相应的父类方法返回值即可。看一下Log"></a>1. 首先，我们将所有方法的返回值均设置成系统默认的返回值，也就是返回相应的父类方法返回值即可。看一下Log</h4><p><img src="/src/imgs/1412/03_TouchEvent/case_default.png" alt="case_default.png"></p>
+<h6 id="这里我们借这个简单的Log来详细阐述一下长按Button这个操作所产生的触摸事件的分发流程。"><a href="#这里我们借这个简单的Log来详细阐述一下长按Button这个操作所产生的触摸事件的分发流程。" class="headerlink" title="## 这里我们借这个简单的Log来详细阐述一下长按Button这个操作所产生的触摸事件的分发流程。"></a>## 这里我们借这个简单的Log来详细阐述一下长按Button这个操作所产生的触摸事件的分发流程。</h6><ul>
+<li>首先，手指按下，ACTION_DOWN事件由顶层View也就是这里的MyLayout的dispatchTouchEvent的方法来分发，由于这里默认返回的是false，也就是不分发给自己而是继续向下分发。接着onInterceptTouchEvent方法想要拦截这个事件，但是由于系统默认的也是返回false，也就是不拦截。</li>
+<li>于是这个ACTION_DOWN事件会分发给它的子View也就是MyChildLayout。由于ViewGroup的dispatchTouchEvent方法默认返回值是false，所以这里也和它的父控件一样，交由onInterceptTouchEvent方法来拦截。同样ViewGroup的onInterceptTouchEvent的默认返回值也是false。所以事件会继续向下分发。</li>
+<li>知道分发到最底层的子View，也就是这里的MyButton，由于View的dispatchTouchEvent方法默认返回值为true，所以会将事件分发给自己处理，而不必向下分发。处理这个事件是在onTouchEvent中，而View的onTouchEvent默认返回值为true，也就是默认自己消费这个事件，不必向上传递。</li>
+<li>由于我这里是长按Button，所以在ACTION_DOWN触发之后会执行Button的onLongClick方法。自此这个ACTION_DOWN事件传递完毕。</li>
+<li>长按之后，将手指抬起，ACTION_UP事件也会按照上述的路线再次分发执行。</li>
+<li>最终，ACTION_UP消费完成之后会执行Button的onClick方法。</li>
+</ul>
+<blockquote>
+<p>从这个Log也可以清楚的表明，其实Android的<code>一个触摸事件</code>其实是一个单独的手指操作，例如ACTION_DOWN是一个手指按下事件，ACTION_UP是一个手指抬起事件，而并不像我们日常生活中所理解的点击一下是一个事件。</p>
+</blockquote>
+<h4 id="2-由于一开始我并没有调用super-dispatchTouchEvent，而是直接将dispatchTouchEvent方法返回true-or-false。结果产生了一些怪异的分发路径。"><a href="#2-由于一开始我并没有调用super-dispatchTouchEvent，而是直接将dispatchTouchEvent方法返回true-or-false。结果产生了一些怪异的分发路径。" class="headerlink" title="2.  由于一开始我并没有调用super.dispatchTouchEvent，而是直接将dispatchTouchEvent方法返回true or false。结果产生了一些怪异的分发路径。"></a>2.  由于一开始我并没有调用super.dispatchTouchEvent，而是直接将dispatchTouchEvent方法返回true or false。结果产生了一些怪异的分发路径。</h4><h6 id="2-1-不如来看看在MyChildLayout不调用super-dispatchTouchEvent方法的情况下（MyChildLayout中其方法以及其MyButton中的方法均返回默认值）"><a href="#2-1-不如来看看在MyChildLayout不调用super-dispatchTouchEvent方法的情况下（MyChildLayout中其方法以及其MyButton中的方法均返回默认值）" class="headerlink" title="2.1 不如来看看在MyChildLayout不调用super.dispatchTouchEvent方法的情况下（MyChildLayout中其方法以及其MyButton中的方法均返回默认值）:"></a>2.1 不如来看看在MyChildLayout不调用super.dispatchTouchEvent方法的情况下（MyChildLayout中其方法以及其MyButton中的方法均返回默认值）:</h6><ul>
+<li>（1）MyChildLayout dispatchTouchEvent方法 return false;</li>
+</ul>
+<p><img src="/src/imgs/1412/03_TouchEvent/case_error_false.png" alt="case_error_false.png"></p>
+<p>可以看出，这种情况下，事件虽然会分发，但是并不会执行到 MyChildLayout 的onInterceptTouchEvent方法。也不是分发给子View处理，而是会直接在Activity中的onTouchEvent中消化事件。对于Activity中的onTouchEvent方法来说，无论它的返回值是什么，这都是事件传导的终点。</p>
+<ul>
+<li>（2）MyChildLayout 的 dispatchTouchEvent方法 return true;</li>
+</ul>
+<p><img src="/src/imgs/1412/03_TouchEvent/case_error_true.png" alt="case_error_true.png"></p>
+<p>可以看出，这种情况下，事件不会分发只会限制在 MyChildLayout 的 dispatchTouchEvent方法中直到消失，既不自己处理也不分给子View。Activity也不会处理到。</p>
+<h6 id="2-2-再来看看在MyChildLayout调用super-dispatchTouchEvent方法的情况下（MyChildLayout中其方法以及其MyButton中的方法均返回默认值）"><a href="#2-2-再来看看在MyChildLayout调用super-dispatchTouchEvent方法的情况下（MyChildLayout中其方法以及其MyButton中的方法均返回默认值）" class="headerlink" title="2.2 再来看看在MyChildLayout调用super.dispatchTouchEvent方法的情况下（MyChildLayout中其方法以及其MyButton中的方法均返回默认值）:"></a>2.2 再来看看在MyChildLayout调用super.dispatchTouchEvent方法的情况下（MyChildLayout中其方法以及其MyButton中的方法均返回默认值）:</h6><ul>
+<li>(1)比如：一开始我是这样写的</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.dispatchTouchEvent(ev);</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123; ... &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果发现打出的Log是这样的：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/case00_1.png" alt="case00_1.png"></p>
+<p>注意图中选中的部分是MyButton- dispatchTouchEvent竟然位于MyLayout- onInterceptTouchEvent的下面</p>
+<ul>
+<li>(2)然后我又把super.dispatchTouchEvent(ev)的位置换了一下：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123; ... &#125;</span><br><span class="line">    <span class="keyword">super</span>.dispatchTouchEvent(ev);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时我长按Button,打出的Log为：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/case00_2_1.png" alt="case00_2_1.png"></p>
+<p>如果我点击Button，打出的Log为：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/case00_2_2.png" alt="case00_2_2.png"></p>
+<p>可以看出不仅MyButton的onClick方法没有执行到,onLongClick的方法调用的顺序也混乱了。</p>
+<p>其实上面这种写法也不能算是错误，但是这样会让事件传导路线发生混乱。如果想要事件按正确的分发路线分发一定要返回super.dispatchTouchEvent(event)，否则会产生一些奇怪的现象。</p>
+<p>所以，虽然MyChildLayout的dispatchTouchEvent的返回值也是false，但是对比默认的分发路径，还是有很大的出入。</p>
+<blockquote>
+<p>因此：如果想要拦截一个ViewGroup的事件，不要改变dispatchTouchEvent方法的返回值，可以直接修改onInterceptTouchEvent方法的返回值为true。</p>
+</blockquote>
+<hr>
+<h3 id="接下面我们试着来改变一下事件的分发路线"><a href="#接下面我们试着来改变一下事件的分发路线" class="headerlink" title="接下面我们试着来改变一下事件的分发路线"></a>接下面我们试着来改变一下事件的分发路线</h3><h4 id="1-CASE-02"><a href="#1-CASE-02" class="headerlink" title="1.CASE 02 :"></a>1.CASE 02 :</h4><ul>
+<li>MyChildLayout- onInterceptTouchEvent return true;</li>
+<li>MyChildLayout- onTouchEvent return super.onTouchEvent(event);//false</li>
+<li>MyChildLayout中其方法以及其MyButton中的方法均返回默认值.</li>
+</ul>
+<blockquote>
+<p>值得一提的是，和dispatchTouchEvent不同，在这两个方法里不管有没有调用相应的super方法，或者super方法的位置写在哪里，都不会影响事件的分发路线。</p>
+</blockquote>
+<p>来看一下这种情况下的Log：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/case01_1.png" alt="case01_01.png"></p>
+<ul>
+<li>可以看到MyChildLayout- onInterceptTouchEvent返回true，也就是拦截了事件，交给它自己的onTouchEvent来处理。。因此事件不会分发到MyButton,理所当然Log中也就看不到MyButton的影子了。</li>
+<li>但是由于MyChildLayout- onTouchEvent默认返回false，也就是MyChildLayout自己不消化事件，而是向上传递到它的父控件MyLayout。</li>
+<li>同样MyLayout默认也是不消化事件，继续向上传递到Activity中。由于Activity中的onTouchEvent默认返回true，所以最终会消化事件。</li>
+<li>同时，Activity作为事件传递的顶层，如果返回值为true表示处理了事件；如果返回值为false，事件也不会继续向上传递了，而是自此<code>消失</code>。</li>
+</ul>
+<h4 id="2-CASE-02"><a href="#2-CASE-02" class="headerlink" title="2.CASE 02 :"></a>2.CASE 02 :</h4><ul>
+<li>MyChildLayout- onInterceptTouchEvent return true;</li>
+<li>MyChildLayout- onTouchEvent return true;</li>
+<li>MyChildLayout中其方法以及其MyButton中的方法均返回默认值.</li>
+</ul>
+<p>来看一下这种情况下的Log：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/case01_2.png" alt="case01_02.png"></p>
+<ul>
+<li>同上：MyChildLayout- onInterceptTouchEvent返回true，拦截事件，</li>
+<li>由于MyChildLayout- onTouchEvent返回true，也就是自己消化了事件，所以不会向再上传递到了。</li>
+</ul>
+<h4 id="3-CASE-03"><a href="#3-CASE-03" class="headerlink" title="3.CASE 03 :"></a>3.CASE 03 :</h4><ul>
+<li>MyButton- onTouchEvent return false;</li>
+<li>MyChildLayout- onTouchEvent return true;</li>
+<li>MyButton和MyChildLayout中的其他方法均返回默认值.</li>
+</ul>
+<p>不如我们先来猜想一下ACTION_DOWN事件的分发路径：</p>
+<ul>
+<li>首先从MyLayout中分发到MyChildLayout，再分发到MyButton，由于MyButton-onTouchEvent return false;也就是并未消化事件。</li>
+<li>所以事件会向上传递到MyChildLayout的onTouchEvent的方法中，由于这个方法返回了true也就是消化了事件，所以不会再向上传递了。</li>
+</ul>
+<p>来看一下这种情况下的Log：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/case_03.png" alt="case_03.png"></p>
+<p>可以看出，ACTION_DOWN的分发路径和我们猜想的是一模一样的。</p>
+<p>再来看看ACTION_UP事件。同样是从MyLayout分发下来。但是分发到MyChildLayout时，直接被它的dispatchTouchEvent分发给自己，并交由onTouchEvent处理了。</p>
+<blockquote>
+<p>如果某个触摸事件传递到了某个View(or ViewGroup)的onToucEvent方法，但是它返回了false，那么对于这一次操作（点击或者长按之类的操作）而言，这之后所有的触摸事件都不会再分发给这个View了。</p>
+<p>一次操作是从ACTION_DOWN事件开始的，所以每一ACTION_DOWN事件的发生相当于进行了一次初始化，因此onToucEvent方法返回false并不会影响这个View接受下一次的ACTION_DOWN事件。</p>
+</blockquote>
+<p>所以我们再来看一下这个Log，ACTION_DOWN事件传递到了MyButton的onTouchEvent方法中，但是由于这个方法返回了false，所以ACTION_UP事件不会再分发给MyButton了。</p>
+<h4 id="4-CASE-04"><a href="#4-CASE-04" class="headerlink" title="4.CASE 04 :"></a>4.CASE 04 :</h4><p>我们可以接着上面这个情况，再来进一步说明这种分发方式。</p>
+<ul>
+<li>MyButton- onTouchEvent return false;</li>
+<li>MyChildLayout- onTouchEvent return false;</li>
+<li>MyButton和MyChildLayout中的其他方法均返回默认值.</li>
+</ul>
+<p>看一下这种情况的Log：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/case_04.png" alt="case_04.png"></p>
+<ul>
+<li>选中部分及其上面是ACTION_DOWN的分发流程，下面是ACTION_UP的分发流程。</li>
+<li>可以看出，由于MyButton- onTouchEvent return false;MyChildLayout- onTouchEvent return false;而MyLayout的onTouchEvent默认也是返回false。最终ACTION_DOWN事件被 ACtivity消化了。</li>
+<li>并且，ACTION_UP事件直接交由Activity处理。</li>
+</ul>
+<h4 id="5-CASE-05"><a href="#5-CASE-05" class="headerlink" title="5.CASE 05 :"></a>5.CASE 05 :</h4><p>来看看最后一种情况</p>
+<ul>
+<li>MyButton- onTouchEvent return false;</li>
+<li>MyChildLayout- onTouchEvent return false;</li>
+<li>Activity- onTouchEvent return false;</li>
+<li>MyButton和MyChildLayout中的其他方法均返回默认值.</li>
+</ul>
+<p>这种情况的Log和CASE04的Log是一模一样的：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/case_05.png" alt="case_05.png"></p>
+<blockquote>
+<p>也就是说，和View以及ViewGroup不同。即使Activity的onTouchEvent方法返回了false，它还是会接受到接下来的触摸事件。</p>
+</blockquote>
+<hr>
+<h3 id="如果MyButton中同时存在-onTouchEvent-onClick以及onLongClick三个方法，并且希望每个方法都能执行到的话"><a href="#如果MyButton中同时存在-onTouchEvent-onClick以及onLongClick三个方法，并且希望每个方法都能执行到的话" class="headerlink" title="如果MyButton中同时存在 onTouchEvent,onClick以及onLongClick三个方法，并且希望每个方法都能执行到的话"></a>如果MyButton中同时存在 onTouchEvent,onClick以及onLongClick三个方法，并且希望每个方法都能执行到的话</h3><ul>
+<li>首先，如果已经重写了 dispatchTouchEvent方法，一定要 return super.dispatchTopuchEvent(event);千万不要直接返回 true。</li>
+<li>其次，onTouchEvent 方法同样要 return super.onTouchEvent(event);也不能直接返回 true or false。</li>
+<li>最后，onLongClick方法要返回false。</li>
+</ul>
+<p>如下是长按Button之后的Log：</p>
+<p><img src="/src/imgs/1412/03_TouchEvent/touch_click_long.png" alt="touch_click_long.png"></p>
+<p>在上文的分析中其实已经提到了：</p>
+<ul>
+<li>onLongClick是在ACTION_DOWN之后ACTION_UP之前触发的。</li>
+<li>而onClick是在ACTION_UP之后触发的</li>
+</ul>
+<blockquote>
+<p>此外,如果在Activity中为Button设置onClickListener，那么只会执行这里的onClick方法，而不会执行Button内部的onClick方法。</p>
+</blockquote>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2014/12/25/2014-12-25-AndroidTouchEventAnalysis/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2014/12/27/2014-12-27-NDKPreview/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    NDK开发起步
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/12/24/2014-12-23-AndroidScroller/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Scroller 实现滑动效果以及下拉操作</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

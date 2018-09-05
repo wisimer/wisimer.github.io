@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Android依赖注入框架 Dagger1 深入了解 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="一、前言之前已经介绍了Dagger的简单使用 接下来看看Dagger中还有一些别的常用的注解如何使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android依赖注入框架 Dagger1 深入了解">
+<meta property="og:url" content="http://ai.wisim.me/2015/10/13/2015-10-13-AndroidDagger1Deep/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="一、前言之前已经介绍了Dagger的简单使用 接下来看看Dagger中还有一些别的常用的注解如何使用">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android依赖注入框架 Dagger1 深入了解">
+<meta name="twitter:description" content="一、前言之前已经介绍了Dagger的简单使用 接下来看看Dagger中还有一些别的常用的注解如何使用">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-10-13-AndroidDagger1Deep" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Android依赖注入框架 Dagger1 深入了解
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/10/13/2015-10-13-AndroidDagger1Deep/">
+            <time datetime="2015-10-12T16:00:00.000Z" itemprop="datePublished">2015-10-13</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>之前已经介绍了Dagger的简单使用</p>
+<p>接下来看看Dagger中还有一些别的常用的注解如何使用</p>
+<a id="more"></a>
+<h3 id="二、-Provides注解"><a href="#二、-Provides注解" class="headerlink" title="二、@Provides注解"></a>二、@Provides注解</h3><h4 id="1-对构造方法进行注解是很好用的实现依赖的途径，然而它并不适用于所有情况。"><a href="#1-对构造方法进行注解是很好用的实现依赖的途径，然而它并不适用于所有情况。" class="headerlink" title="1.对构造方法进行注解是很好用的实现依赖的途径，然而它并不适用于所有情况。"></a>1.对构造方法进行注解是很好用的实现依赖的途径，然而它并不适用于所有情况。</h4><ol>
+<li>接口（Interface）是没有构造方法的</li>
+<li>第三方库提供的类，它们的构造方法不能被注解</li>
+<li>有些类需要灵活选择初始化的配置，而不是使用一个单一的构造方法</li>
+</ol>
+<p>所以除了直接@Inject构造函数，也可以通过@Provides注解来获取到对象。Dagger要求所有的@Provides必须属于一个Module。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span>(injects = MainActivity.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgMoudle</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="function">DraftsBox <span class="title">provideDraftsBox</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DraftsBox();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而Module仅仅是一个使用了@Module注解的类。</p>
+<p>Module的作用是提供信息，让ObjectGraph知道应该怎样注入所有的依赖。例如，上面这段代码中声明了可注入对象的信息：MainActivity.class</p>
+<h4 id="2-限定符注解-Qualifier"><a href="#2-限定符注解-Qualifier" class="headerlink" title="2.限定符注解 @Qualifier"></a>2.限定符注解 @Qualifier</h4><p>有些时候，单纯类型（指这些基本的@Inject….等等）是不能够满足指定依赖的需求的。</p>
+<p>在这种情况下，我们可以添加限定符注释来自定义一个注解， 这种注释本身有一个@Qualifier注释</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span>(injects = MainActivity.class,library = <span class="keyword">true</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgMoudle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@MyInt</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">providesMyInt</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用的时候在@Inject下面加上@MsgMoudle.MyInt(1)即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Inject</span></span><br><span class="line"><span class="meta">@MsgMoudle</span>.MyInt(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">int</span> mLength;</span><br></pre></td></tr></table></figure>
+<h4 id="3-有些情况下，-你需要多个对象实例，-而不是仅仅注入一个对象实例。"><a href="#3-有些情况下，-你需要多个对象实例，-而不是仅仅注入一个对象实例。" class="headerlink" title="3.有些情况下， 你需要多个对象实例， 而不是仅仅注入一个对象实例。"></a>3.有些情况下， 你需要多个对象实例， 而不是仅仅注入一个对象实例。</h4><p>这时你可以利用Provider实现， 每次调用Provider的get()函数将返回新的<t>的对象实例。</t></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DraftsBox</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span>  Provider&lt;NewMsg&gt; providerNewMsg;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">edit</span><span class="params">()</span></span>&#123;</span><br><span class="line">		providerNewMsg.get();	<span class="comment">//得到对象1</span></span><br><span class="line">		providerNewMsg.get();	<span class="comment">//得到对象2</span></span><br><span class="line">		<span class="comment">//对象1 和 对象2 是两个不同的对象.</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="二、Dagger中其他一些注解的使用"><a href="#二、Dagger中其他一些注解的使用" class="headerlink" title="二、Dagger中其他一些注解的使用"></a>二、Dagger中其他一些注解的使用</h3><h4 id="1-当我们希望不管多少个地方注入DraftsBox这个类，我们只希望拥有一份“DraftsBox”的实例对象（单例）。"><a href="#1-当我们希望不管多少个地方注入DraftsBox这个类，我们只希望拥有一份“DraftsBox”的实例对象（单例）。" class="headerlink" title="1.当我们希望不管多少个地方注入DraftsBox这个类，我们只希望拥有一份“DraftsBox”的实例对象（单例）。"></a>1.当我们希望不管多少个地方注入DraftsBox这个类，我们只希望拥有一份“DraftsBox”的实例对象（单例）。</h4><p>那么我们可以用到注解@Singleton 加在 @Provides注解的后面即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Provides</span> <span class="meta">@Singleton</span> <span class="function">DraftsBox <span class="title">provideDraftsBox</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> DraftsBox();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@Singleton 注释对Dagger有效， 也只在一个ObjectGraph中生效。 若是有多个ObjectGraph， 则有多个相应的@Singleton对象。</p>
+<h4 id="2-延迟注入-Lazy-即：懒加载-等到调用的时候才注入"><a href="#2-延迟注入-Lazy-即：懒加载-等到调用的时候才注入" class="headerlink" title="2.延迟注入 Lazy :(即：懒加载, 等到调用的时候才注入)"></a>2.延迟注入 Lazy :(即：懒加载, 等到调用的时候才注入)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Account</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span>  Lazy&lt;DraftsBox&gt; lazyDraftsBox;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">save</span><span class="params">()</span></span>&#123;</span><br><span class="line">		lazyDraftsBox.get();<span class="comment">//这样就能得到一个DraftsBox对象</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="三、-Module的一些说明"><a href="#三、-Module的一些说明" class="headerlink" title="三、@Module的一些说明"></a>三、@Module的一些说明</h3><ol>
+<li>在@Module中加入一个参数 complete=false， 标记说明该Module为不完整的Module。因为不完整的Module允许缺少对象实例。</li>
+</ol>
+<p>2.如果在@Module中已经加入参数injects (即所谓的：注入对象列表绑定),若是这个Module提供的对象绑定， 可能被injects列表中以外的类使用， 可以将改Module标记为library, 以避免出错。</p>
+<p>如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span>(injects = DraftsBox.class,library = <span class="keyword">true</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DraftsBoxModule</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Provides</span> <span class="function">NewMsg <span class="title">provideNewMsg</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> NewMsg();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Provides</span> <span class="function">Others <span class="title">provideOthers</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span>  <span class="keyword">new</span> Others;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分析：由于DraftsBox只用到了一个NewMsg的类，而injects列表中也只写了DraftsBox.class。<br>这样的话，NewMsg这个类提供的其他方法有可能被除了DraftsBox之外的类所用，那么避免报错就要在@Module加上参数library=true</p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/10/13/2015-10-13-AndroidDagger1Deep/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/10/22/2015-10-22-AndroidAnt/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Ant 构建Android工程
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/10/08/2015-10-08-AndroidDagger1Demo/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Android依赖注入框架 Dagger1</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

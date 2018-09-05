@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>JAVA设计模式-代理模式 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="参与者 行为接口 目标对象，也就是被代理的对象 代理对象 客户端  实现 代理对象和目标对象均实现一个相同的行为接口; 在各自的类里面重写接口中的行为方法. 在代理对象的无参构造函数中实例化一个被代理者对象; 在代理者的行为方法中调用被代理者的行为方法. 客户端想要调用目标对象的那个行为，只能通过调用代理对象的行为方法来实现。">
+<meta name="keywords" content="Java,DesignPattern">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA设计模式-代理模式">
+<meta property="og:url" content="http://ai.wisim.me/2015/03/20/2015-03-20-DesignPatternProxy/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="参与者 行为接口 目标对象，也就是被代理的对象 代理对象 客户端  实现 代理对象和目标对象均实现一个相同的行为接口; 在各自的类里面重写接口中的行为方法. 在代理对象的无参构造函数中实例化一个被代理者对象; 在代理者的行为方法中调用被代理者的行为方法. 客户端想要调用目标对象的那个行为，只能通过调用代理对象的行为方法来实现。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-05T01:06:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA设计模式-代理模式">
+<meta name="twitter:description" content="参与者 行为接口 目标对象，也就是被代理的对象 代理对象 客户端  实现 代理对象和目标对象均实现一个相同的行为接口; 在各自的类里面重写接口中的行为方法. 在代理对象的无参构造函数中实例化一个被代理者对象; 在代理者的行为方法中调用被代理者的行为方法. 客户端想要调用目标对象的那个行为，只能通过调用代理对象的行为方法来实现。">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-03-20-DesignPatternProxy" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            JAVA设计模式-代理模式
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/03/20/2015-03-20-DesignPatternProxy/">
+            <time datetime="2015-03-19T16:00:00.000Z" itemprop="datePublished">2015-03-20</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/SE/">SE</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/DesignPattern/">DesignPattern</a>, <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h4><ol>
+<li>行为接口</li>
+<li>目标对象，也就是被代理的对象</li>
+<li>代理对象</li>
+<li>客户端</li>
+</ol>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>代理对象和目标对象均实现一个相同的行为接口;</li>
+<li>在各自的类里面重写接口中的行为方法.</li>
+<li>在代理对象的无参构造函数中实例化一个被代理者对象;</li>
+<li>在代理者的行为方法中调用被代理者的行为方法.</li>
+<li>客户端想要调用目标对象的那个行为，只能通过调用代理对象的行为方法来实现。</li>
+</ol>
+<a id="more"></a>
+<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p>客户端需要调用的是目标对象(被代理者)的行为方法;<br>现在通过代理模式用代理对象代理了目标对象并调用他的行为方法,达到了同样的目的.<br>并且还可以在代理者中还可以定义其他的一些方法</p>
+<hr>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p>举个例子，“有时候”不能访问谷歌，所以只能翻墙，Ubuntu环境下，使用GoAgent来实现翻墙还是比较方便的。</p>
+<p>于是现在就可以通过代理模式来解决上面这中情形下产生的问题</p>
+<p>假设现在有下面几个参与者：</p>
+<ol>
+<li>行为接口:Search.java</li>
+<li>客户端:Geek.java</li>
+<li>代理对象:GoAgent.java</li>
+<li>目标对象:GAE.java(Google App Engine)</li>
+</ol>
+<h4 id="一、首先定义一个抽象的行为接口googlesearch"><a href="#一、首先定义一个抽象的行为接口googlesearch" class="headerlink" title="一、首先定义一个抽象的行为接口googlesearch"></a>一、首先定义一个抽象的行为接口<code>googlesearch</code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Search</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">googlesearch</span><span class="params">(String keyword)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="二、还有一个客户端-也就是它要使用代理对象"><a href="#二、还有一个客户端-也就是它要使用代理对象" class="headerlink" title="二、还有一个客户端,也就是它要使用代理对象"></a>二、还有一个客户端,也就是它要使用代理对象</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Geek</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Search staticsearch = <span class="keyword">new</span> GoAgent();</span><br><span class="line">        System.out.println(<span class="string">"Result is :"</span>+staticsearch.googlesearch(<span class="string">"wxp"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于用户（客户端）并不能直接访问google，也就是不能实例化一个GAE对象，所以只能通过实例化一个GoAgent代理对象来实现。<br>再想一下，实际访问google的是GAE,所以在GoAgent内部一定会实例化一个GAE对象来达到访问google的目的。</p>
+<h4 id="三、让GAE实现Search这个行为接口"><a href="#三、让GAE实现Search这个行为接口" class="headerlink" title="三、让GAE实现Search这个行为接口"></a>三、让GAE实现Search这个行为接口</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GAE</span> <span class="keyword">implements</span> <span class="title">Search</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">googlesearch</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Search result from google...keyword is : "</span>+kw);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"pcx : "</span>+System.currentTimeMillis();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="四、因为用户就是要通过代理对象来实现搜索，所以GoAgent也要实现Search接口"><a href="#四、因为用户就是要通过代理对象来实现搜索，所以GoAgent也要实现Search接口" class="headerlink" title="四、因为用户就是要通过代理对象来实现搜索，所以GoAgent也要实现Search接口"></a>四、因为用户就是要通过代理对象来实现搜索，所以GoAgent也要实现Search接口</h4><blockquote>
+<p>根据上面的分析，代理对象有一个目标对象作为它的成员变量，并且在代理对象的无参构造函数中实例化这个目标对象。接着在代理对象的行为方法中调用目标对象的行为方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GoAgent</span> <span class="keyword">implements</span> <span class="title">Search</span></span>&#123;</span><br><span class="line">    Search mSearch;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GoAgent</span><span class="params">()</span></span>&#123;</span><br><span class="line">        mSearch = <span class="keyword">new</span> GAE();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">googlesearch</span><span class="params">(String kw)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Use GoAgent to access google search..."</span>);</span><br><span class="line">        String res = mSearch.googlesearch(kw);</span><br><span class="line">        System.out.println(<span class="string">"Successfully access google"</span>);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后来测试一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javac Geek.java</span><br><span class="line">java Geek</span><br></pre></td></tr></table></figure>
+<p>看一下运行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Use GoAgent to access google search...</span><br><span class="line">Search result from google...keyword is : wxp</span><br><span class="line">Successfully access google</span><br><span class="line">Result is :pcx : 1426746484614</span><br></pre></td></tr></table></figure>
+<h4 id="五、应用场景-一个客户端不能或者不想直接实例化一个对象。于是通过一个代理对象作为中介来实现与服务端的交流。"><a href="#五、应用场景-一个客户端不能或者不想直接实例化一个对象。于是通过一个代理对象作为中介来实现与服务端的交流。" class="headerlink" title="五、应用场景:一个客户端不能或者不想直接实例化一个对象。于是通过一个代理对象作为中介来实现与服务端的交流。"></a>五、应用场景:一个客户端不能或者不想直接实例化一个对象。于是通过一个代理对象作为中介来实现与服务端的交流。</h4><ol>
+<li>授权机制：不同等级的用户对某一个对象有不同的访问权限，通过代理模式来进行访问权限的控制。</li>
+<li>客户端暂时无法获取服务器端比较大的对象，可以通过代理模式用一个代理对象暂时代替真正的对象。</li>
+</ol>
+<hr>
+<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>可以发现，上面这种代理方式，必须给每个目标对象类都实现一个代理对象类，如果客户端要使用目标对象，只要创建代理对象再调用代理类的方法即可。</p>
+<p>但是，如果现在有许多目标对象类，那就必须要有许多代理类才可以，这样显然不合理。所以我们可以采用动态代理，只用一个动态代理类就可以适用所有的目标对象。</p>
+<p>要实现动态代理，一般涉及到一下两个类：</p>
+<h4 id="一、java-lang-reflect-InvocationHandler"><a href="#一、java-lang-reflect-InvocationHandler" class="headerlink" title="一、java.lang.reflect.InvocationHandler"></a>一、java.lang.reflect.InvocationHandler</h4><p>InvocationHandler（调用处理程序）是一个接口，我们必须新建一个自己的子类DynamicProxyHandler并实现这个接口，<br>然后重写它的invoke方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicProxyHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> Object mProxied;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DynamicProxyHandler</span><span class="params">(Object obj)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.mProxied = obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy,Method method,Object[] args)</span> <span class="keyword">throws</span> Throwable</span>&#123;</span><br><span class="line">      System.out.println(<span class="string">"invoke : Object.getClass() --&gt; "</span>+proxy.getClass());</span><br><span class="line">      System.out.println(<span class="string">"invoke : Method --&gt; "</span>+method);</span><br><span class="line">      System.out.println(<span class="string">"invoke : Object[] --&gt; "</span>+args);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (args != <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span> (Object arg : args) &#123;</span><br><span class="line">          System.out.println(<span class="string">"args : "</span>+args);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> method.invoke(mProxied,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>invoke的第一个参数proxy就是下面会提到的Java内建的代理类Proxy类的一个实例</li>
+<li>第二个参数method是被代理的方法，也就是上面的googlesearch方法</li>
+<li>第三个参数是googlesearch方法的参数组，如果method方法没有参数，那第三个参数就为null</li>
+</ul>
+<h4 id="二、java-lang-reflect-Proxy"><a href="#二、java-lang-reflect-Proxy" class="headerlink" title="二、java.lang.reflect.Proxy"></a>二、java.lang.reflect.Proxy</h4><p>Proxy即为代理类，作用类似于上面的GoAgent类，它有一个 <code>Static Object newProxyInstance(ClassLoader loader, Class[] interfaces, InvocationHandler h)</code> 方法返回代理类的一个实例，返回后的代理类，可以当作被代理类使用，也就是可以使用googlesearch方法。</p>
+<ul>
+<li>第一个参数是代理类的类加载器</li>
+<li>第二个参数是抽象行为方法数组,可以直接通过search.getClass().getInterfaces()来获取</li>
+<li>第三个参数是上面提到的调用处理程序DynamicProxyHandler的一个实例</li>
+</ul>
+<h4 id="三、我们在客户端如何使用动态代理对象呢"><a href="#三、我们在客户端如何使用动态代理对象呢" class="headerlink" title="三、我们在客户端如何使用动态代理对象呢"></a>三、我们在客户端如何使用动态代理对象呢</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Search gae = <span class="keyword">new</span> GAE();</span><br><span class="line">DynamicProxyHandler dynamicproxyhandler = <span class="keyword">new</span> DynamicProxyHandler(gae);</span><br><span class="line">Search dynamicproxysearch = (Search)Proxy.newProxyInstance(</span><br><span class="line">    Search.class.getClassLoader(),</span><br><span class="line">    gae.getClass().getInterfaces(),</span><br><span class="line">    dynamicproxyhandler);</span><br><span class="line">System.out.println(<span class="string">"Result is :"</span>+dynamicproxysearch.googlesearch(<span class="string">"wxp"</span>));</span><br></pre></td></tr></table></figure>
+<p>当我们调用dynamicproxysearch的googlesearch方法时，jvm会将该方法的调用指派给它的调用处理程序 dynamicproxyhandler<br>最终调用的其实是metho.invoke()方法。<br>来看一下运行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">invoke : Object.getClass() --&gt; class com.sun.proxy.$Proxy0</span><br><span class="line">invoke : Method --&gt; public abstract java.lang.String Search.googlesearch(java.lang.String)</span><br><span class="line">invoke : Object[] --&gt; [Ljava.lang.Object;@3852fdeb</span><br><span class="line">args : [Ljava.lang.Object;@3852fdeb</span><br><span class="line">Search result from google...keyword is : wxp</span><br><span class="line">Result is :pcx : 1426746484620</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Proxy上的任何方法调用都会被传入InvocationHandler类,InvocationHandler控制对目标对象的访问。</p>
+</blockquote>
+<p>可以看到在实例化DynamicProxyHandler对象时，只要传入一个目标对象的实例即可。<br>这样我们就不必为每个目标对象都实现一个代理类了，只要通过动态代理来生成一个代理对象，然后调用它的代理方法即可。</p>
+<hr>
+<p>实例源码：<a href="https://github.com/whisper92/wxpdesignpattern/tree/master/src/java/proxy/ProxyExample" target="_blank" rel="noopener">https://github.com/whisper92/wxpdesignpattern/tree/master/src/java/proxy/ProxyExample</a></p>
+<p>另外附送通过动态代理实现不同访问权限的用户的例子：</p>
+<p><a href="https://github.com/whisper92/wxpdesignpattern/tree/master/src/java/proxy/ControlAccess" target="_blank" rel="noopener">https://github.com/whisper92/wxpdesignpattern/tree/master/src/java/proxy/ControlAccess</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/03/20/2015-03-20-DesignPatternProxy/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/03/29/2015-03-29-DesignPatternStrategyDP/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    JAVA设计模式-策略模式
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/03/14/2015-03-14-PythonDjangpViewUrl/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Django 视图Views和URL配置</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

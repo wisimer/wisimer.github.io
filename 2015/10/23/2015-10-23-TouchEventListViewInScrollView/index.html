@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>ScrollView嵌套ListView处理事件冲突 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="当ListView嵌套在ScrollView中时会有两个问题 列表内容显示不全  滑动事件冲突   第一个问题可以参考ScrollView与ListView嵌套仿微博个人主页中的解决方法。 第二个问题就是下面要讲的废话了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ScrollView嵌套ListView处理事件冲突">
+<meta property="og:url" content="http://ai.wisim.me/2015/10/23/2015-10-23-TouchEventListViewInScrollView/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="当ListView嵌套在ScrollView中时会有两个问题 列表内容显示不全  滑动事件冲突   第一个问题可以参考ScrollView与ListView嵌套仿微博个人主页中的解决方法。 第二个问题就是下面要讲的废话了。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1203_scrollview_move.gif">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1510/1203_scroll_lv.gif">
+<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ScrollView嵌套ListView处理事件冲突">
+<meta name="twitter:description" content="当ListView嵌套在ScrollView中时会有两个问题 列表内容显示不全  滑动事件冲突   第一个问题可以参考ScrollView与ListView嵌套仿微博个人主页中的解决方法。 第二个问题就是下面要讲的废话了。">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1510/1203_scrollview_move.gif">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="default-2015-10-23-TouchEventListViewInScrollView" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            ScrollView嵌套ListView处理事件冲突
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/10/23/2015-10-23-TouchEventListViewInScrollView/">
+            <time datetime="2015-10-22T16:00:00.000Z" itemprop="datePublished">2015-10-23</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="当ListView嵌套在ScrollView中时会有两个问题"><a href="#当ListView嵌套在ScrollView中时会有两个问题" class="headerlink" title="当ListView嵌套在ScrollView中时会有两个问题"></a>当ListView嵌套在ScrollView中时会有两个问题</h4><ol>
+<li><p>列表内容显示不全</p>
+</li>
+<li><p>滑动事件冲突</p>
+</li>
+</ol>
+<p>第一个问题可以参考ScrollView与ListView嵌套仿微博个人主页中的解决方法。</p>
+<p>第二个问题就是下面要讲的废话了。</p>
+<a id="more"></a>
+<h3 id="一、首先要实现的效果是"><a href="#一、首先要实现的效果是" class="headerlink" title="一、首先要实现的效果是"></a>一、首先要实现的效果是</h3><ol>
+<li><p>手指在ListView中滑动时，滑动事件要交给ListView来处理，也就是说手指在ListView的内容区域中可以上下滑动。</p>
+</li>
+<li><p>ListView中的内容滑动到顶部后如果手指还是继续向下滑（自己模拟一下），此时的滑动事件应该交给ScrollView来处理，也就是说ScrollView可以继续滑动。</p>
+</li>
+<li><p>ListView中的内容滑动到底部后如果手指还是继续向上滑（自己模拟一下），此时的滑动事件应该交给ScrollView来处理，也就是说ScrollView可以继续滑动。</p>
+</li>
+</ol>
+<p>下面就来一个一个的实现上面所列出的效果</p>
+<h3 id="二、手指在ListView中滑动时，滑动事件要交给ListView来处理"><a href="#二、手指在ListView中滑动时，滑动事件要交给ListView来处理" class="headerlink" title="二、手指在ListView中滑动时，滑动事件要交给ListView来处理"></a>二、手指在ListView中滑动时，滑动事件要交给ListView来处理</h3><h4 id="1-首先如果不做任何处理，ListView嵌套在ScrollView中时，默认滑动事件是被ScrollView处理掉的，效果是这样的："><a href="#1-首先如果不做任何处理，ListView嵌套在ScrollView中时，默认滑动事件是被ScrollView处理掉的，效果是这样的：" class="headerlink" title="1.首先如果不做任何处理，ListView嵌套在ScrollView中时，默认滑动事件是被ScrollView处理掉的，效果是这样的："></a>1.首先如果不做任何处理，ListView嵌套在ScrollView中时，默认滑动事件是被ScrollView处理掉的，效果是这样的：</h4><p><img src="/src/imgs/1510/1203_scrollview_move.gif" alt="1203_scrollview_move"></p>
+<p>我们都知道ViewGroup默认是不拦截事件的，看一下ViewGroup的源码就知道：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而ScrollView是继承自FrameLayout的，那为什么ScrollView会自己处理掉滑动事件呢，到ScrollView的源码里一搜，在onInterceptTouchEvent方法中居然有这么触目惊心的一段：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> action = ev.getAction();</span><br><span class="line">    <span class="keyword">if</span> ((action == MotionEvent.ACTION_MOVE) &amp;&amp; (mIsBeingDragged)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (getScrollY() == <span class="number">0</span> &amp;&amp; !canScrollVertically(<span class="number">1</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (action &amp; MotionEvent.ACTION_MASK) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE: &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> activePointerId = mActivePointerId;</span><br><span class="line">            <span class="keyword">if</span> (activePointerId == INVALID_POINTER) &#123;</span><br><span class="line">                <span class="comment">// If we don't have a valid id, the touch down wasn't on content.</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> pointerIndex = ev.findPointerIndex(activePointerId);</span><br><span class="line">            <span class="keyword">if</span> (pointerIndex == -<span class="number">1</span>) &#123;</span><br><span class="line">                Log.e(TAG, <span class="string">"Invalid pointerId="</span> + activePointerId+ <span class="string">" in onInterceptTouchEvent"</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> y = (<span class="keyword">int</span>) ev.getY(pointerIndex);</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> yDiff = Math.abs(y - mLastMotionY);</span><br><span class="line">            <span class="keyword">if</span> (yDiff &gt; mTouchSlop &amp;&amp; (getNestedScrollAxes() &amp; SCROLL_AXIS_VERTICAL) == <span class="number">0</span>) &#123;</span><br><span class="line">                mIsBeingDragged = <span class="keyword">true</span>;</span><br><span class="line">                mLastMotionY = y;</span><br><span class="line">                initVelocityTrackerIfNotExists();</span><br><span class="line">                mVelocityTracker.addMovement(ev);</span><br><span class="line">                mNestedYOffset = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span> (mScrollStrictSpan == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    mScrollStrictSpan = StrictMode.enterCriticalSpan(<span class="string">"ScrollView-scroll"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">final</span> ViewParent parent = getParent();</span><br><span class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    parent.requestDisallowInterceptTouchEvent(<span class="keyword">true</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN: &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> y = (<span class="keyword">int</span>) ev.getY();</span><br><span class="line">            <span class="keyword">if</span> (!inChild((<span class="keyword">int</span>) ev.getX(), (<span class="keyword">int</span>) y)) &#123;</span><br><span class="line">                mIsBeingDragged = <span class="keyword">false</span>;</span><br><span class="line">                recycleVelocityTracker();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">             * Remember location of down touch.</span></span><br><span class="line"><span class="comment">             * ACTION_DOWN always refers to pointer index 0.</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            mLastMotionY = y;</span><br><span class="line">            mActivePointerId = ev.getPointerId(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">            initOrResetVelocityTracker();</span><br><span class="line">            mVelocityTracker.addMovement(ev);</span><br><span class="line"></span><br><span class="line">            mIsBeingDragged = !mScroller.isFinished();</span><br><span class="line">            <span class="keyword">if</span> (mIsBeingDragged &amp;&amp; mScrollStrictSpan == <span class="keyword">null</span>) &#123;</span><br><span class="line">                mScrollStrictSpan = StrictMode.enterCriticalSpan(<span class="string">"ScrollView-scroll"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            startNestedScroll(SCROLL_AXIS_VERTICAL);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="comment">/* Release the drag */</span></span><br><span class="line">            mIsBeingDragged = <span class="keyword">false</span>;</span><br><span class="line">            mActivePointerId = INVALID_POINTER;</span><br><span class="line">            recycleVelocityTracker();</span><br><span class="line">            <span class="keyword">if</span> (mScroller.springBack(mScrollX, mScrollY, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, getScrollRange())) &#123;</span><br><span class="line">                postInvalidateOnAnimation();</span><br><span class="line">            &#125;</span><br><span class="line">            stopNestedScroll();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_POINTER_UP:</span><br><span class="line">            onSecondaryPointerUp(ev);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> mIsBeingDragged;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(1). 首先看到的是如果ScrollView接收到MOVE事件，并且这个mIsBeingDragged为true，它的onInterceptTouchEvent方法直接就返回true了，也就是拦截了滑动事件，交给它自己处理了。</p>
+<p>(2). 接着看switch里面<code>case MotionEvent.ACTION_DOWN</code>，如果按下的时候手指落在了子控件里面mIsBeingDragged置为false。</p>
+<p>  里面还有这么一句<code>mIsBeingDragged = !mScroller.isFinished();</code>，mIsBeingDragged就表示当前ScrollView是否在滑动</p>
+<p>  这mIsBeingDragged有啥卵用呢？联系上面1中所说，假如ScrollView还在滑动的时候，你想去触摸嵌在里面的ListView，没门，ScrollView滑动还没结束呢，继续直接return true。</p>
+<p>  另外要说的是，不管咋样ScrollView并不会把ListView的点击事件给拦截掉。</p>
+<p>(3). 再来看看switch里面<code>case MotionEvent.ACTION_MOVE</code>，如果y轴方向上的滑动距离大于最小滑动距离，则将mIsBeingDragged设置为true。结合上面第二点所说，啥情况呢？也就是说虽然我手指落在了子View里面，但是如果我要滑动的话，谁也拦不住老纸（Parent）！！</p>
+<p>从上面几点来看，ScrollView确实默认会自己处理掉滑动事件。我们想想事件分发的流程，如果父控件拦截了事件，子控件就没办法接收到事件了。那如何才能让ListView来处理滑动事件呢，接着说。</p>
+<h4 id="2-想要让ListView来处理滑动事件，首先要重写它的dispatchTouchEvent方法"><a href="#2-想要让ListView来处理滑动事件，首先要重写它的dispatchTouchEvent方法" class="headerlink" title="2.想要让ListView来处理滑动事件，首先要重写它的dispatchTouchEvent方法"></a>2.想要让ListView来处理滑动事件，首先要重写它的dispatchTouchEvent方法</h4><p>我们继承ListView实现自己的一个MyListView,重写它的dispatchTouchEvent方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    Log.e(TAG, TAG + <span class="string">"dispatchTouchEvent"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            Log.e(TAG, TAG + <span class="string">"dispatchTouchEvent -&gt; MotionEvent.ACTION_DOWN"</span>);</span><br><span class="line">            downY = ev.getRawY();</span><br><span class="line">            y = downY;</span><br><span class="line">            getParent().requestDisallowInterceptTouchEvent(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在它的 MotionEvent.ACTION_DOWN 事件中调用: <code>getParent().requestDisallowInterceptTouchEvent(true);</code></p>
+<p>这个’requestDisallowInterceptTouchEvent’真绕口，就是说</p>
+<blockquote>
+<p>我[ListView]的父亲啊[getParent()]请求您[request]行行好别让[Disallow]您的onInterceptTouchEvent方法再拦截我的事件了啊[true]</p>
+</blockquote>
+<p>因此如果你在ListView中调用了这个方法之后，父控件（ScrollView）就不会拦截ListView的滑动事件了。ListView的内容也就可以正常滑动了。</p>
+<h3 id="三、ListView中的内容滑动到顶部后以及滑动到底部后，事件应该交给ScrollView来处理"><a href="#三、ListView中的内容滑动到顶部后以及滑动到底部后，事件应该交给ScrollView来处理" class="headerlink" title="三、ListView中的内容滑动到顶部后以及滑动到底部后，事件应该交给ScrollView来处理"></a>三、ListView中的内容滑动到顶部后以及滑动到底部后，事件应该交给ScrollView来处理</h3><p>在MyListView中实现这两个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">scrollToBottom</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> first = getFirstVisiblePosition();</span><br><span class="line">    <span class="keyword">int</span> last = getLastVisiblePosition();</span><br><span class="line">    <span class="keyword">int</span> visibleCoutn = getChildCount();</span><br><span class="line">    <span class="keyword">int</span> count = getCount();</span><br><span class="line">    <span class="keyword">if</span> ((first + visibleCoutn) == count) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">scrollToTop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> first = getFirstVisiblePosition();</span><br><span class="line">    <span class="keyword">int</span> last = getLastVisiblePosition();</span><br><span class="line">    <span class="keyword">int</span> visibleCoutn = getChildCount();</span><br><span class="line">    <span class="keyword">int</span> count = getCount();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (first == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个用于判断ListView是否滑动到底部，一个用于判断ListView是否滑动到顶部。</p>
+<p>接着继续重写dispatchTouchEvent方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    Log.e(TAG, TAG + <span class="string">"dispatchTouchEvent"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            downY = ev.getRawY();</span><br><span class="line">            y = downY;</span><br><span class="line">            getParent().requestDisallowInterceptTouchEvent(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            y = ev.getRawY();</span><br><span class="line">            <span class="keyword">if</span> (scrollToTop()) &#123;</span><br><span class="line">                <span class="keyword">if</span> (y - downY &gt; mTouchSlop) &#123;</span><br><span class="line">                    <span class="comment">/**</span></span><br><span class="line"><span class="comment">                     * Point 1 : 如果滑动到顶部，并且手指还想向下滑动，则事件交还给父控件，要求父控件可以拦截事件</span></span><br><span class="line"><span class="comment">                     */</span></span><br><span class="line">                    getParent().requestDisallowInterceptTouchEvent(<span class="keyword">false</span>);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (y - downY &lt; -mTouchSlop) &#123;</span><br><span class="line">                    <span class="comment">/**</span></span><br><span class="line"><span class="comment">                     * Point 2 : 如果滑动到顶部，并且手指正常向上滑动，则事件由自己处理，要求父控件不许拦截事件</span></span><br><span class="line"><span class="comment">                     */</span></span><br><span class="line">                    getParent().requestDisallowInterceptTouchEvent(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (scrollToBottom()) &#123;</span><br><span class="line">                <span class="keyword">if</span> (y - downY &lt; -mTouchSlop) &#123;</span><br><span class="line">                    <span class="comment">/**</span></span><br><span class="line"><span class="comment">                     * Point 3 : 如果滑动到底部，并且手指还想向上滑动，则事件交还给父控件，要求父控件可以拦截事件</span></span><br><span class="line"><span class="comment">                     */</span></span><br><span class="line">                    getParent().requestDisallowInterceptTouchEvent(<span class="keyword">false</span>);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (y - downY &gt; mTouchSlop) &#123;</span><br><span class="line">                    <span class="comment">/**</span></span><br><span class="line"><span class="comment">                     * Point 4 : 如果滑动到底部，并且手指正常向下滑动，则事件由自己处理，要求父控件不许拦截事件</span></span><br><span class="line"><span class="comment">                     */</span></span><br><span class="line">                    getParent().requestDisallowInterceptTouchEvent(<span class="keyword">true</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很简单，看注释，实现的效果：</p>
+<p><img src="/src/imgs/1510/1203_scroll_lv.gif" alt="1203_scroll_lv"></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/10/23/2015-10-23-TouchEventListViewInScrollView/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/03/18/2016-03-18-FrameworksLaunchActivity/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    由主线程更新UI所想到的Window和RootViewImpl的创建过程
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/10/22/2015-10-22-AndroidAnt/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Ant 构建Android工程</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

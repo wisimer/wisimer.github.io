@@ -30,7 +30,7 @@ title: JAVA设计模式-代理模式
 
 #### 实例
 
-举个例子，“有时候”不能访问谷歌，所以只能翻墙，Ubuntu环境下，使用GoAgent来实现翻墙还是比较方便的。详情请阅[{{ site.url }}/posts/OtherWall]({{ site.url }}/posts/OtherWall)
+举个例子，“有时候”不能访问谷歌，所以只能翻墙，Ubuntu环境下，使用GoAgent来实现翻墙还是比较方便的。
 
 于是现在就可以通过代理模式来解决上面这中情形下产生的问题
 

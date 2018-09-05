@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>SVM 简介 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="原文：An introduction to Support Vector Machines (SVM) 如果你在处理文本分类问题，为了提炼数据，可能已经尝试过朴素贝叶斯（Naive Bayes）分类算法。如果你的数据集还算正常的话，并且想要一步到位表现更好的话，可以考虑使用 SVM。SVM 是一个在有限数据集上十分快速且靠谱的分类算法。">
+<meta name="keywords" content="SVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SVM 简介">
+<meta property="og:url" content="http://ai.wisim.me/2018/09/05/2018-09-05_introduction_to_SVM/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="原文：An introduction to Support Vector Machines (SVM) 如果你在处理文本分类问题，为了提炼数据，可能已经尝试过朴素贝叶斯（Naive Bayes）分类算法。如果你的数据集还算正常的话，并且想要一步到位表现更好的话，可以考虑使用 SVM。SVM 是一个在有限数据集上十分快速且靠谱的分类算法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_original.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_original_2.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_hyperplanes_annotated.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_circle_01.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_circle_02.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_circle_03.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_circle_04.png">
+<meta property="og:updated_time" content="2018-09-05T09:23:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SVM 简介">
+<meta name="twitter:description" content="原文：An introduction to Support Vector Machines (SVM) 如果你在处理文本分类问题，为了提炼数据，可能已经尝试过朴素贝叶斯（Naive Bayes）分类算法。如果你的数据集还算正常的话，并且想要一步到位表现更好的话，可以考虑使用 SVM。SVM 是一个在有限数据集上十分快速且靠谱的分类算法。">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_original.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-09-05_introduction_to_SVM" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            SVM 简介
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/05/2018-09-05_introduction_to_SVM/">
+            <time datetime="2018-09-04T16:00:00.000Z" itemprop="datePublished">2018-09-05</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/SVM/">SVM</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>原文：<a href="https://monkeylearn.com/blog/introduction-to-support-vector-machines-svm/" target="_blank" rel="noopener">An introduction to Support Vector Machines (SVM)</a></p>
+<p>如果你在处理文本分类问题，为了提炼数据，可能已经尝试过<code>朴素贝叶斯（Naive Bayes）</code>分类算法。如果你的数据集还算正常的话，并且想要一步到位表现更好的话，可以考虑使用 SVM。SVM 是一个在有限数据集上十分快速且靠谱的分类算法。</p>
+<a id="more"></a>
+<p>你可能已经有一点点深入地去学习 SVM 了，是不是遇到了一些专业术语，比如：<code>线性可分（linearly separable）</code>、<code>核技巧（kernel trick}</code>  以及 <code>核函数（kernel functions）</code>。不过不用担心，SVM 背后的思想其实很简单，并且想要实际应用到文本分类的话，并不需要多少复杂的知识。</p>
+<p>在继续阅读之前，推荐先看一下 <a href="https://monkeylearn.com/blog/practical-explanation-naive-bayes-classifier/" target="_blank" rel="noopener">朴素贝叶斯分类指南（our guide to Naive Bayes classifiers）</a>，这里面有一些关于文本处理的相关知识。</p>
+<p>开始。</p>
+<h4 id="SVM-时如何运行的？"><a href="#SVM-时如何运行的？" class="headerlink" title="SVM 时如何运行的？"></a>SVM 时如何运行的？</h4><p>通过一个简单地例子来更好地理解 SVM 以及它是如何运行的。假设有红、蓝两个标签，并且我们的数据有x、y两个特征。如果我们给出一对 (x,y)，想要判断它是红还是蓝。首先画出已有数据集：</p>
+<p><img src="/src/imgs/1809/0905_plot_original.png" alt="数据集"></p>
+<p>SVM 会输入这些数据点然后输出一个可以最优分割标签的超平面（在二维空间里面是一条直线）。这个超平面就是 <code>决策边界</code>：在我们这个例子里，落在左边的就分类为蓝，落在右边的就分类为红。如图：</p>
+<p><img src="/src/imgs/1809/0905_plot_original_2.png" alt="在二维空间，分割超平面是一条直线"></p>
+<p>但是，哪一个才是最优超平面呢？对于 SVM 来说，最优超平面就是到所有标签的距离最大的超平面。换句话来说，就是最优超平面到最近的标签的距离是所有超平面中最大的（在这个例子中是最优分割直线到最近标签的距离为最大）。看一下这个图：</p>
+<p><img src="/src/imgs/1809/0905_plot_hyperplanes_annotated.png" alt="每个分割超平面到最近点的距离都不一样"></p>
+<p>可以看一下这个<a href="https://www.youtube.com/watch?v=1NxnPkZM9bc" target="_blank" rel="noopener">YouTube视频</a>，直观感受一下最后超平面是如何找到的。</p>
+<h4 id="非线性数据"><a href="#非线性数据" class="headerlink" title="非线性数据"></a>非线性数据</h4><p>上面这个例子很简单，因为它是<code>线性可分</code>的，直接找到一条直线就可以完成分类了。然而实际应用中，大多都是线性不可分的，看看下面这个例子：</p>
+<p><img src="/src/imgs/1809/0905_plot_circle_01.png" alt="复杂数据集"></p>
+<p>很显然，上面这个数据是不可能找到一个直线来划分的。但是我们可以发现，各个标签还是相对分隔明显的，也许有其他的办法分类。</p>
+<p>所以这里我们这样操作：新增一个第三维坐标，于是现在变成了x,y,z三个坐标。并且为了方便计算，我们定义 $z=x^2+y^2$（注意到这是一个圆的表达式）。于是在这个三维空间里，我们从垂直于y轴的方向就可以看到下面这样：</p>
+<p><img src="/src/imgs/1809/0905_plot_circle_02.png" alt="从一个不同透视角度看，现在数据集又变成线性可分了"></p>
+<p>SVM 是怎么做到这样的效果呢？我们继续看看：</p>
+<p><img src="/src/imgs/1809/0905_plot_circle_03.png" alt="."></p>
+<p>效果看起来很棒，由于我们现在是在三维空间里，所以这个分割超平面是平行于x轴且垂直于z轴的（这里就是z=1这个平面）。</p>
+<p>下面这张图是从z轴的方向垂直向下观察，这样又只看到x,y这两个维度了：</p>
+<p><img src="/src/imgs/1809/0905_plot_circle_04.png" alt="再回到原始的角度，发现数据很清晰地分割开来"></p>
+<p>这样我们就利用 SVM 将数据集用一个半径为1的圆周分割开来。再看下面这个：<a href="https://youtu.be/3liCbRZPrZA" target="_blank" rel="noopener">视频</a></p>
+<p>这里小结一下：在这个例子中，对于线性不可分的数据，先升到三维空间，再投影到一个线性可分的二维平面进行分类，然后再回到原始的二维平面就可以将线性不可分的数据分类了。</p>
+<h4 id="核技巧"><a href="#核技巧" class="headerlink" title="核技巧"></a>核技巧</h4><p>在上面这个线性不可分的例子中，我们找到了一种映射到高维的方法来解决了分类问题。但是，计算映射的过程很复杂，而且还要计算不止一个维度。这样处理数据集其实工作量还是比较大得，有没有更简单更高校的方法呢。有，就是我们要说的<code>核技巧</code>。</p>
+<p>SVM 不需要实际的向量来参与计算，真正有用的时向量之间的<code>点积(dot products)</code>，这样我们就可以直接跳过第一步的升维映射计算过程了。</p>
+<p>下面是我们要做的事情：</p>
+<ul>
+<li>引入我们需要的新空间：$z=x^2+y^2$</li>
+<li>计算出这个空间里向量之间新的点积和，例如：</li>
+</ul>
+<p>$a \cdot b=x_a \cdot x_b+y_a \cdot y_b+z_a \cdot z_b$</p>
+<p>$a \cdot b=x_a \cdot x_b+y_a \cdot y_b+(x_a^2+y_a^2) \cdot (x_b^2+y_b^2)$</p>
+<ul>
+<li>让 SVM 来解决分类问题，但是要使用上面这个新的点积-我们称之为<code>核函数</code></li>
+</ul>
+<p>这就是我们所说的<code>核技巧</code>，避免了许多复杂计算。通常这个<code>核</code>是线性的，并且我们会得到一个线性分类器。但是，我们也可以使用一个非线性核（上面这个例子），从而得到一个非线性分类器，也可以避免大量计算。</p>
+<p>值得注意的是，核技巧并不是 SVM 所特有的一部分，核技巧也可以用于其他线性分类器，例如：logistic regression。SVM 本身只关注决策边界。</p>
+<h4 id="SVM-如何应用于自然语言分类"><a href="#SVM-如何应用于自然语言分类" class="headerlink" title="SVM 如何应用于自然语言分类"></a>SVM 如何应用于自然语言分类</h4><p>根据上面的知识，我们可以在多维空间里对向量进行分类。现在要讲这个算法应用于文本分类，首先要做的就是把一条一条的文本转换为一个一个的数字向量，才能使用 SVM 来进行分类。另一方面，我们使用 SVM 进行文本分类的时候，需要关注文本的什么特征呢？</p>
+<p>一般我们关注的就是<code>词频</code>，就像之前<a href="https://monkeylearn.com/blog/practical-explanation-naive-bayes-classifier/#feature-engineering" target="_blank" rel="noopener">朴素贝叶斯算法</a>中所做的一样。我们把文本看做一袋单词，出现在这里面的单词有一个特征，就是在整个文本中这个单词出现的频率，也就是词频。</p>
+<p>词频的计算方式就是用这个词在文本中出现的次数除以整个文本的单词个数。例如这个句子”All monkeys are primates but not all primates are monkeys”，单词 “monkeys” 的词频就是 2/10=0.2，”but” 这个词的词频是 1/10=0.1。</p>
+<p>此外，还可以使用 <a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf" target="_blank" rel="noopener">TF-IDF</a>来计算词频。</p>
+<p>经过上面的操作，我们数据集中得所有文本就变成了一系列多维向量，向量里的元素代表着每个单词的词频。这时候我们再把数据喂给 SVM 处理。我们还可以使用预处理技术例如 “stemming”,移除停顿词，以及使用 “n-grams”。</p>
+<h4 id="选择一个核函数"><a href="#选择一个核函数" class="headerlink" title="选择一个核函数"></a>选择一个核函数</h4><p>既然我们已经有了这些特征向量，剩下的事情就是为模型选择核函数了。每个问题都要具体对待，并且核函数取决于具体的数据。这个例子中我们的数据分布看起来是一个同轴的圆，所以我们选择一个适用于这些数据点的核函数。</p>
+<p>考虑到这一点，哪个核函数才最适用于自然语言处理呢？我们需要一个非线性分类器么？或者这个数据是线性可分的么？这样一看，我们最好选择一个线性核，为什么呢？</p>
+<p>回到上面这个例子中，我们的数据有两个特征。而 SVM 实际应用中，特征会非常多。我们的例子使用非线性核也许比较合适，可以避免过拟合。</p>
+<h4 id="整合"><a href="#整合" class="headerlink" title="整合"></a>整合</h4><p>剩下的事情就是训练数据了！从数据集中拿出一部分，并为其设置标签，将其转化为词频向量，然后喂给 SVM。最终会生成一个模型。然后未标记的数据就可以用这个模型来分类了。注意也要将这些数据转化为词频向量，然后分类结果就是输出这个文本的标签。</p>
+<h4 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h4><p>这里只是 SVM 的基础知识！</p>
+<ul>
+<li>总结如下：SVM 可以对线性可分的数据进行分类。</li>
+<li>如果数据线性不可分，则要使用核技巧来使得 SVM 可以生效。</li>
+<li>对于文本分类来说，尽量选用线性核。</li>
+</ul>
+<p>像神经网络这样新的算法，它们有两个优势：更快速高效并且在数据量少的时候表现良好。这就使得这些新的算法更适合文本分类，只要从数据集中拿出一小部分去训练模型即可。</p>
+<p>想要深入了解 SVM，可以学习 <a href="https://www.youtube.com/watch?v=_PwhiWxHK8o" target="_blank" rel="noopener">MIT的这个课程</a>。</p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/09/05/2018-09-05_introduction_to_SVM/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/09/04/2018-09-04_law_of_large_numbers_note/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">大数定理随笔</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

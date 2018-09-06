@@ -190,8 +190,7 @@ var _hmt = _hmt || [];
         
         <div class="article-entry" itemprop="articleBody">
         
-            
-            <h4 id="一、经验误差与过拟合"><a href="#一、经验误差与过拟合" class="headerlink" title="一、经验误差与过拟合"></a>一、经验误差与过拟合</h4><ol>
+            <p><h4 id="一、经验误差与过拟合"><a href="#一、经验误差与过拟合" class="headerlink" title="一、经验误差与过拟合"></a>一、经验误差与过拟合</h4><ol>
 <li>错误率(error rate)：分类错误的样本数占样本总数的比例,E = a/m</li>
 <li>精度(accuracy)：精度 = 1 一 错误率</li>
 <li>误差(error)：学习器的实际预测输出与样本的真实输出之间的差异</li>
@@ -202,97 +201,10 @@ var _hmt = _hmt || [];
 <p>过拟合为什么无法避免？机器学习面临的问题通常是NP 难甚至更难，而有效的学习算法必然是在多项式时间内运行完成，若可彻底避免过拟合， 则通过经验误差最小化就能获最优解，这就意味着我们构造性地证明了 “P=NP” ;因此只要相信”P≠NP “ ，过拟合就不可避免P。</p>
 <ol>
 <li><code>欠拟合</code>(underfitting)：是指对训练样本的一般性质尚未学好。通常是由于学习能力低下而造成的。</li>
-</ol>
-<h4 id="二、模型评估方法"><a href="#二、模型评估方法" class="headerlink" title="二、模型评估方法"></a>二、模型评估方法</h4><p>通常，我们可以通过实验测试来对学习器的<code>泛化误差</code>进行评估并进而做出选择。为此，需要使用一个“测试集” (testing set) 来测试学习器对新样本的判别能力，然后以测试集上的 “测试误差” (testing error) 作为泛化误差的近似。通常我们假设测试样本也是从样本真实分布中<code>独立同分布</code>采样而得。但需要注意的是，测试集应该尽可能与训练集<code>互斥</code>，即测试样本尽量不在训练集中出现、未在训练过程中使用过。</p>
-<p>我们只有一个包含 m 个样例的数据集 $D=\{(x_1, y_1), (x_2, y_2), … , (x_m, y_m)\}$ ​， 既要训练，又要测试，怎样才能做到呢？答案是：通过对  D 进行适当的处理，从中产生出训练集 S 和测试集​ T 。下面介绍几种常见的做法。</p>
-<ol>
-<li>留出法（hold-out）</li>
-</ol>
-<p>直接将数据集D 划分为两个互斥的集合，一个用来训练模型，一个评估。$D = S\cup T, \; S\cap T = \emptyset$，D为总数据集，S为训练数据集，T为测试数据集。</p>
-<ul>
-<li>S 过大，测试误差不够准确</li>
-<li>T 过大，训练出的模型不够准确</li>
-</ul>
-<p>训练和测试集的划分要尽可能保持数据分布的一致性，避免因数据划分引入额外的偏差。一种保留类别比例的采样：stratified sampling.</p>
-<p>单次使用留出法得到的估计结果不够稳定可靠。一般采用若干次随机划分、重复实验取平均值。</p>
-<p>常见做法：大约 2/3 ~ 4/5 的样本用于训练，剩余样本用于测试。</p>
-<ol>
-<li>交叉验证法（cross validation)</li>
-</ol>
-<p>将 D 做分成 k 个大小相似的部分, $D = D_1\cup D_2 \cup \ldots \cup D_k, \; D_i\cap D_j = \emptyset \, (i\neq j)$，留下一个做测试集，其他作为训练集，从而得到 k 次训练和测试。划分本身还要随机重复 p 次，最终的评估结果是这 p 次  k 折交叉验证结果的均值。通常把交叉验证法称为 <code>k 折交叉验证</code> (​ k - fold cross validation)。​ 最常用的取值是 10，此时称为 10 折交叉验证；其他常用的 k 值有 5、20 等。</p>
-<p>特殊例子：k = m(数据集中的数据个数), 称为留一法(LOO). 当 m 很大时工作量太大。</p>
-<ol>
-<li>自助法(bootstrapping)</li>
-</ol>
-<p>自助采样(bootstrap sampling)：sampling with replacement.</p>
-<p>给定包含 m 个样本的数据集D，每次有放回取出一个样本，重复m次，构成采样数据集D’。有一部分样本会重复出现，有一部分不会出现。样本在 m 次采样中始终不被采到的概率是：</p>
-<script type="math/tex; mode=display">\lim_{m\to \infty} \left (1-\frac{1}{m}\right )^m = \frac{1}{e} \approx 0.368</script><p>所以大约有 1/3 的样本不会在采样集中出现。采样数据集作为训练集，剩下的作为测试集。</p>
-<ul>
-<li>优点：自助法在数据集较小、难以有效划分时有用。</li>
-<li>缺点：<code>自助法改变了初始数据集的分布，会引入估计偏差</code>。</li>
-</ul>
-<ol>
-<li>调参与最终模型(parameter tuning)</li>
-</ol>
-<p>参数空间太大，调参的工作量很大。在不少应用中，参数调得好不好往往对最终模型性能有关键性影响。</p>
-<p>如果误差函数对参数是光滑的，可以用优化算法寻找最优参数。</p>
-<p>模型评估与选择中用于评估测试的数据集称为 validation set，和测试集不同，属于训练数据中的一部分。</p>
-<h4 id="三、性能度量（performance-measure）"><a href="#三、性能度量（performance-measure）" class="headerlink" title="三、性能度量（performance measure）"></a>三、性能度量（performance measure）</h4><p>回归任务最常用的是“均方误差”（mean squared error) ：</p>
-<script type="math/tex; mode=display">E(f; D) = \frac{1}{m}\sum_{i=1}^m (f(\boldsymbol x_i)-y_i)^2 \tag{3.1}</script><p>更一般地，对于数据分布D和概率密度p(x)的表达式如下：</p>
-<script type="math/tex; mode=display">E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x)-y)^2p(\boldsymbol x) {\rm d}\boldsymbol x \tag{3.2}</script><p>其实3.1和3.2式分别就是离散数据和连续数据的均方误差表达式。</p>
-<ol>
-<li>错误率与精度</li>
-</ol>
-<p>对于数据分布D:</p>
-<p>错误率：$E(f; \mathcal D) = \frac{1}{m}\sum_{i=1}^m(f(x_i)\neq y_i)$</p>
-<p>错误率更一般的表达式：$E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x)\neq y)p(\boldsymbol x) {\rm d}\boldsymbol x$</p>
-<p>精度：$E(f; \mathcal D) = \frac{1}{m}\sum_{i=1}^m(f(x_i) = y_i)$</p>
-<p>精度更一般的表达式：$E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x) = y)p(\boldsymbol x) {\rm d}\boldsymbol x$</p>
-<ol>
-<li>查准率、查全率与F1</li>
-</ol>
-<p>以信息检索为例：</p>
-<ul>
-<li>查准率(precision): 检索出的信息中有多少比例是用户感兴趣的</li>
-<li>查全率(recall)：用户感兴趣的信息中有多少被检索出来了</li>
-</ul>
-<p>对于二分类问题，可将样例根据其<code>真实类别以及机器学习分类器预测类别</code>的组合划分为真正例（true positive）、假正例子（false positive）、真反例（true negative）以及假反例（false negative）四种情形。令TP、FP、TN、FN分别表示其对应的<code>样例数</code>。显然有 TP+FP+TN+FN=总样例数。分类结果的“混淆矩阵”（confusion matrix）如下：</p>
-<p><img src="/src/imgs/1809/0906_confusionmatrix.png" alt="混淆矩阵"></p>
-<ul>
-<li><p>查准率 $P=\frac{TP}{TP+FP}$</p>
-</li>
-<li><p>查全率 $R=\frac{TP}{TP+FN}$</p>
-</li>
-</ul>
-<p>另外，人们设计了一些综合考虑查准率和查全率的性能度量。</p>
-<p><code>平衡点</code>（Break-Event Point,BEP）是这其中的一个度量，它是“查准率=查全率”时的取值。</p>
-<p>BEP过于简化，更常用的是<code>F1度量</code>：</p>
-<script type="math/tex; mode=display">F1=\frac{2 \times P \times R}{P+R}=\frac{2 \times TP}{样例总数+TP-TN} \tag{3.3}</script><p>考虑到有的应用中查准率和查全率的权重不同，给出F1度量更一般的形式：</p>
-<script type="math/tex; mode=display">F_{\beta}=\frac{(1+{\beta}^2) \times P \times R}{({\beta}^2 \times P)+R} \tag{3.4}</script><p>其中$\beta$表示查全率对查准率的相对重要性。$\beta=1$时退化为标准的F1度量（3.3式）。$\beta &gt; 1$时，查全率更重要。$\beta &lt; 1$时查准率更重要。</p>
-<h4 id="四、比较检验"><a href="#四、比较检验" class="headerlink" title="四、比较检验"></a>四、比较检验</h4><p>机器学习中性能比较比想象的要复杂。原因有三：</p>
-<ol>
-<li>希望比较泛化性能，但获得的度量是测试集上的，两者有差别； </li>
-<li>测试集上的性能和测试集的选取有关； </li>
-<li>算法的随机性。</li>
-</ol>
-<p>统计假设检验(hypothesis test)为我们比较学习器性能提供了重要依据. 若在测试集上学习器A比B好，则A的泛化性能是否在统计意义上优于B，以及这个结论的把握有多大。</p>
-<ol>
-<li>假设检验</li>
-</ol>
-<ul>
-<li>二项检验</li>
-<li>t检验</li>
-</ul>
-<ol>
-<li>交叉验证t检验</li>
-<li>McNemar检验</li>
-<li>Friedman检验和Nemenyi后续检验</li>
-</ol>
-<h4 id="五、偏差与方差"><a href="#五、偏差与方差" class="headerlink" title="五、偏差与方差"></a>五、偏差与方差</h4><p>“偏差-方差分解”（bias-variance decomposition）是解释机器学习算法泛化性能的一种重要工具。偏差-方差分解试图对学习算法的期望泛化错误率进行拆解。</p>
-<p>泛化误差可以分解为偏差、方差与噪声之和：</p>
-<script type="math/tex; mode=display">E(f;D)=bias^2(x)+var(x)+\epsilon^2</script><hr>
-<p>THE END.</p>
-
+</ol></p>
+            <p class="article-more-link">
+                <a href="/2018/09/06/2018-09-06_Model_Evaluation_Selection/#more">查看更多</a>
+            </p>
         
         </div>
         <footer class="article-footer">
@@ -673,110 +585,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="default-2018-07-17-ARTS_ISSUE_002_a" class="article article-type-default" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/07/17/2018-07-17-ARTS_ISSUE_002_a/">Binary Tree Zigzag Level Order Traversal</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/07/17/2018-07-17-ARTS_ISSUE_002_a/">
-            <time datetime="2018-07-16T16:00:00.000Z" itemprop="datePublished">2018-07-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/ALGORITHM/">ALGORITHM</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/TREE/">TREE</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><blockquote>
-<p>The more we do,the more we can do.</p>
-</blockquote></p>
-            <p class="article-more-link">
-                <a href="/2018/07/17/2018-07-17-ARTS_ISSUE_002_a/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://ai.wisim.me/2018/07/17/2018-07-17-ARTS_ISSUE_002_a/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <article id="default-2018-07-17-ARTS_ISSUE_002" class="article article-type-default" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -885,7 +693,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="default-2018-07-06-ARTS_ISSUE_001_r" class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2018-07-17-ARTS_ISSUE_002_a" class="article article-type-default" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -893,7 +701,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                 
     
         <h1 itemprop="name">
-            <a class="article-title" href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/">Want to Improve Your Memory?</a>
+            <a class="article-title" href="/2018/07/17/2018-07-17-ARTS_ISSUE_002_a/">Binary Tree Zigzag Level Order Traversal</a>
         </h1>
     
 
@@ -902,8 +710,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/">
-            <time datetime="2018-07-05T16:00:00.000Z" itemprop="datePublished">2018-07-06</time>
+        <a href="/2018/07/17/2018-07-17-ARTS_ISSUE_002_a/">
+            <time datetime="2018-07-16T16:00:00.000Z" itemprop="datePublished">2018-07-17</time>
         </a>
     </div>
 
@@ -911,13 +719,13 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/READING/">READING</a>
+        <a class="article-category-link" href="/categories/ALGORITHM/">ALGORITHM</a>
     </div>
 
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/Medium/">Medium</a>
+        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/TREE/">TREE</a>
     </div>
 
                     </div>
@@ -927,21 +735,12 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            
-            <p>来源 : <a href="https://medium.com/swlh/want-to-improve-your-memory-science-tells-us-the-key-and-it-can-actually-be-fun-99a9c9b95d5b" target="_blank" rel="noopener">Want to Improve Your Memory? Science Tells Us the Key (and It Can Actually Be Fun)</a></p>
-<p>The key to improving your memory is surprise.</p>
-<blockquote>
-<p> Somehow, the novelty of surprise creates a halo of better memory for all the otherwise trivial events of one’s day that we ordinarily forget.”</p>
-</blockquote>
-<ul>
-<li>Distract yourself.</li>
-<li>Celebrate quick wins.</li>
-<li>Take regular body breaks.</li>
-<li>Take the opportunity to try something new.</li>
-</ul>
-<hr>
-<p>THE END.</p>
-
+            <p><blockquote>
+<p>The more we do,the more we can do.</p>
+</blockquote></p>
+            <p class="article-more-link">
+                <a href="/2018/07/17/2018-07-17-ARTS_ISSUE_002_a/#more">查看更多</a>
+            </p>
         
         </div>
         <footer class="article-footer">
@@ -988,7 +787,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/#comments" class="article-comment-link">评论</a>
+        <a href="http://ai.wisim.me/2018/07/17/2018-07-17-ARTS_ISSUE_002_a/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -1093,6 +892,110 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
             
     
         <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_a/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="default-2018-07-06-ARTS_ISSUE_001_t" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">Git Commit Message Format</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">
+            <time datetime="2018-07-05T16:00:00.000Z" itemprop="datePublished">2018-07-06</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/FAQ/">FAQ</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/GIT/">GIT</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><blockquote>
+<p>Never leave todays’s work tomorrow.</p>
+</blockquote></p>
+            <p class="article-more-link">
+                <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -1210,7 +1113,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="default-2018-07-06-ARTS_ISSUE_001_t" class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2018-07-06-ARTS_ISSUE_001_r" class="article article-type-default" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -1218,7 +1121,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                 
     
         <h1 itemprop="name">
-            <a class="article-title" href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">Git Commit Message Format</a>
+            <a class="article-title" href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/">Want to Improve Your Memory?</a>
         </h1>
     
 
@@ -1227,7 +1130,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">
+        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/">
             <time datetime="2018-07-05T16:00:00.000Z" itemprop="datePublished">2018-07-06</time>
         </a>
     </div>
@@ -1236,13 +1139,13 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/FAQ/">FAQ</a>
+        <a class="article-category-link" href="/categories/READING/">READING</a>
     </div>
 
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/GIT/">GIT</a>
+        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/Medium/">Medium</a>
     </div>
 
                     </div>
@@ -1252,12 +1155,21 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><blockquote>
-<p>Never leave todays’s work tomorrow.</p>
-</blockquote></p>
-            <p class="article-more-link">
-                <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#more">查看更多</a>
-            </p>
+            
+            <p>来源 : <a href="https://medium.com/swlh/want-to-improve-your-memory-science-tells-us-the-key-and-it-can-actually-be-fun-99a9c9b95d5b" target="_blank" rel="noopener">Want to Improve Your Memory? Science Tells Us the Key (and It Can Actually Be Fun)</a></p>
+<p>The key to improving your memory is surprise.</p>
+<blockquote>
+<p> Somehow, the novelty of surprise creates a halo of better memory for all the otherwise trivial events of one’s day that we ordinarily forget.”</p>
+</blockquote>
+<ul>
+<li>Distract yourself.</li>
+<li>Celebrate quick wins.</li>
+<li>Take regular body breaks.</li>
+<li>Take the opportunity to try something new.</li>
+</ul>
+<hr>
+<p>THE END.</p>
+
         
         </div>
         <footer class="article-footer">
@@ -1304,7 +1216,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#comments" class="article-comment-link">评论</a>
+        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -1526,108 +1438,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="post-2018-05-14_LinearRegression" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/05/14/2018-05-14_LinearRegression/">线性回归算法</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/05/14/2018-05-14_LinearRegression/">
-            <time datetime="2018-05-13T16:00:00.000Z" itemprop="datePublished">2018-05-14</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/ML/">ML</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/LinearRegression/">LinearRegression</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <hr>
-<p>THE END.</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://ai.wisim.me/2018/05/14/2018-05-14_LinearRegression/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <article id="post-2018-05-14_BayesPraticeEmail" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1739,6 +1549,108 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
+    <article id="post-2018-05-14_LinearRegression" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/14/2018-05-14_LinearRegression/">线性回归算法</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/14/2018-05-14_LinearRegression/">
+            <time datetime="2018-05-13T16:00:00.000Z" itemprop="datePublished">2018-05-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/LinearRegression/">LinearRegression</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/05/14/2018-05-14_LinearRegression/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-2018-05-10_BayesPraticeComment" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1832,108 +1744,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
             
     
         <a href="http://ai.wisim.me/2018/05/10/2018-05-10_BayesPraticeComment/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-2018-05-03_Numpy" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/05/03/2018-05-03_Numpy/">Numpy</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/05/03/2018-05-03_Numpy/">
-            <time datetime="2018-05-02T16:00:00.000Z" itemprop="datePublished">2018-05-03</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/ML/">ML</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Numpy/">Numpy</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><h4 id="一、创建ndarray"><a href="#一、创建ndarray" class="headerlink" title="一、创建ndarray"></a>一、创建ndarray</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">a = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">b = np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>],[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># np.ones(x):创建一个长度为x，且元素全为1的ndarray</span></span><br><span class="line">c = np.ones(<span class="number">2</span>,dtype = np.int)</span><br><span class="line">[<span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># np.ones(x，y):创建一个长度为x行y列，且元素全为1的ndarray</span></span><br><span class="line">d = np.ones((<span class="number">3</span>,<span class="number">2</span>))</span><br><span class="line">[[<span class="number">1.</span>, <span class="number">1.</span>],</span><br><span class="line"> [<span class="number">1.</span>, <span class="number">1.</span>],</span><br><span class="line"> [<span class="number">1.</span>, <span class="number">1.</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># np.zeros(x,y):创建一个x行y列且元素全为0的ndarray</span></span><br><span class="line">e = np.zeros((<span class="number">3</span>,<span class="number">2</span>))</span><br><span class="line">[[<span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line"> [<span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line"> [<span class="number">0.</span>, <span class="number">0.</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># np.empty(x,y):创建一个x行y列且未初始化的ndarray(随机数填充数据)</span></span><br><span class="line">f = np.empty((<span class="number">1</span>,<span class="number">2</span>), dtype =  int)</span><br><span class="line">[[<span class="number">4607182418800017408</span>, <span class="number">4607182418800017408</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 np.arange 生成连续元素的ndarray</span></span><br><span class="line">g = np.arange(<span class="number">6</span>) <span class="comment">#从0到6，默认间隔(步长)为1</span></span><br><span class="line">[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">h = np.arange(<span class="number">0</span>,<span class="number">6</span>,<span class="number">2</span>) <span class="comment">#从0到6，间隔为2，不包括6</span></span><br><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>]</span><br></pre></td></tr></table></figure></p>
-            <p class="article-more-link">
-                <a href="/2018/05/03/2018-05-03_Numpy/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://ai.wisim.me/2018/05/03/2018-05-03_Numpy/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -2037,6 +1847,108 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
             
     
         <a href="http://ai.wisim.me/2018/05/03/2018-05-03_Matplotlib/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-2018-05-03_Numpy" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/03/2018-05-03_Numpy/">Numpy</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/03/2018-05-03_Numpy/">
+            <time datetime="2018-05-02T16:00:00.000Z" itemprop="datePublished">2018-05-03</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Numpy/">Numpy</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><h4 id="一、创建ndarray"><a href="#一、创建ndarray" class="headerlink" title="一、创建ndarray"></a>一、创建ndarray</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">a = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">b = np.array([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>],[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># np.ones(x):创建一个长度为x，且元素全为1的ndarray</span></span><br><span class="line">c = np.ones(<span class="number">2</span>,dtype = np.int)</span><br><span class="line">[<span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># np.ones(x，y):创建一个长度为x行y列，且元素全为1的ndarray</span></span><br><span class="line">d = np.ones((<span class="number">3</span>,<span class="number">2</span>))</span><br><span class="line">[[<span class="number">1.</span>, <span class="number">1.</span>],</span><br><span class="line"> [<span class="number">1.</span>, <span class="number">1.</span>],</span><br><span class="line"> [<span class="number">1.</span>, <span class="number">1.</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># np.zeros(x,y):创建一个x行y列且元素全为0的ndarray</span></span><br><span class="line">e = np.zeros((<span class="number">3</span>,<span class="number">2</span>))</span><br><span class="line">[[<span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line"> [<span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line"> [<span class="number">0.</span>, <span class="number">0.</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># np.empty(x,y):创建一个x行y列且未初始化的ndarray(随机数填充数据)</span></span><br><span class="line">f = np.empty((<span class="number">1</span>,<span class="number">2</span>), dtype =  int)</span><br><span class="line">[[<span class="number">4607182418800017408</span>, <span class="number">4607182418800017408</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 np.arange 生成连续元素的ndarray</span></span><br><span class="line">g = np.arange(<span class="number">6</span>) <span class="comment">#从0到6，默认间隔(步长)为1</span></span><br><span class="line">[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">h = np.arange(<span class="number">0</span>,<span class="number">6</span>,<span class="number">2</span>) <span class="comment">#从0到6，间隔为2，不包括6</span></span><br><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>]</span><br></pre></td></tr></table></figure></p>
+            <p class="article-more-link">
+                <a href="/2018/05/03/2018-05-03_Numpy/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/05/03/2018-05-03_Numpy/#comments" class="article-comment-link">评论</a>
     
 
         </footer>

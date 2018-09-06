@@ -14,13 +14,13 @@
 <meta property="og:description" content="原文：An introduction to Support Vector Machines (SVM) 如果你在处理文本分类问题，为了提炼数据，可能已经尝试过朴素贝叶斯（Naive Bayes）分类算法。如果你的数据集还算正常的话，并且想要一步到位表现更好的话，可以考虑使用 SVM。SVM 是一个在有限数据集上十分快速且靠谱的分类算法。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_original.png">
-<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_original_2.png">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_hyperplanes_2.png">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_hyperplanes_annotated.png">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_circle_01.png">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_circle_02.png">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_circle_03.png">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0905_plot_circle_04.png">
-<meta property="og:updated_time" content="2018-09-05T09:23:43.000Z">
+<meta property="og:updated_time" content="2018-09-06T01:20:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SVM 简介">
 <meta name="twitter:description" content="原文：An introduction to Support Vector Machines (SVM) 如果你在处理文本分类问题，为了提炼数据，可能已经尝试过朴素贝叶斯（Naive Bayes）分类算法。如果你的数据集还算正常的话，并且想要一步到位表现更好的话，可以考虑使用 SVM。SVM 是一个在有限数据集上十分快速且靠谱的分类算法。">
@@ -206,10 +206,10 @@ var _hmt = _hmt || [];
 <p>你可能已经有一点点深入地去学习 SVM 了，是不是遇到了一些专业术语，比如：<code>线性可分（linearly separable）</code>、<code>核技巧（kernel trick}</code>  以及 <code>核函数（kernel functions）</code>。不过不用担心，SVM 背后的思想其实很简单，并且想要实际应用到文本分类的话，并不需要多少复杂的知识。</p>
 <p>在继续阅读之前，推荐先看一下 <a href="https://monkeylearn.com/blog/practical-explanation-naive-bayes-classifier/" target="_blank" rel="noopener">朴素贝叶斯分类指南（our guide to Naive Bayes classifiers）</a>，这里面有一些关于文本处理的相关知识。</p>
 <p>开始。</p>
-<h4 id="SVM-时如何运行的？"><a href="#SVM-时如何运行的？" class="headerlink" title="SVM 时如何运行的？"></a>SVM 时如何运行的？</h4><p>通过一个简单地例子来更好地理解 SVM 以及它是如何运行的。假设有红、蓝两个标签，并且我们的数据有x、y两个特征。如果我们给出一对 (x,y)，想要判断它是红还是蓝。首先画出已有数据集：</p>
+<h4 id="SVM-是如何运行的？"><a href="#SVM-是如何运行的？" class="headerlink" title="SVM 是如何运行的？"></a>SVM 是如何运行的？</h4><p>通过一个简单地例子来更好地理解 SVM 以及它是如何运行的。假设有红、蓝两个标签，并且我们的数据有x、y两个特征。如果我们给出一对 (x,y)，想要判断它是红还是蓝。首先画出已有数据集：</p>
 <p><img src="/src/imgs/1809/0905_plot_original.png" alt="数据集"></p>
 <p>SVM 会输入这些数据点然后输出一个可以最优分割标签的超平面（在二维空间里面是一条直线）。这个超平面就是 <code>决策边界</code>：在我们这个例子里，落在左边的就分类为蓝，落在右边的就分类为红。如图：</p>
-<p><img src="/src/imgs/1809/0905_plot_original_2.png" alt="在二维空间，分割超平面是一条直线"></p>
+<p><img src="/src/imgs/1809/0905_plot_hyperplanes_2.png" alt="在二维空间，分割超平面是一条直线"></p>
 <p>但是，哪一个才是最优超平面呢？对于 SVM 来说，最优超平面就是到所有标签的距离最大的超平面。换句话来说，就是最优超平面到最近的标签的距离是所有超平面中最大的（在这个例子中是最优分割直线到最近标签的距离为最大）。看一下这个图：</p>
 <p><img src="/src/imgs/1809/0905_plot_hyperplanes_annotated.png" alt="每个分割超平面到最近点的距离都不一样"></p>
 <p>可以看一下这个<a href="https://www.youtube.com/watch?v=1NxnPkZM9bc" target="_blank" rel="noopener">YouTube视频</a>，直观感受一下最后超平面是如何找到的。</p>

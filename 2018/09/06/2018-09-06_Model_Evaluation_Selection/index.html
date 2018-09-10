@@ -14,7 +14,7 @@
 <meta property="og:description" content="一、经验误差与过拟合 错误率(error rate)：分类错误的样本数占样本总数的比例,E = a/m 精度(accuracy)：精度 = 1 一 错误率 误差(error)：学习器的实际预测输出与样本的真实输出之间的差异 经验误差(empirical error)：学习器在训练集上的误差，也叫训练误差(training error) 泛化误差(generalization error)：学习器在">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0906_confusionmatrix.png">
-<meta property="og:updated_time" content="2018-09-06T13:05:11.000Z">
+<meta property="og:updated_time" content="2018-09-10T00:19:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="模型评估与选择">
 <meta name="twitter:description" content="一、经验误差与过拟合 错误率(error rate)：分类错误的样本数占样本总数的比例,E = a/m 精度(accuracy)：精度 = 1 一 错误率 误差(error)：学习器的实际预测输出与样本的真实输出之间的差异 经验误差(empirical error)：学习器在训练集上的误差，也叫训练误差(training error) 泛化误差(generalization error)：学习器在">
@@ -209,10 +209,7 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 <h4 id="二、模型评估方法"><a href="#二、模型评估方法" class="headerlink" title="二、模型评估方法"></a>二、模型评估方法</h4><p>通常，我们可以通过实验测试来对学习器的<code>泛化误差</code>进行评估并进而做出选择。为此，需要使用一个“测试集” (testing set) 来测试学习器对新样本的判别能力，然后以测试集上的 “测试误差” (testing error) 作为泛化误差的近似。通常我们假设测试样本也是从样本真实分布中<code>独立同分布</code>采样而得。但需要注意的是，测试集应该尽可能与训练集<code>互斥</code>，即测试样本尽量不在训练集中出现、未在训练过程中使用过。</p>
 <p>我们只有一个包含 m 个样例的数据集 $D=\{(x_1, y_1), (x_2, y_2), … , (x_m, y_m)\}$ ​， 既要训练，又要测试，怎样才能做到呢？答案是：通过对  D 进行适当的处理，从中产生出训练集 S 和测试集​ T 。下面介绍几种常见的做法。</p>
-<ol>
-<li>留出法（hold-out）</li>
-</ol>
-<p>直接将数据集D 划分为两个互斥的集合，一个用来训练模型，一个评估。$D = S\cup T, \; S\cap T = \emptyset$，D为总数据集，S为训练数据集，T为测试数据集。</p>
+<h5 id="1-留出法（hold-out）"><a href="#1-留出法（hold-out）" class="headerlink" title="1. 留出法（hold-out）"></a>1. 留出法（hold-out）</h5><p>直接将数据集D 划分为两个互斥的集合，一个用来训练模型，一个评估。$D = S\cup T, \; S\cap T = \emptyset$，D为总数据集，S为训练数据集，T为测试数据集。</p>
 <ul>
 <li>S 过大，测试误差不够准确</li>
 <li>T 过大，训练出的模型不够准确</li>
@@ -220,42 +217,27 @@ var _hmt = _hmt || [];
 <p>训练和测试集的划分要尽可能保持数据分布的一致性，避免因数据划分引入额外的偏差。一种保留类别比例的采样：stratified sampling.</p>
 <p>单次使用留出法得到的估计结果不够稳定可靠。一般采用若干次随机划分、重复实验取平均值。</p>
 <p>常见做法：大约 2/3 ~ 4/5 的样本用于训练，剩余样本用于测试。</p>
-<ol>
-<li>交叉验证法（cross validation)</li>
-</ol>
-<p>将 D 做分成 k 个大小相似的部分, $D = D_1\cup D_2 \cup \ldots \cup D_k, \; D_i\cap D_j = \emptyset \, (i\neq j)$，留下一个做测试集，其他作为训练集，从而得到 k 次训练和测试。划分本身还要随机重复 p 次，最终的评估结果是这 p 次  k 折交叉验证结果的均值。通常把交叉验证法称为 <code>k 折交叉验证</code> (​ k - fold cross validation)。​ 最常用的取值是 10，此时称为 10 折交叉验证；其他常用的 k 值有 5、20 等。</p>
+<h5 id="2-交叉验证法（cross-validation"><a href="#2-交叉验证法（cross-validation" class="headerlink" title="2. 交叉验证法（cross validation)"></a>2. 交叉验证法（cross validation)</h5><p>将 D 做分成 k 个大小相似的部分, $D = D_1\cup D_2 \cup \ldots \cup D_k, \; D_i\cap D_j = \emptyset \, (i\neq j)$，留下一个做测试集，其他作为训练集，从而得到 k 次训练和测试。划分本身还要随机重复 p 次，最终的评估结果是这 p 次  k 折交叉验证结果的均值。通常把交叉验证法称为 <code>k 折交叉验证</code> (​ k - fold cross validation)。​ 最常用的取值是 10，此时称为 10 折交叉验证；其他常用的 k 值有 5、20 等。</p>
 <p>特殊例子：k = m(数据集中的数据个数), 称为留一法(LOO). 当 m 很大时工作量太大。</p>
-<ol>
-<li>自助法(bootstrapping)</li>
-</ol>
-<p>自助采样(bootstrap sampling)：sampling with replacement.</p>
+<h5 id="3-自助法-bootstrapping"><a href="#3-自助法-bootstrapping" class="headerlink" title="3. 自助法(bootstrapping)"></a>3. 自助法(bootstrapping)</h5><p>自助采样(bootstrap sampling)：sampling with replacement.</p>
 <p>给定包含 m 个样本的数据集D，每次有放回取出一个样本，重复m次，构成采样数据集D’。有一部分样本会重复出现，有一部分不会出现。样本在 m 次采样中始终不被采到的概率是：</p>
 <script type="math/tex; mode=display">\lim_{m\to \infty} \left (1-\frac{1}{m}\right )^m = \frac{1}{e} \approx 0.368</script><p>所以大约有 1/3 的样本不会在采样集中出现。采样数据集作为训练集，剩下的作为测试集。</p>
 <ul>
 <li>优点：自助法在数据集较小、难以有效划分时有用。</li>
 <li>缺点：<code>自助法改变了初始数据集的分布，会引入估计偏差</code>。</li>
 </ul>
-<ol>
-<li>调参与最终模型(parameter tuning)</li>
-</ol>
-<p>参数空间太大，调参的工作量很大。在不少应用中，参数调得好不好往往对最终模型性能有关键性影响。</p>
+<h5 id="4-调参与最终模型-parameter-tuning"><a href="#4-调参与最终模型-parameter-tuning" class="headerlink" title="4. 调参与最终模型(parameter tuning)"></a>4. 调参与最终模型(parameter tuning)</h5><p>参数空间太大，调参的工作量很大。在不少应用中，参数调得好不好往往对最终模型性能有关键性影响。</p>
 <p>如果误差函数对参数是光滑的，可以用优化算法寻找最优参数。</p>
 <p>模型评估与选择中用于评估测试的数据集称为 validation set，和测试集不同，属于训练数据中的一部分。</p>
 <h4 id="三、性能度量（performance-measure）"><a href="#三、性能度量（performance-measure）" class="headerlink" title="三、性能度量（performance measure）"></a>三、性能度量（performance measure）</h4><p>回归任务最常用的是“均方误差”（mean squared error) ：</p>
 <script type="math/tex; mode=display">E(f; D) = \frac{1}{m}\sum_{i=1}^m (f(\boldsymbol x_i)-y_i)^2 \tag{3.1}</script><p>更一般地，对于数据分布D和概率密度p(x)的表达式如下：</p>
 <script type="math/tex; mode=display">E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x)-y)^2p(\boldsymbol x) {\rm d}\boldsymbol x \tag{3.2}</script><p>其实3.1和3.2式分别就是离散数据和连续数据的均方误差表达式。</p>
-<ol>
-<li>错误率与精度</li>
-</ol>
-<p>对于数据分布D:</p>
+<h5 id="1-错误率与精度"><a href="#1-错误率与精度" class="headerlink" title="1. 错误率与精度"></a>1. 错误率与精度</h5><p>对于数据分布D:</p>
 <p>错误率：$E(f; \mathcal D) = \frac{1}{m}\sum_{i=1}^m(f(x_i)\neq y_i)$</p>
 <p>错误率更一般的表达式：$E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x)\neq y)p(\boldsymbol x) {\rm d}\boldsymbol x$</p>
 <p>精度：$E(f; \mathcal D) = \frac{1}{m}\sum_{i=1}^m(f(x_i) = y_i)$</p>
 <p>精度更一般的表达式：$E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x) = y)p(\boldsymbol x) {\rm d}\boldsymbol x$</p>
-<ol>
-<li>查准率、查全率与F1</li>
-</ol>
-<p>以信息检索为例：</p>
+<h5 id="2-查准率、查全率与F1"><a href="#2-查准率、查全率与F1" class="headerlink" title="2. 查准率、查全率与F1"></a>2. 查准率、查全率与F1</h5><p>以信息检索为例：</p>
 <ul>
 <li>查准率(precision): 检索出的信息中有多少比例是用户感兴趣的</li>
 <li>查全率(recall)：用户感兴趣的信息中有多少被检索出来了</li>
@@ -281,13 +263,7 @@ var _hmt = _hmt || [];
 </ol>
 <p>统计假设检验(hypothesis test)为我们比较学习器性能提供了重要依据. 若在测试集上学习器A比B好，则A的泛化性能是否在统计意义上优于B，以及这个结论的把握有多大。</p>
 <ol>
-<li>假设检验</li>
-</ol>
-<ul>
-<li>二项检验</li>
-<li>t检验</li>
-</ul>
-<ol>
+<li>假设检验: 二项检验, t检验</li>
 <li>交叉验证t检验</li>
 <li>McNemar检验</li>
 <li>Friedman检验和Nemenyi后续检验</li>
@@ -352,10 +328,19 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
 <nav id="article-nav">
     
+        <a href="/2018/09/07/2018-09-07-Boosting/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    AdaBoost 简介【译】
+                
+            </div>
+        </a>
     
-        <a href="/2018/09/05/2018-09-07-Boosting/" id="article-nav-older" class="article-nav-link-wrap">
+    
+        <a href="/2018/09/05/2018-09-05_introduction_to_SVM/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">AdaBoost 简介【译】</div>
+            <div class="article-nav-title">SVM 简介【译】</div>
         </a>
     
 </nav>

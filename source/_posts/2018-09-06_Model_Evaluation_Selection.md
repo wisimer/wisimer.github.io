@@ -26,7 +26,7 @@ tags: [ML]
 
 我们只有一个包含 m 个样例的数据集 $D=\{(x_1, y_1), (x_2, y_2), ... , (x_m, y_m)\}$ ​， 既要训练，又要测试，怎样才能做到呢？答案是：通过对  D 进行适当的处理，从中产生出训练集 S 和测试集​ T 。下面介绍几种常见的做法。
 
-1. 留出法（hold-out）
+##### 1. 留出法（hold-out）
 
 直接将数据集D 划分为两个互斥的集合，一个用来训练模型，一个评估。$D = S\cup T, \; S\cap T = \emptyset$，D为总数据集，S为训练数据集，T为测试数据集。
 
@@ -39,13 +39,13 @@ tags: [ML]
 
 常见做法：大约 2/3 ~ 4/5 的样本用于训练，剩余样本用于测试。
 
-2. 交叉验证法（cross validation)
+##### 2. 交叉验证法（cross validation)
 
 将 D 做分成 k 个大小相似的部分, $D = D_1\cup D_2 \cup \ldots \cup D_k, \; D_i\cap D_j = \emptyset \, (i\neq j)$，留下一个做测试集，其他作为训练集，从而得到 k 次训练和测试。划分本身还要随机重复 p 次，最终的评估结果是这 p 次  k 折交叉验证结果的均值。通常把交叉验证法称为 `k 折交叉验证` (​ k - fold cross validation)。​ 最常用的取值是 10，此时称为 10 折交叉验证；其他常用的 k 值有 5、20 等。
 
 特殊例子：k = m(数据集中的数据个数), 称为留一法(LOO). 当 m 很大时工作量太大。
 
-3. 自助法(bootstrapping)
+##### 3. 自助法(bootstrapping)
 
 自助采样(bootstrap sampling)：sampling with replacement.
 
@@ -58,7 +58,7 @@ $$\lim_{m\to \infty} \left (1-\frac{1}{m}\right )^m = \frac{1}{e} \approx 0.368$
 - 优点：自助法在数据集较小、难以有效划分时有用。
 - 缺点：`自助法改变了初始数据集的分布，会引入估计偏差`。
 
-4. 调参与最终模型(parameter tuning)
+##### 4. 调参与最终模型(parameter tuning)
 
 参数空间太大，调参的工作量很大。在不少应用中，参数调得好不好往往对最终模型性能有关键性影响。
 
@@ -78,7 +78,7 @@ $$E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x)-y)^2p
 
 其实3.1和3.2式分别就是离散数据和连续数据的均方误差表达式。
 
-1. 错误率与精度
+##### 1. 错误率与精度
 
 对于数据分布D:
 
@@ -90,7 +90,7 @@ $$E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x)-y)^2p
 
 精度更一般的表达式：$E(f; \mathcal D) = \int_{\boldsymbol x\sim \mathcal D} (f(\boldsymbol x) = y)p(\boldsymbol x) {\rm d}\boldsymbol x$
 
-2. 查准率、查全率与F1
+##### 2. 查准率、查全率与F1
 
 以信息检索为例：
 
@@ -129,11 +129,7 @@ $$F_{\beta}=\frac{(1+{\beta}^2) \times P \times R}{({\beta}^2 \times P)+R} \tag{
 
 统计假设检验(hypothesis test)为我们比较学习器性能提供了重要依据. 若在测试集上学习器A比B好，则A的泛化性能是否在统计意义上优于B，以及这个结论的把握有多大。
 
-1. 假设检验
-
-- 二项检验
-- t检验
-
+1. 假设检验: 二项检验, t检验
 2. 交叉验证t检验
 3. McNemar检验
 4. Friedman检验和Nemenyi后续检验

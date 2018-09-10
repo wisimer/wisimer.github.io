@@ -1,5 +1,5 @@
 ---
-title: SVM 简介
+title: SVM 简介【译】
 date: 2018-09-05
 categories: ML
 tags: [SVM]

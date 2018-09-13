@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>高斯混合模型和EM算法 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="一、混合模型（Mixture Model）混合模型是一个可以用来表示在总体分布（distribution）中含有 K 个子分布的概率模型。换句话说，混合模型表示了观测数据在总体中的概率分布，它是一个由 K 个子分布组成的混合分布。混合模型不要求观测数据提供关于子分布的信息，来计算观测数据在总体分布中的概率。">
+<meta name="keywords" content="GMM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高斯混合模型和EM算法">
+<meta property="og:url" content="http://ai.wisim.me/2018/09/12/2018-09-12-GMM_EM/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="一、混合模型（Mixture Model）混合模型是一个可以用来表示在总体分布（distribution）中含有 K 个子分布的概率模型。换句话说，混合模型表示了观测数据在总体中的概率分布，它是一个由 K 个子分布组成的混合分布。混合模型不要求观测数据提供关于子分布的信息，来计算观测数据在总体分布中的概率。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-13T12:18:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高斯混合模型和EM算法">
+<meta name="twitter:description" content="一、混合模型（Mixture Model）混合模型是一个可以用来表示在总体分布（distribution）中含有 K 个子分布的概率模型。换句话说，混合模型表示了观测数据在总体中的概率分布，它是一个由 K 个子分布组成的混合分布。混合模型不要求观测数据提供关于子分布的信息，来计算观测数据在总体分布中的概率。">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-09-12-GMM_EM" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            高斯混合模型和EM算法
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/12/2018-09-12-GMM_EM/">
+            <time datetime="2018-09-11T16:00:00.000Z" itemprop="datePublished">2018-09-12</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/GMM/">GMM</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="一、混合模型（Mixture-Model）"><a href="#一、混合模型（Mixture-Model）" class="headerlink" title="一、混合模型（Mixture Model）"></a>一、混合模型（Mixture Model）</h4><p>混合模型是一个可以用来表示在总体分布（distribution）中含有 K 个子分布的概率模型。换句话说，混合模型表示了观测数据在总体中的概率分布，它是一个由 K 个子分布组成的混合分布。混合模型<code>不要求</code>观测数据提供关于子分布的信息，来计算观测数据在总体分布中的概率。</p>
+<a id="more"></a>
+<h4 id="二、高斯混合模型（Gaussian-Mixture-Model-GMM）"><a href="#二、高斯混合模型（Gaussian-Mixture-Model-GMM）" class="headerlink" title="二、高斯混合模型（Gaussian Mixture Model,GMM）"></a>二、高斯混合模型（Gaussian Mixture Model,GMM）</h4><h5 id="1-单高斯模型"><a href="#1-单高斯模型" class="headerlink" title="1. 单高斯模型"></a>1. 单高斯模型</h5><ul>
+<li>当样本数据 X 是<code>一维数据（Univariate）</code>时，高斯分布(也叫<code>正态分布</code>)遵从下方概率密度函数（Probability Density Function）：</li>
+</ul>
+<script type="math/tex; mode=display">P(x|\theta)=\frac{1}{2\pi\sigma^2}exp(-\frac{(x-\mu)^2}{2\sigma^2})</script><p>正态分布通常也记为 $N(x|\theta)$，其中 $\mu$ 为<code>数据均值（期望）</code>， $\sigma$ <code>为数据标准差</code>（Standard deviation）`。</p>
+<ul>
+<li>当样本数据 X 是多维数据（Multivariate）时，高斯分布遵从下方概率密度函数：</li>
+</ul>
+<script type="math/tex; mode=display">P(x|\theta)=\frac{1}{(2\pi)^{\frac{D}{2}}|\Sigma|^{\frac{1}{2}}}exp(-\frac{(x-\mu)^T \Sigma^{-1}(x-\mu)}{2})</script><p>其中， $\mu$ 为数据均值（期望）， $\Sigma$ 为协方差（Covariance），D 为数据维度。注意这里的 <code>T 是矩阵转置符号</code>，多维数据 $x-\mu$ 是一个矩阵。</p>
+<h5 id="2-高斯混合模型"><a href="#2-高斯混合模型" class="headerlink" title="2. 高斯混合模型"></a>2. 高斯混合模型</h5><p>高斯混合模型可以看作是由 K 个<code>单高斯模型</code>组合而成的模型，每个 Gaussian 称为一个“Component”，这 K 个子模型是混合模型的<code>隐变量</code>（Hidden variable）。也就是说我们假设样本中的每个数据都由这 K 个子模型中的某一个生成。一般来说，一个混合模型可以使用任何概率分布，这里使用高斯混合模型是因为高斯分布具备很好的数学性质以及良好的计算性能。下面给出高斯混合模型的数学定义：</p>
+<p>首先定义如下信息：</p>
+<ul>
+<li>$x_j$ 表示第 j 个观测数据， j = 1,2,…,N</li>
+<li>K 是混合模型中子高斯模型的数量， k = 1,2,…,K</li>
+<li>$\alpha_k$ 是观测数据属于第 i 个子模型的概率， $\alpha_k \geq 0 ， \sum_{i=1}^{K}{\alpha_k} = 1$</li>
+<li>$\phi(x|\theta_k)$ 是第 k 个子模型的高斯分布密度函数， $\theta_k = (\mu_k, \sigma_k^{2})$ 。其展开形式与上面介绍的单高斯模型相同</li>
+<li>$\gamma_{ji}$ 表示第 j 个观测数据属于第 i 个子模型的概率。</li>
+</ul>
+<p>那么，<code>高斯混合模型</code>的概率分布为：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll} P(x|\theta)
+& =\sum_{k=1}^{K} \alpha_k \phi(x|\theta_k)\\
+& =\sum_{k=1}^{K} \alpha_k \frac{1}{(2\pi)^{\frac{D}{2}}|\Sigma|_k^{\frac{1}{2}}}exp(-\frac{(x-\mu_k)^T \Sigma_k^{-1}(x-\mu_k)}{2})\\
+\end{array}</script><p>对于这个<code>高斯混合模型</code>而言，参数 $\theta = (\tilde{\mu_k}, \tilde{\sigma_k}, \tilde{\alpha_k})$ ，也就是每个子模型的期望、方差（或协方差）、在混合模型中发生的概率。</p>
+<p>根据上面的式子，如果我们要从 GMM 的分布中随机地取一个点的话，实际上可以分为两步：首先随机地在这 K 个 Component 之中选一个，每个 Component 被选中的概率实际上就是它的系数 $\alpha_k$ ，选中了 Component 之后，再单独地考虑从这个 Component 的分布中选取一个点就可以了──这里已经回到了普通的 Gaussian 分布，转化为了已知的问题。</p>
+<p>那么如何用 GMM 来做聚类呢？其实很简单，现在我们有了数据，假定它们是由 GMM 生成出来的，那么我们只要根据数据推出 GMM 的概率分布来就可以了，然后 GMM 的 K 个 Component 实际上就对应了 K 个 cluster 了。根据数据来推算概率密度通常被称作<code>密度估计(density estimation)</code> ，特别地，当<code>我们在已知（或假定）了概率密度函数的形式，而要估计其中的参数的过程被称作“参数估计”</code>。</p>
+<p>GMM与K-means比较</p>
+<ul>
+<li><p>相同点：都是可用于聚类的算法；都需要指定K值。</p>
+</li>
+<li><p>不同点：GMM可以给出一个样本属于某类的概率是多少。</p>
+</li>
+</ul>
+<h4 id="三、极大似然估计"><a href="#三、极大似然估计" class="headerlink" title="三、极大似然估计"></a>三、极大似然估计</h4><p>上面只是给出了 GMM 的概率密度，但是它的参数还是未知的，那么如何该如何求概率密度的参数呢？</p>
+<p>先来聊聊似然函数。现在假设我们有 N 个数据点，并假设它们服从某个分布（记作 p(x) ），要确定里面的一些参数的值。现在这里的分布就是高斯混合分布，我们就需要确定 $\alpha_k、\mu_k 和 \Sigma_k$ 这些参数。 我们的想法是，找到这样一组参数，它所确定的概率分布<code>生成这些给定的数据点的概率最大</code>，而这个概率实际上就等于 $\prod_{i=1}^N p(x_i)$ ，我们把这个乘积称作<code>似然函数 (Likelihood Function)</code>。</p>
+<p>通常单个点的概率都很小，许多很小的数字相乘起来在计算机里很容易造成浮点数下溢，因此我们通常会对其取对数，把乘积变成加和 $\sum_{i=1}^N \log p(x_i)$，得到<code>对数似然函数（log-likelihood function）</code> 。接下来我们只要将这个函数最大化（通常的做法是求导并令导数等于零，然后解方程），<code>亦即找到这样一组参数值，它让似然函数取得最大值</code>，我们就认为这是最合适的参数，这样就完成了参数估计的过程。下面让我们来看一看 GMM 的对数似然函数的具体形式 ：</p>
+<script type="math/tex; mode=display">l(\Theta)=log\prod_{i=1}^{n}p(x_{i};\Theta)=\sum_{i=1}^{n}log(\sum_{k=1}^{K}\alpha_{k}N(x_{i};\mu_{k},\Sigma_{k})) \tag{3.1}</script><p>由于在对数函数里面又有加和，我们没法直接用求导解方程的办法直接求得最大值。为了解决这个问题，我们要用到 <code>EM算法</code>。</p>
+<h4 id="四、EM算法"><a href="#四、EM算法" class="headerlink" title="四、EM算法"></a>四、EM算法</h4><p>EM算法全程是 Expectation Maximization，即期望最大化算法，专门用来迭代求解极大似然估计。我们就是要找到最佳的模型参数，使得3.1式的期望最大，“期望最大化算法”名字由此而来。</p>
+<p>EM算法每次迭代包含两个步骤：</p>
+<ul>
+<li>E-step：求期望 $E(\gamma_{jk} | X, \theta)$ for all j = 1,2,…,N;</li>
+<li>M-step：求极大，计算新一轮迭代的模型参数。</li>
+</ul>
+<p>这里不具体介绍一般性的 EM 算法（通过 Jensen 不等式得出似然函数的下界 Lower bound，通过极大化下界做到极大化似然函数），只介绍怎么在高斯混合模型里应用从来推算出模型参数。通过 EM 迭代更新高斯混合模型参数的方法如下：</p>
+<p>假设：我们有样本数据 $x_{1}, x_{2}, …,x_{N}$ 和一个有 K 个子模型的高斯混合模型，想要推算出这个高斯混合模型的最佳参数。</p>
+<h5 id="1-首先初始化参数"><a href="#1-首先初始化参数" class="headerlink" title="1. 首先初始化参数"></a>1. 首先初始化参数</h5><h5 id="2-E-step：依据当前参数，计算每个数据-j-来自子模型-k-的可能性"><a href="#2-E-step：依据当前参数，计算每个数据-j-来自子模型-k-的可能性" class="headerlink" title="2. E-step：依据当前参数，计算每个数据 j 来自子模型 k 的可能性"></a>2. E-step：<code>依据当前参数，计算每个数据 j 来自子模型 k 的可能性</code></h5><p>估计数据由每个 Component 生成的概率（并不是每个 Component 被选中的概率）：对于每个数据 $x_i$ 来说，它由第 k 个 Component 生成的概率为：</p>
+<p>$\gamma_{jk} = \frac{\alpha_{k}\phi(x_{j}|\theta_{k})}{\sum_{k=1}^{K}{\alpha_{k}\phi(x_{j}|\theta_{k})}}, j = 1,2,…,N; k = 1,2,…,K$</p>
+<h5 id="3-M-step：计算新一轮迭代的模型参数"><a href="#3-M-step：计算新一轮迭代的模型参数" class="headerlink" title="3. M-step：计算新一轮迭代的模型参数"></a>3. M-step：计算新一轮迭代的<code>模型参数</code></h5><p>估计每个 Component 的参数：现在我们假设上一步中得到的 $\gamma(i, k)$ 就是正确的“数据 $x_i$ 由 Component k 生成的概率”，亦可以当做该 Component 在生成这个数据上所做的贡献。或者说，我们可以看作 $x_i$ 这个值其中有 $\gamma(i, k)x_i$ 这部分是由 Component k 所生成的。集中考虑所有的数据点，现在实际上可以看作 Component 生成了 $\gamma(1, k)x_1, \ldots, \gamma(N, k)x_N$ 这些点。由于每个 Component 都是一个标准的 Gaussian 分布，可以很容易分布<code>求出最大似然所对应的参数</code>值：</p>
+<p>$\mu_{k} = \frac{\sum_{j}^{N}{(\gamma_{jk}}x_{j})}{\sum_{j}^{N}{\gamma_{jk}}}, k=1,2,…,K$</p>
+<p>$\Sigma_{k} = \frac{\sum_{j}^{N}{\gamma_{jk}}(x_{j}-\mu_{k})(x_{j}-\mu_{k})^{T}}{\sum_{j}^{N}{\gamma_{jk}}}, k = 1,2,…,K$ （用这一轮更新后的 $\mu_{k}$</p>
+<p>$\alpha_{k} = \frac{\sum_{j=1}^{N}{\gamma_{jk}}}{N}, k=1,2,…,K$</p>
+<h5 id="4-重复计算-E-step-和-M-step-直至收敛"><a href="#4-重复计算-E-step-和-M-step-直至收敛" class="headerlink" title="4. 重复计算 E-step 和 M-step 直至收敛"></a>4. 重复计算 E-step 和 M-step 直至收敛</h5><p>也就是要求 $||\theta_{i+1} - \theta_{i}|| &lt; \varepsilon$, $\varepsilon$ 是一个很小的正数，表示经过一次迭代之后参数变化非常小。否则重复2，3两步。</p>
+<p>至此，我们就找到了高斯混合模型的参数。需要注意的是，EM 算法具备收敛性，但并不保证找到全局最大值，有可能找到局部最大值。<code>解决方法是初始化几次不同的参数进行迭代，取结果最好的那次</code>。</p>
+<hr>
+<p>参考：</p>
+<p>[0]. <a href="http://www.datasciencelab.cn/clustering/gmm" target="_blank" rel="noopener">高斯混合模型</a></p>
+<p>[1]. <a href="https://zhuanlan.zhihu.com/p/30483076" target="_blank" rel="noopener">高斯混合模型（GMM）</a></p>
+<p>[2]. <a href="http://blog.pluskid.org/?p=39" target="_blank" rel="noopener">漫谈 Clustering (3): Gaussian Mixture Model</a></p>
+<p>[3]. <a href="http://www.cnblogs.com/zhangchaoyang/articles/2624882.html" target="_blank" rel="noopener">EM及高斯混合模型</a></p>
+<p>[4]. <a href="https://blog.csdn.net/v_JULY_v/article/details/81708386" target="_blank" rel="noopener">如何通俗理解EM算法</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/09/12/2018-09-12-GMM_EM/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/09/10/2018-09-10_Bagging_RandomForest/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Bagging 和 随机森林（Random Forest,RF）</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

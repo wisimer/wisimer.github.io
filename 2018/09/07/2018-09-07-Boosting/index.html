@@ -6,19 +6,20 @@
     <title>AdaBoost 简介【译】 | XP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="原文：AdaBoost 简介 目前的集成学习（Ensemble Learning）方法大致可分为两类：一是个体学习器之间存在强依赖关系、必须串行生成的序列化方法，代表算法是Boosting；二是个体学习器之间不存在强依赖关系，可同时生成的并行方法，代表算法是 Bagging 和 “随机森林（Random Forest）”。 首先要知道 AdaBoost(adaptive boosting) 算法是">
-<meta name="keywords" content="SVM">
+<meta name="keywords" content="Boosting,AdaBoost">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AdaBoost 简介【译】">
 <meta property="og:url" content="http://ai.wisim.me/2018/09/07/2018-09-07-Boosting/index.html">
 <meta property="og:site_name" content="XP">
 <meta property="og:description" content="原文：AdaBoost 简介 目前的集成学习（Ensemble Learning）方法大致可分为两类：一是个体学习器之间存在强依赖关系、必须串行生成的序列化方法，代表算法是Boosting；二是个体学习器之间不存在强依赖关系，可同时生成的并行方法，代表算法是 Bagging 和 “随机森林（Random Forest）”。 首先要知道 AdaBoost(adaptive boosting) 算法是">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0907_boosting.png">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0907_smatrix.png">
-<meta property="og:updated_time" content="2018-09-10T00:19:42.000Z">
+<meta property="og:updated_time" content="2018-09-10T13:21:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AdaBoost 简介【译】">
 <meta name="twitter:description" content="原文：AdaBoost 简介 目前的集成学习（Ensemble Learning）方法大致可分为两类：一是个体学习器之间存在强依赖关系、必须串行生成的序列化方法，代表算法是Boosting；二是个体学习器之间不存在强依赖关系，可同时生成的并行方法，代表算法是 Bagging 和 “随机森林（Random Forest）”。 首先要知道 AdaBoost(adaptive boosting) 算法是">
-<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1809/0907_smatrix.png">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1809/0907_boosting.png">
     
 
     
@@ -183,7 +184,7 @@ var _hmt = _hmt || [];
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/SVM/">SVM</a>
+        <a class="tag-link" href="/tags/AdaBoost/">AdaBoost</a>, <a class="tag-link" href="/tags/Boosting/">Boosting</a>
     </div>
 
                     </div>
@@ -196,7 +197,8 @@ var _hmt = _hmt || [];
             
             <p>原文：<a href="http://www.inf.fu-berlin.de/inst/ag-ki/adaboost4.pdf" target="_blank" rel="noopener">AdaBoost 简介</a></p>
 <p>目前的<code>集成学习（Ensemble Learning）</code>方法大致可分为两类：一是个体学习器之间存在强依赖关系、必须串行生成的序列化方法，代表算法是Boosting；二是个体学习器之间不存在强依赖关系，可同时生成的并行方法，代表算法是 Bagging 和 “随机森林（Random Forest）”。</p>
-<p>首先要知道 <code>AdaBoost(adaptive boosting) 算法</code>是<code>Boosting算法族</code>中的一员。Boosting算法可将弱学习器提升为强学习器。所谓的弱学习器就是泛化性能略高于随机猜测的学习器，而强学习器很显然就是指泛化能力较高的学习器了。</p>
+<p>首先要知道 <code>AdaBoost(adaptive boosting) 算法</code>是<code>Boosting算法族</code>中的一员。Boosting算法可将弱学习器提升为强学习器。所谓的弱学习器就是泛化性能略高于随机猜测的学习器，而强学习器很显然就是指泛化能力较高的学习器了。Boosting算法原理图：</p>
+<p><img src="/src/imgs/1809/0907_boosting.png" alt="Boosting"></p>
 <p>AdaBoost算法中有一个很重要的环节。每一个训练样本都被赋予权值，并且随着训练过程样本权值不断更新。更新的原则是：误分类样本被赋予更高的权值，而正确分类样本的权值被相应降低。通过这种方式能够将重点放在不能正确分类的样本上，新选出来的分类器能够发挥原有分类器没有的作用，提高整体的分类效果。<br><a id="more"></a></p>
 <h4 id="一、算法目标"><a href="#一、算法目标" class="headerlink" title="一、算法目标"></a>一、算法目标</h4><p>如果你正在处理一个二分类模式识别问题，并且现在提供了一系列分类器，你可以从中选择使用哪些分类器（我们这里称之为小能手）。现在你想从中选出最优的几个小能手参加“超级碗”比赛。因此，你要选出一个十一人梦之队。假设给定的数据 $x_i$ 和每个分类器（小能手） $k_j$ 可以发表一个观点 $k_j(x_i) \in{\{-1,1\}}$，并且根据这些观点最终得出的决定是 sign(C(x_i))，这个 <code>sign</code>函数是所有小能手提出的观点的带权之和：</p>
 <script type="math/tex; mode=display">C(x_i)=a_1k_1(x_i)+a_2k_2(x_i)+...+a_11k_11(x_i)</script><p>这里的 $k_1,k_2,…,k_11$ 表示这十一个小能手代表的时哪一种分类器。然后前面的常数 $a_1,a_2,…,a_11$ 是我们给定的每个小能手的权重。此外，小能手 $K_j$ 只能回答 “yes(+1)” 或者 “no(-1)” 来对问题分类。这里的 <code>sign 函数</code>是一个非线性决策，它是由这一些列线性分类器组合而成。</p>
@@ -298,6 +300,15 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     
         
 <nav id="article-nav">
+    
+        <a href="/2018/09/10/2018-09-10_Bagging_RandomForest/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Bagging 和 随机森林（Random Forest,RF）
+                
+            </div>
+        </a>
     
     
         <a href="/2018/09/06/2018-09-06_Model_Evaluation_Selection/" id="article-nav-older" class="article-nav-link-wrap">

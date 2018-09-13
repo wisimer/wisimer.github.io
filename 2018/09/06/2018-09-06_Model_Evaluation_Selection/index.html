@@ -14,7 +14,7 @@
 <meta property="og:description" content="一、经验误差与过拟合 错误率(error rate)：分类错误的样本数占样本总数的比例,E = a/m 精度(accuracy)：精度 = 1 一 错误率 误差(error)：学习器的实际预测输出与样本的真实输出之间的差异 经验误差(empirical error)：学习器在训练集上的误差，也叫训练误差(training error) 泛化误差(generalization error)：学习器在">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0906_confusionmatrix.png">
-<meta property="og:updated_time" content="2018-09-10T00:19:10.000Z">
+<meta property="og:updated_time" content="2018-09-10T06:01:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="模型评估与选择">
 <meta name="twitter:description" content="一、经验误差与过拟合 错误率(error rate)：分类错误的样本数占样本总数的比例,E = a/m 精度(accuracy)：精度 = 1 一 错误率 误差(error)：学习器的实际预测输出与样本的真实输出之间的差异 经验误差(empirical error)：学习器在训练集上的误差，也叫训练误差(training error) 泛化误差(generalization error)：学习器在">
@@ -200,10 +200,7 @@ var _hmt = _hmt || [];
 <li>误差(error)：学习器的实际预测输出与样本的真实输出之间的差异</li>
 <li><code>经验误差</code>(empirical error)：学习器在训练集上的误差，也叫训练误差(training error)</li>
 <li><code>泛化误差</code>(generalization error)：学习器在新样本上的误差</li>
-<li><code>过拟合</code>(overfitting)：当学习器把训练样本学得”太好”了的时候，很可能巳经把训练样本自身的一些特点当作了所有潜在样本都会具有的一般性质，这样就会导致泛化性能下降。这种现象称为过拟合。其中最常见的情况是由于学习能力过于强大，以至于把训练样本所包含的不太一般的特性都学到了。</li>
-</ol>
-<p>过拟合为什么无法避免？机器学习面临的问题通常是NP 难甚至更难，而有效的学习算法必然是在多项式时间内运行完成，若可彻底避免过拟合， 则通过经验误差最小化就能获最优解，这就意味着我们构造性地证明了 “P=NP” ;因此只要相信”P≠NP “ ，过拟合就不可避免P。</p>
-<ol>
+<li><code>过拟合</code>(overfitting)：当学习器把训练样本学得”太好”了的时候，很可能巳经把训练样本自身的一些特点当作了所有潜在样本都会具有的一般性质，这样就会导致泛化性能下降。这种现象称为过拟合。其中最常见的情况是由于学习能力过于强大，以至于把训练样本所包含的不太一般的特性都学到了。过拟合为什么无法避免？机器学习面临的问题通常是NP 难甚至更难，而有效的学习算法必然是在多项式时间内运行完成，若可彻底避免过拟合， 则通过经验误差最小化就能获最优解，这就意味着我们构造性地证明了 “P=NP” ;因此只要相信”P≠NP “ ，过拟合就不可避免P。</li>
 <li><code>欠拟合</code>(underfitting)：是指对训练样本的一般性质尚未学好。通常是由于学习能力低下而造成的。</li>
 </ol>
 <a id="more"></a>

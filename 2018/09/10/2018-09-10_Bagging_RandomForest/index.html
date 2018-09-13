@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Bagging 和 随机森林（Random Forest,RF） | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前面已经了解到集成学习有两个流派，一个是 Boosting 派系，它的特点是各个弱学习器之间有依赖关系。另一种是 Bagging 流派，它的特点是各个弱学习器之间没有依赖关系，可以并行拟合。而随机森林又是对 Bagging 的一个改进算法，可以很方便的并行训练。">
+<meta name="keywords" content="Bagging,RF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bagging 和 随机森林（Random Forest,RF）">
+<meta property="og:url" content="http://ai.wisim.me/2018/09/10/2018-09-10_Bagging_RandomForest/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="前面已经了解到集成学习有两个流派，一个是 Boosting 派系，它的特点是各个弱学习器之间有依赖关系。另一种是 Bagging 流派，它的特点是各个弱学习器之间没有依赖关系，可以并行拟合。而随机森林又是对 Bagging 的一个改进算法，可以很方便的并行训练。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0910_bagging.png">
+<meta property="og:updated_time" content="2018-09-11T03:24:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bagging 和 随机森林（Random Forest,RF）">
+<meta name="twitter:description" content="前面已经了解到集成学习有两个流派，一个是 Boosting 派系，它的特点是各个弱学习器之间有依赖关系。另一种是 Bagging 流派，它的特点是各个弱学习器之间没有依赖关系，可以并行拟合。而随机森林又是对 Bagging 的一个改进算法，可以很方便的并行训练。">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1809/0910_bagging.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-09-10_Bagging_RandomForest" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Bagging 和 随机森林（Random Forest,RF）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/10/2018-09-10_Bagging_RandomForest/">
+            <time datetime="2018-09-09T16:00:00.000Z" itemprop="datePublished">2018-09-10</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Bagging/">Bagging</a>, <a class="tag-link" href="/tags/RF/">RF</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>前面已经了解到<code>集成学习</code>有两个流派，一个是 Boosting 派系，它的特点是各个弱学习器之间有依赖关系。另一种是 Bagging 流派，它的特点是各个弱学习器之间没有依赖关系，可以并行拟合。而<code>随机森林</code>又是对 Bagging 的一个改进算法，可以很方便的并行训练。</p>
+<a id="more"></a>
+<h4 id="一、Bagging"><a href="#一、Bagging" class="headerlink" title="一、Bagging"></a>一、Bagging</h4><h5 id="1-Bagging-算法原理"><a href="#1-Bagging-算法原理" class="headerlink" title="1. Bagging 算法原理"></a>1. Bagging 算法原理</h5><p>Bagging 原理图：</p>
+<p><img src="/src/imgs/1809/0910_bagging.png" alt="Bagging"></p>
+<p>Bagging 的弱学习器之间的确没有 Boosting 那样的联系。它的特点在“随机采样”。那么什么是随机采样？</p>
+<p>随机采样(bootsrap)就是从我们的训练集里面采集固定个数的样本，但是每采集一个样本后，都将样本放回。也就是说，之前采集到的样本在放回后有可能继续被采集到。对于我们的Bagging算法，一般会随机采集和训练集样本数m一样个数的样本。这样得到的采样集和训练集样本的个数相同，但是样本内容不同。如果我们对有m个样本训练集做T次的随机采样，则由于随机性，T个采样集各不相同。注意到这和 <code>GBDT</code> 的子采样是不同的。GBDT 的子采样是无放回采样，而 Bagging的子采样是放回采样。</p>
+<p>对于一个样本，它在某一次含m个样本的训练集的随机采样中，每次被采集到的概率是 $\frac{1}{m}$，不被采集到的概率为 $1-\frac{1}{m}$。如果 m 次采样都没有被采集中的概率是 $(1-\frac{1}{m})^{m}$，当 $m \to \infty,(1-\frac{1}{m})^m \to \frac{1}{e} \simeq 0.368$。也就是说，在 BaggingB的每轮随机采样中，训练集中大约有36.8%的数据没有被采样集采集中。</p>
+<p>对于这部分大约36.8%的没有被采样到的数据，我们常常称之为<code>袋外数据(Out Of Bag, 简称OOB)</code>。这些数据没有参与训练集模型的拟合，因此可以用来<code>检测模型的泛化能力</code>。</p>
+<p>Bagging 对于弱学习器没有限制，这和Adaboost一样。但是最常用的一般也是决策树和神经网络。</p>
+<p>Bagging 的结合策略也比较简单，对于分类问题，通常使用简单投票法，得到最多票数的类别或者类别之一为最终的模型输出。对于回归问题，通常使用简单平均法，对T个弱学习器得到的回归结果进行算术平均得到最终的模型输出。</p>
+<p>由于 Bagging算法每次都进行采样来训练模型，因此泛化能力很强，对于<code>降低模型的方差</code>很有作用。当然对于训练集的拟合程度就会差一些，也就是模型的偏差会大一些。</p>
+<h5 id="2-Bagging-算法流程"><a href="#2-Bagging-算法流程" class="headerlink" title="2. Bagging 算法流程"></a>2. Bagging 算法流程</h5><ul>
+<li>输入为样本集 $D=\{(x_,y_1),(x_2,y_2), …(x_m,y_m)\}$。</li>
+<li>弱学习器算法。弱分类器迭代次数T。</li>
+<li>输出为最终的强分类器f(x)</li>
+</ul>
+<p>(1) 对于 i=1,2…,m:</p>
+<p>  (a) 对训练集进行第 i 次随机采样，共采集 m 次，得到包含 m 个样本的采样集 D;</p>
+<p>  (b) 用采样集 D 训练第 i 个弱学习器 $G_i(x)$.</p>
+<p>(2) 如果是分类算法预测，则 m 个弱学习器投出最多票数的类别或者类别之一为最终类别。如果是回归算法，m 个弱学习器得到的回归结果进行算术平均得到的值为最终的模型输出。</p>
+<h4 id="二、随机森林"><a href="#二、随机森林" class="headerlink" title="二、随机森林"></a>二、随机森林</h4><p>理解了 Bagging 算法，随机森林(Random Forest,以下简称RF)就好理解了。它是 Bagging 算法的进化版，也就是说，它的思想仍然是 Bagging,但是进行了独有的改进。我们现在就来看看RF算法改进了什么。</p>
+<p>首先，RF使用了<code>CART 决策树</code>作为弱学习器。第二，在使用决策树的基础上，RF对决策树的建立做了改进，对于普通的决策树，我们会在节点上所有的n个样本特征中选择<code>一个最优的特征</code>来做决策树的左右子树划分，但是RF通过<code>随机选择</code>节点上的<code>一部分样本特征</code>，这个数字小于n，假设为 $n_1$，然后在这些随机选择的 $n_1$ 个样本特征中，选择一个最优的特征来做决策树的左右子树划分。这样进一步增强了模型的泛化能力。　　　</p>
+<p>如果 $n_1=n$，则此时RF的CART决策树和普通的CART决策树没有区别。$n_1$ 越小，则模型约健壮，当然此时对于训练集的拟合程度会变差。也就是说$n_1$ 越小，模型的方差会减小，但是偏差会增大。在实际案例中，一般会通过交叉验证调参获取一个合适的 $n_1$ 的值。</p>
+<p>除了上面两点，RF和普通的 Bagging 算法没有什么不同， 下面简单总结下RF的算法。</p>
+<ul>
+<li>输入为样本集 $D=\{(x_,y_1),(x_2,y_2), …(x_m,y_m)\}$。</li>
+<li>弱分类器迭代次数T。</li>
+<li>输出为最终的强分类器f(x)。</li>
+</ul>
+<p>(1) 对于 i=1,2…,m:</p>
+<p>  (a)对训练集进行第 i 次随机采样，共采集 m 次，得到包含 m 个样本的采样集 D;</p>
+<p>  (b)用采样集 D 训练第 i 个决策树模型 $G_i(x)$ ，在训练决策树模型的节点的时候，在节点上所有的样本特征中选择<code>一部分样本特征</code>， 在这些随机选择的部分样本特征中选择一个<code>最优的特征</code>来做决策树的左右子树划分</p>
+<p>(2) 如果是分类算法预测，则 m 个弱学习器投出最多票数的类别或者类别之一为最终类别。如果是回归算法，m 个弱学习器得到的回归结果进行算术平均得到的值为最终的模型输出。</p>
+<h4 id="三、结合策略"><a href="#三、结合策略" class="headerlink" title="三、结合策略"></a>三、结合策略</h4><p>我们可以看到不管是 Boosting 还是 Bagging，最终弱学习器都要通过结合策略结合成强学习器，结合策略有如下几个：</p>
+<h5 id="1-平均法"><a href="#1-平均法" class="headerlink" title="1. 平均法"></a>1. 平均法</h5><p>对于数值类的回归预测问题，通常使用的结合策略是平均法，也就是说，对于若干个弱学习器的输出进行平均得到最终的预测输出。</p>
+<ul>
+<li>最简单的平均是算术平均，也就是说最终预测是：$H(x) = \frac{1}{T}\sum\limits_{1}^{T}h_i(x)$</li>
+<li>如果每个个体学习器有一个权重w，则最终预测是：$H(x) = \sum\limits_{i=1}^{T}w_ih_i(x)$，其中 $wi$ 是个体学习器 $hi$ 的权重，通常有 $w_i \geq 0 ,\;\;\; \sum\limits_{i=1}^{T}w_i = 1$</li>
+</ul>
+<h5 id="2-投票法"><a href="#2-投票法" class="headerlink" title="2. 投票法"></a>2. 投票法</h5><p>对于分类问题的预测，我们通常使用的是投票法。假设我们的预测类别是 $\{c_1,c_2,…c_K\}$,对于任意一个预测样本x，我们的T个弱学习器的预测结果分别是 $(h_1(x), h_2(x)…h_T(x))$。</p>
+<p>最简单的投票法是相对多数投票法，也就是我们常说的少数服从多数，也就是T个弱学习器的对样本x的预测结果中，数量最多的类别ci为最终的分类类别。如果不止一个类别获得最高票，则随机选择一个做最终类别。</p>
+<p>稍微复杂的投票法是绝对多数投票法，也就是我们常说的要票过半数。在相对多数投票法的基础上，不光要求获得最高票，还要求票过半数。否则会拒绝预测。</p>
+<p>更加复杂的是加权投票法，和加权平均法一样，每个弱学习器的分类票数要乘以一个权重，最终将各个类别的加权票数求和，最大的值对应的类别为最终类别。</p>
+<h5 id="3-学习法"><a href="#3-学习法" class="headerlink" title="3. 学习法"></a>3. 学习法</h5><p>上面两个方法都是对弱学习器的结果做平均或者投票，相对比较简单，但是可能学习误差较大，于是就有了学习法这种方法，对于学习法，代表方法是stacking，当使用stacking的结合策略时， 我们不是对弱学习器的结果做简单的逻辑处理，而是再加上一层学习器，也就是说，我们将训练集弱学习器的学习结果作为输入，将训练集的输出作为输出，重新训练一个学习器来得到最终结果。</p>
+<p>在这种情况下，我们将弱学习器称为初级学习器，将用于结合的学习器称为次级学习器。对于测试集，我们首先用初级学习器预测一次，得到次级学习器的输入样本，再用次级学习器预测一次，得到最终的预测结果。</p>
+<h4 id="四、随机森林的推广"><a href="#四、随机森林的推广" class="headerlink" title="四、随机森林的推广"></a>四、随机森林的推广</h4><p>由于RF在实际应用中的良好特性，基于RF，有很多变种算法，应用也很广泛，不光可以用于分类回归，还可以用于特征转换，异常点检测等。下面对于这些RF家族的算法中有代表性的做一个总结。</p>
+<h5 id="1-extra-trees"><a href="#1-extra-trees" class="headerlink" title="1. extra trees"></a>1. extra trees</h5><p>extra trees是RF的一个变种, 原理几乎和RF一模一样，仅有区别有：</p>
+<p>(1) 对于每个决策树的训练集，RF 采用的是随机采样 bootstrap 来选择采样集作为每个决策树的训练集，而 extra trees 一般不采用随机采样，即每个决策树采用<code>原始训练集</code>。</p>
+<p>(2) 在选定了划分特征后，RF的决策树会基于基尼系数，均方差之类的原则，选择一个最优的特征值划分点，这和传统的决策树相同。但是extra trees比较的激进，他会<code>随机的选择一个特征值来划分决策树</code>。</p>
+<p>从第二点可以看出，由于随机选择了特征值的划分点位，而不是最优点位，这样会导致生成的决策树的规模一般会大于RF所生成的决策树。也就是说，<code>模型的方差相对于RF进一步减少，但是偏差相对于RF进一步增大</code>。在某些时候，extra trees的泛化能力比RF更好。</p>
+<h4 id="2-Totally-Random-Trees-Embedding"><a href="#2-Totally-Random-Trees-Embedding" class="headerlink" title="2. Totally Random Trees Embedding"></a>2. Totally Random Trees Embedding</h4><p>Totally Random Trees Embedding(以下简称 TRTE)是一种非监督学习的数据转化方法。它将<code>低维的数据集映射到高维</code>，从而让映射到高维的数据更好的运用于分类回归模型。我们知道，在支持向量机中运用了核方法来将低维的数据集映射到高维，此处TRTE提供了另外一种方法。</p>
+<p>TRTE在数据转化的过程也使用了类似于RF的方法，建立T个决策树来拟合数据。当决策树建立完毕以后，数据集里的每个数据在T个决策树中叶子节点的位置也定下来了。比如我们有3颗决策树，每个决策树有5个叶子节点，某个数据特征x划分到第一个决策树的第2个叶子节点，第二个决策树的第3个叶子节点，第三个决策树的第5个叶子节点。则x映射后的特征编码为(0,1,0,0,0,  0,0,1,0,0,  0,0,0,0,1), 有15维的高维特征。这里特征维度之间加上空格是为了强调三颗决策树各自的子编码。</p>
+<p>映射到高维特征后，可以继续使用监督学习的各种分类回归算法了。</p>
+<h5 id="3-Isolation-Forest"><a href="#3-Isolation-Forest" class="headerlink" title="3. Isolation Forest"></a>3. Isolation Forest</h5><p>　　　　<br>Isolation Forest（以下简称IForest）是一种<code>异常点检测</code>的方法。它也使用了类似于RF的方法来检测异常点。</p>
+<p>对于在 T 个决策树的样本集，IForest 也会对训练集进行随机采样,但是采样个数不需要和RF一样，对于RF，需要采样到采样集样本个数等于训练集个数。但是IForest不需要采样这么多，一般来说，<code>采样个数要远远小于训练集个数</code>。为什么呢？因为我们的目的是异常点检测，只需要部分的样本我们一般就可以将异常点区别出来了。</p>
+<p>对于每一个决策树的建立， IForest采用随机选择一个划分特征，对划分特征随机选择一个划分阈值。这点也和RF不同。</p>
+<p>另外，IForest一般会选择一个比较小的最大决策树深度 max_depth,原因同样本采集，用少量的异常点检测一般不需要这么大规模的决策树。</p>
+<p>对于异常点的判断，则是将测试样本点 x 拟合到 T 颗决策树。计算在每颗决策树上该样本的叶子节点的深度 $h_t(x)$。，从而可以计算出平均高度h(x)。此时我们用下面的公式计算样本点x的异常概率:</p>
+<script type="math/tex; mode=display">s(x,m) = 2^{-\frac{h(x)}{c(m)}}</script><p>其中，m为样本个数。c(m)的表达式为：</p>
+<script type="math/tex; mode=display">c(m) =2\ln(m-1) + \xi - 2\frac{m-1}{m}, \; \xi为欧拉常数</script><p>s(x,m)的取值范围是[0,1],取值越接近于1，则是异常点的概率也越大。</p>
+<h4 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h4><p>RF算法作为一个可以高度并行化的算法，在大数据时候大有可为。下面总结一下 RF 的优缺点。 </p>
+<p>RF的主要优点有：</p>
+<ol>
+<li>训练可以高度并行化，对于大数据时代的大样本训练速度有优势。个人觉得这是的最主要的优点。</li>
+<li>由于可以随机选择决策树节点划分特征，这样在样本特征维度很高的时候，仍然能高效的训练模型。</li>
+<li>在训练后，可以给出各个特征对于输出的重要性</li>
+<li>由于采用了随机采样，训练出的模型的方差小，泛化能力强。</li>
+<li>相对于Boosting系列的Adaboost和GBDT， RF实现比较简单。</li>
+<li>对部分特征缺失不敏感。</li>
+</ol>
+<p>RF的主要缺点有：</p>
+<ol>
+<li>在某些噪音比较大的样本集上，RF模型容易陷入过拟合。</li>
+<li>取值划分比较多的特征容易对RF的决策产生更大的影响，从而影响拟合的模型的效果。</li>
+</ol>
+<hr>
+<p>参考：</p>
+<p>[1]. <a href="https://www.cnblogs.com/pinard/p/6156009.html" target="_blank" rel="noopener">Bagging与随机森林算法原理小结</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/09/10/2018-09-10_Bagging_RandomForest/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/09/12/2018-09-12-GMM_EM/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    高斯混合模型和EM算法
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/09/07/2018-09-07-Boosting/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">AdaBoost 简介【译】</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

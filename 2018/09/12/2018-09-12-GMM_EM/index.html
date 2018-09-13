@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="XP">
 <meta property="og:description" content="一、混合模型（Mixture Model）混合模型是一个可以用来表示在总体分布（distribution）中含有 K 个子分布的概率模型。换句话说，混合模型表示了观测数据在总体中的概率分布，它是一个由 K 个子分布组成的混合分布。混合模型不要求观测数据提供关于子分布的信息，来计算观测数据在总体分布中的概率。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-13T12:18:53.000Z">
+<meta property="og:updated_time" content="2018-09-13T12:27:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高斯混合模型和EM算法">
 <meta name="twitter:description" content="一、混合模型（Mixture Model）混合模型是一个可以用来表示在总体分布（distribution）中含有 K 个子分布的概率模型。换句话说，混合模型表示了观测数据在总体中的概率分布，它是一个由 K 个子分布组成的混合分布。混合模型不要求观测数据提供关于子分布的信息，来计算观测数据在总体分布中的概率。">
@@ -201,7 +201,7 @@ var _hmt = _hmt || [];
 <ul>
 <li>当样本数据 X 是多维数据（Multivariate）时，高斯分布遵从下方概率密度函数：</li>
 </ul>
-<script type="math/tex; mode=display">P(x|\theta)=\frac{1}{(2\pi)^{\frac{D}{2}}|\Sigma|^{\frac{1}{2}}}exp(-\frac{(x-\mu)^T \Sigma^{-1}(x-\mu)}{2})</script><p>其中， $\mu$ 为数据均值（期望）， $\Sigma$ 为协方差（Covariance），D 为数据维度。注意这里的 <code>T 是矩阵转置符号</code>，多维数据 $x-\mu$ 是一个矩阵。</p>
+<script type="math/tex; mode=display">P(x|\theta)=\frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}}exp(-\frac{(x-\mu)^T \Sigma^{-1}(x-\mu)}{2})</script><p>其中， $\mu$ 为数据均值（期望）， $\Sigma$ 为协方差（Covariance），D 为数据维度。注意这里的 <code>T 是矩阵转置符号</code>，多维数据 $x-\mu$ 是一个矩阵。</p>
 <h5 id="2-高斯混合模型"><a href="#2-高斯混合模型" class="headerlink" title="2. 高斯混合模型"></a>2. 高斯混合模型</h5><p>高斯混合模型可以看作是由 K 个<code>单高斯模型</code>组合而成的模型，每个 Gaussian 称为一个“Component”，这 K 个子模型是混合模型的<code>隐变量</code>（Hidden variable）。也就是说我们假设样本中的每个数据都由这 K 个子模型中的某一个生成。一般来说，一个混合模型可以使用任何概率分布，这里使用高斯混合模型是因为高斯分布具备很好的数学性质以及良好的计算性能。下面给出高斯混合模型的数学定义：</p>
 <p>首先定义如下信息：</p>
 <ul>
@@ -215,7 +215,7 @@ var _hmt = _hmt || [];
 <script type="math/tex; mode=display">
 \begin{array}{ll} P(x|\theta)
 & =\sum_{k=1}^{K} \alpha_k \phi(x|\theta_k)\\
-& =\sum_{k=1}^{K} \alpha_k \frac{1}{(2\pi)^{\frac{D}{2}}|\Sigma|_k^{\frac{1}{2}}}exp(-\frac{(x-\mu_k)^T \Sigma_k^{-1}(x-\mu_k)}{2})\\
+& =\sum_{k=1}^{K} \alpha_k \frac{1}{(2\pi)^{D/2}|\Sigma|_k^{1/2}}exp(-\frac{(x-\mu_k)^T \Sigma_k^{-1}(x-\mu_k)}{2})\\
 \end{array}</script><p>对于这个<code>高斯混合模型</code>而言，参数 $\theta = (\tilde{\mu_k}, \tilde{\sigma_k}, \tilde{\alpha_k})$ ，也就是每个子模型的期望、方差（或协方差）、在混合模型中发生的概率。</p>
 <p>根据上面的式子，如果我们要从 GMM 的分布中随机地取一个点的话，实际上可以分为两步：首先随机地在这 K 个 Component 之中选一个，每个 Component 被选中的概率实际上就是它的系数 $\alpha_k$ ，选中了 Component 之后，再单独地考虑从这个 Component 的分布中选取一个点就可以了──这里已经回到了普通的 Gaussian 分布，转化为了已知的问题。</p>
 <p>那么如何用 GMM 来做聚类呢？其实很简单，现在我们有了数据，假定它们是由 GMM 生成出来的，那么我们只要根据数据推出 GMM 的概率分布来就可以了，然后 GMM 的 K 个 Component 实际上就对应了 K 个 cluster 了。根据数据来推算概率密度通常被称作<code>密度估计(density estimation)</code> ，特别地，当<code>我们在已知（或假定）了概率密度函数的形式，而要估计其中的参数的过程被称作“参数估计”</code>。</p>
@@ -239,12 +239,8 @@ var _hmt = _hmt || [];
 <p>这里不具体介绍一般性的 EM 算法（通过 Jensen 不等式得出似然函数的下界 Lower bound，通过极大化下界做到极大化似然函数），只介绍怎么在高斯混合模型里应用从来推算出模型参数。通过 EM 迭代更新高斯混合模型参数的方法如下：</p>
 <p>假设：我们有样本数据 $x_{1}, x_{2}, …,x_{N}$ 和一个有 K 个子模型的高斯混合模型，想要推算出这个高斯混合模型的最佳参数。</p>
 <h5 id="1-首先初始化参数"><a href="#1-首先初始化参数" class="headerlink" title="1. 首先初始化参数"></a>1. 首先初始化参数</h5><h5 id="2-E-step：依据当前参数，计算每个数据-j-来自子模型-k-的可能性"><a href="#2-E-step：依据当前参数，计算每个数据-j-来自子模型-k-的可能性" class="headerlink" title="2. E-step：依据当前参数，计算每个数据 j 来自子模型 k 的可能性"></a>2. E-step：<code>依据当前参数，计算每个数据 j 来自子模型 k 的可能性</code></h5><p>估计数据由每个 Component 生成的概率（并不是每个 Component 被选中的概率）：对于每个数据 $x_i$ 来说，它由第 k 个 Component 生成的概率为：</p>
-<p>$\gamma_{jk} = \frac{\alpha_{k}\phi(x_{j}|\theta_{k})}{\sum_{k=1}^{K}{\alpha_{k}\phi(x_{j}|\theta_{k})}}, j = 1,2,…,N; k = 1,2,…,K$</p>
-<h5 id="3-M-step：计算新一轮迭代的模型参数"><a href="#3-M-step：计算新一轮迭代的模型参数" class="headerlink" title="3. M-step：计算新一轮迭代的模型参数"></a>3. M-step：计算新一轮迭代的<code>模型参数</code></h5><p>估计每个 Component 的参数：现在我们假设上一步中得到的 $\gamma(i, k)$ 就是正确的“数据 $x_i$ 由 Component k 生成的概率”，亦可以当做该 Component 在生成这个数据上所做的贡献。或者说，我们可以看作 $x_i$ 这个值其中有 $\gamma(i, k)x_i$ 这部分是由 Component k 所生成的。集中考虑所有的数据点，现在实际上可以看作 Component 生成了 $\gamma(1, k)x_1, \ldots, \gamma(N, k)x_N$ 这些点。由于每个 Component 都是一个标准的 Gaussian 分布，可以很容易分布<code>求出最大似然所对应的参数</code>值：</p>
-<p>$\mu_{k} = \frac{\sum_{j}^{N}{(\gamma_{jk}}x_{j})}{\sum_{j}^{N}{\gamma_{jk}}}, k=1,2,…,K$</p>
-<p>$\Sigma_{k} = \frac{\sum_{j}^{N}{\gamma_{jk}}(x_{j}-\mu_{k})(x_{j}-\mu_{k})^{T}}{\sum_{j}^{N}{\gamma_{jk}}}, k = 1,2,…,K$ （用这一轮更新后的 $\mu_{k}$</p>
-<p>$\alpha_{k} = \frac{\sum_{j=1}^{N}{\gamma_{jk}}}{N}, k=1,2,…,K$</p>
-<h5 id="4-重复计算-E-step-和-M-step-直至收敛"><a href="#4-重复计算-E-step-和-M-step-直至收敛" class="headerlink" title="4. 重复计算 E-step 和 M-step 直至收敛"></a>4. 重复计算 E-step 和 M-step 直至收敛</h5><p>也就是要求 $||\theta_{i+1} - \theta_{i}|| &lt; \varepsilon$, $\varepsilon$ 是一个很小的正数，表示经过一次迭代之后参数变化非常小。否则重复2，3两步。</p>
+<script type="math/tex; mode=display">\gamma_{jk} = \frac{\alpha_{k}\phi(x_{j}|\theta_{k})}{\sum_{k=1}^{K}{\alpha_{k}\phi(x_{j}|\theta_{k})}}, j = 1,2,...,N; k = 1,2,...,K</script><h5 id="3-M-step：计算新一轮迭代的模型参数"><a href="#3-M-step：计算新一轮迭代的模型参数" class="headerlink" title="3. M-step：计算新一轮迭代的模型参数"></a>3. M-step：计算新一轮迭代的<code>模型参数</code></h5><p>估计每个 Component 的参数：现在我们假设上一步中得到的 $\gamma(i, k)$ 就是正确的“数据 $x_i$ 由 Component k 生成的概率”，亦可以当做该 Component 在生成这个数据上所做的贡献。或者说，我们可以看作 $x_i$ 这个值其中有 $\gamma(i, k)x_i$ 这部分是由 Component k 所生成的。集中考虑所有的数据点，现在实际上可以看作 Component 生成了 $\gamma(1, k)x_1, \ldots, \gamma(N, k)x_N$ 这些点。由于每个 Component 都是一个标准的 Gaussian 分布，可以很容易分布<code>求出最大似然所对应的参数</code>值：</p>
+<script type="math/tex; mode=display">\mu_{k} = \frac{\sum_{j}^{N}{(\gamma_{jk}}x_{j})}{\sum_{j}^{N}{\gamma_{jk}}}, k=1,2,...,K</script><script type="math/tex; mode=display">\Sigma_{k} = \frac{\sum_{j}^{N}{\gamma_{jk}}(x_{j}-\mu_{k})(x_{j}-\mu_{k})^{T}}{\sum_{j}^{N}{\gamma_{jk}}}, k = 1,2,...,K,用这一轮更新后的 \mu_{k}</script><script type="math/tex; mode=display">\alpha_{k} = \frac{\sum_{j=1}^{N}{\gamma_{jk}}}{N}, k=1,2,...,K</script><h5 id="4-重复计算-E-step-和-M-step-直至收敛"><a href="#4-重复计算-E-step-和-M-step-直至收敛" class="headerlink" title="4. 重复计算 E-step 和 M-step 直至收敛"></a>4. 重复计算 E-step 和 M-step 直至收敛</h5><p>也就是要求 $||\theta_{i+1} - \theta_{i}|| &lt; \varepsilon$, $\varepsilon$ 是一个很小的正数，表示经过一次迭代之后参数变化非常小。否则重复2，3两步。</p>
 <p>至此，我们就找到了高斯混合模型的参数。需要注意的是，EM 算法具备收敛性，但并不保证找到全局最大值，有可能找到局部最大值。<code>解决方法是初始化几次不同的参数进行迭代，取结果最好的那次</code>。</p>
 <hr>
 <p>参考：</p>

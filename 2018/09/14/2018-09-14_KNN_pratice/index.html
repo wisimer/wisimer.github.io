@@ -3,20 +3,20 @@
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
-    <title>Git Commit Message Format | XP</title>
+    <title>KNN 实践 | XP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Never leave todays’s work tomorrow.">
-<meta name="keywords" content="ARTS,GIT">
+    <meta name="description" content="先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
+<meta name="keywords" content="KNN">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Git Commit Message Format">
-<meta property="og:url" content="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/index.html">
+<meta property="og:title" content="KNN 实践">
+<meta property="og:url" content="http://ai.wisim.me/2018/09/14/2018-09-14_KNN_pratice/index.html">
 <meta property="og:site_name" content="XP">
-<meta property="og:description" content="Never leave todays’s work tomorrow.">
+<meta property="og:description" content="先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta property="og:updated_time" content="2018-09-14T13:49:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Git Commit Message Format">
-<meta name="twitter:description" content="Never leave todays’s work tomorrow.">
+<meta name="twitter:title" content="KNN 实践">
+<meta name="twitter:description" content="先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
     
 
     
@@ -149,7 +149,7 @@ var _hmt = _hmt || [];
 
         <div class="outer">
             
-            <section id="main"><article id="default-2018-07-06-ARTS_ISSUE_001_t" class="article article-type-default" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-2018-09-14_KNN_pratice" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -157,7 +157,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 class="article-title" itemprop="name">
-            Git Commit Message Format
+            KNN 实践
         </h1>
     
 
@@ -166,8 +166,8 @@ var _hmt = _hmt || [];
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">
-            <time datetime="2018-07-05T16:00:00.000Z" itemprop="datePublished">2018-07-06</time>
+        <a href="/2018/09/14/2018-09-14_KNN_pratice/">
+            <time datetime="2018-09-13T16:00:00.000Z" itemprop="datePublished">2018-09-14</time>
         </a>
     </div>
 
@@ -175,13 +175,13 @@ var _hmt = _hmt || [];
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/FAQ/">FAQ</a>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
     </div>
 
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/GIT/">GIT</a>
+        <a class="tag-link" href="/tags/KNN/">KNN</a>
     </div>
 
                     </div>
@@ -192,32 +192,8 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <blockquote>
-<p>Never leave todays’s work tomorrow.</p>
-</blockquote>
+            <p>先简单回顾一下 KNN 的原理：用<code>距离目标最近的 k 个样本数据的分类</code>来代表目标的分类。</p>
 <a id="more"></a>
-<h3 id="1-Why-need-format"><a href="#1-Why-need-format" class="headerlink" title="1. Why need format"></a>1. Why need format</h3><p>It will benefit ourselves and others.</p>
-<h3 id="2-Specific-format"><a href="#2-Specific-format" class="headerlink" title="2. Specific format"></a>2. Specific format</h3><p>Let’s first see the abstract formula:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;</span><br></pre></td></tr></table></figure>
-<p>example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fix(controller) : nullpointexception</span><br></pre></td></tr></table></figure></p>
-<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><p>It is used to explain the type of this <code>commit</code> and can only be in the following 7 types:</p>
-<ul>
-<li>feat：add new function（feature）of your project.</li>
-<li>fix：fix bugs.</li>
-<li>docs：add documentation.</li>
-<li>style： just modify the style of code,it does’n affect the execution of code.</li>
-<li>refactor：neither feat nor fix,it may affect the execution of code.</li>
-<li>test：add test unit.</li>
-<li>chore：change of build tools or helper and enviroment.</li>
-</ul>
-<h4 id="scope"><a href="#scope" class="headerlink" title="scope"></a>scope</h4><p>It is used to explain the scope of this <code>commit</code>,such as <code>view layer,model layer,controller layer</code> and so on.</p>
-<h4 id="subject"><a href="#subject" class="headerlink" title="subject"></a>subject</h4><p>It is a short description of this <code>commit</code> and it can not be in excess of 50 character.</p>
-<ul>
-<li>start with verb and use first persion present tense,such as change instead of changes nor changed</li>
-<li>make sure the first character should be lower case</li>
-<li>do not add period(.) at the end of your <code>subject</code></li>
-</ul>
-<p>As you see,above tips of <code>subject</code> also follow it’s rules.</p>
 <hr>
 <p>THE END.</p>
 
@@ -267,7 +243,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#comments" class="article-comment-link">评论</a>
+        <a href="http://ai.wisim.me/2018/09/14/2018-09-14_KNN_pratice/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -276,19 +252,19 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
 <nav id="article-nav">
     
-        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_a/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2018/09/14/2018-09-14_Numpy_tile/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    Binary Tree Inorder
+                    Numpy.tile 的作用
                 
             </div>
         </a>
     
     
-        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/09/12/2018-09-12-GMM_EM/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">ARTS ISSUE#001</div>
+            <div class="article-nav-title">高斯混合模型和EM算法</div>
         </a>
     
 </nav>

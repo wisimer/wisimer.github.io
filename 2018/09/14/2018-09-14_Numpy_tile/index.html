@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>Numpy.tile 的作用 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="文档1234567891011numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;lt; d, A">
+<meta name="keywords" content="Numpy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Numpy.tile 的作用">
+<meta property="og:url" content="http://ai.wisim.me/2018/09/14/2018-09-14_Numpy_tile/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="文档1234567891011numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;lt; d, A">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-14T13:49:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Numpy.tile 的作用">
+<meta name="twitter:description" content="文档1234567891011numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;lt; d, A">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-09-14_Numpy_tile" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Numpy.tile 的作用
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/14/2018-09-14_Numpy_tile/">
+            <time datetime="2018-09-13T16:00:00.000Z" itemprop="datePublished">2018-09-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Numpy/">Numpy</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">numpy.tile(A, reps):</span><br><span class="line"></span><br><span class="line">  Construct an array by repeating A the number of times given by reps.</span><br><span class="line"></span><br><span class="line">  If reps has length d, the result will have dimension of max(d, A.ndim).</span><br><span class="line"></span><br><span class="line">  If A.ndim &lt; d, A is promoted to be d-dimensional by prepending new axes. So a shape (3,) array is promoted to (1, 3) for 2-D replication, or shape (1, 1, 3) for 3-D replication. If this is not the desired behavior, promote A to d-dimensions manually before calling this function.</span><br><span class="line"></span><br><span class="line">  If A.ndim &gt; d, reps is promoted to A.ndim by pre-pending 1’s to it. Thus for an A of shape (2, 3, 4, 5), a reps of (2, 2) is treated as (1, 1, 2, 2).</span><br><span class="line"></span><br><span class="line">  Note : Although tile may be used for broadcasting, it is strongly recommended to use numpy’s broadcasting operations and functions.</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p><code>tile</code> 函数有两个参数 A 和 reps。</p>
+<p>tile这个函数是用来构造一个数组，内容按<code>规则 reps</code> 来重复<code>参数 A</code>。</p>
+<p>如果 reps 的长度是 d，那么生成结果的维度是 max(d,A.ndim)。A.ndim 表示参数 A 数组的维度。</p>
+<ol>
+<li><p>如果 A.ndim &lt; d，那就在 A 的前面加上新的维度使其达到 d 维。</p>
+</li>
+<li><p>如果 A.ndim &gt; d，reps 就要在现有元素前面插入1，使它的长度达到 A.ndim。再对 A 进行重复。</p>
+</li>
+</ol>
+<blockquote>
+<p>注意！！！这里的执行顺序很重要：元组 reps 数字从右到左，数组 A 维度从最深维度到最低维度。见下面例子分析。</p>
+</blockquote>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><h5 id="例子-1"><a href="#例子-1" class="headerlink" title="例子 1"></a>例子 1</h5><p>输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">a = np.array([0, 1, 2])</span><br><span class="line">np.tile(a, 2)</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([0, 1, 2, 0, 1, 2])</span><br></pre></td></tr></table></figure>
+<p><br>分析：</p>
+<blockquote>
+<p>这里的参数 A 就是 [0, 1, 2]，维度是 1。参数 reps 是 2，它的长度是1。A.ndim = d，不用改变维度，直接重复 A 两次得到[0, 1, 2, 0, 1, 2]。</p>
+</blockquote>
+<h5 id="例子-2"><a href="#例子-2" class="headerlink" title="例子 2"></a>例子 2</h5><p>输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = np.array([0, 1, 2])</span><br><span class="line">np.tile(a, (2, 2))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([[0, 1, 2, 0, 1, 2],</span><br><span class="line">       [0, 1, 2, 0, 1, 2]])</span><br></pre></td></tr></table></figure>
+<p>分析：</p>
+<blockquote>
+<p>参数 A 还是 [0,1,2]，维度是 1。参数 reps 是 (2, 2)，它的长度是 2。A.ndim &lt; d， max(d,A.ndim)=2，就表示构造的结果要升维变成 2 维了。那么具体是怎么重复A呢？首先第1个维度（最深的维度）重复 A 两次（reps的后面一个2）变为 [[0,1,2,0,1,2]]；然后再将这个结果在第 2 个维度（低维度）重复两次（reps的前面一个2）变为 [[0,1,2,0,1,2],[0,1,2,0,1,2]]。</p>
+</blockquote>
+<h5 id="例子-3"><a href="#例子-3" class="headerlink" title="例子 3"></a>例子 3</h5><p>输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = np.array([0, 1, 2])</span><br><span class="line">np.tile(a, (2, 1, 2))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([[[0, 1, 2, 0, 1, 2]],</span><br><span class="line">       [[0, 1, 2, 0, 1, 2]]])</span><br></pre></td></tr></table></figure>
+<p><br>分析：</p>
+<blockquote>
+<p>参数 A 还是 [0,1,2]，维度是 1。参数 reps 是（2，1，2）它的长度是3。A.ndim &lt; d，max(d,A.ndim)=3，所以构造的结果需要升维到 3。首先在第1维度（最深）重复2次且<code>升维</code>得[[[0,1,2,0,1,2]]]；再在第2维度重复1次，也就是它本身得[[[0,1,2,0,1,2]]]；最后在第3维度（最低）重复2次得[[[0,1,2,0,1,2]],[[0,1,2,0,1,2]]]。</p>
+</blockquote>
+<h5 id="例子-4"><a href="#例子-4" class="headerlink" title="例子 4"></a>例子 4</h5><p>输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b = np.array([[1, 2], [3, 4]])</span><br><span class="line">np.tile(b, 2)</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([[1, 2, 1, 2],</span><br><span class="line">       [3, 4, 3, 4]])</span><br></pre></td></tr></table></figure>
+<p>分析：</p>
+<blockquote>
+<p>参数 A 是 [[1,2], [3,4]]，维度是 2。参数 reps 是 2，长度是1。A.ndim &gt; d，max(d,A.ndim)=2，所以在 reps 前面插入 1得 (1,2)，再对 A 重复。首先第1维（最深维度）重复2次得 [[1,2,1,2],[3,4,3,4]]，再在低维度重复1次也就是它本身[[1,2,1,2],[3,4,3,4]]。</p>
+</blockquote>
+<h5 id="例子-5"><a href="#例子-5" class="headerlink" title="例子 5"></a>例子 5</h5><p>输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b = np.array([[1, 2], [3, 4]])</span><br><span class="line">np.tile(b, (2, 1))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array([[1, 2],</span><br><span class="line">       [3, 4],</span><br><span class="line">       [1, 2],</span><br><span class="line">       [3, 4]])</span><br></pre></td></tr></table></figure>
+<p>分析：</p>
+<blockquote>
+<p>参数 A 是 [[1, 2], [3, 4]]，维度是 2。参数 reps 是(2, 1)，长度是2。A.ndim = d，不用升维。首先重复1次得本身 [[1, 2], [3, 4]]，再在低维度重复两次得 [[1, 2], [3, 4],[1, 2], [3, 4]]</p>
+</blockquote>
+<h5 id="例子-6"><a href="#例子-6" class="headerlink" title="例子 6"></a>例子 6</h5><p>输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c = np.array([1,2,3,4])</span><br><span class="line">np.tile(c,(4,1))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array([[1, 2, 3, 4],</span><br><span class="line">       [1, 2, 3, 4],</span><br><span class="line">       [1, 2, 3, 4],</span><br><span class="line">       [1, 2, 3, 4]])</span><br></pre></td></tr></table></figure>
+<p>分析：</p>
+<blockquote>
+<p>参数 A 是 [1,2,3,4]，维度是 1。参数 reps 是 (4,1)，长度是 2。A.ndim &lt; d，max(d,A.ndim)=2，结果需要升维到2。首先在深维度重复1次得本身[[1,2,3,4]]，再在浅维度重复4次得[[1,2,3,4],[1,2,3,4],[1,2,3,4],[1,2,3,4]]。</p>
+</blockquote>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/09/14/2018-09-14_Numpy_tile/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/09/14/2018-09-14_KNN_pratice/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">KNN 实践</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="XP">
 <meta property="og:description" content="文档1234567891011numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;lt; d, A">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-14T13:49:14.000Z">
+<meta property="og:updated_time" content="2018-09-16T10:28:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Numpy.tile 的作用">
 <meta name="twitter:description" content="文档1234567891011numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;lt; d, A">
@@ -195,7 +195,7 @@ var _hmt = _hmt || [];
             <h4 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">numpy.tile(A, reps):</span><br><span class="line"></span><br><span class="line">  Construct an array by repeating A the number of times given by reps.</span><br><span class="line"></span><br><span class="line">  If reps has length d, the result will have dimension of max(d, A.ndim).</span><br><span class="line"></span><br><span class="line">  If A.ndim &lt; d, A is promoted to be d-dimensional by prepending new axes. So a shape (3,) array is promoted to (1, 3) for 2-D replication, or shape (1, 1, 3) for 3-D replication. If this is not the desired behavior, promote A to d-dimensions manually before calling this function.</span><br><span class="line"></span><br><span class="line">  If A.ndim &gt; d, reps is promoted to A.ndim by pre-pending 1’s to it. Thus for an A of shape (2, 3, 4, 5), a reps of (2, 2) is treated as (1, 1, 2, 2).</span><br><span class="line"></span><br><span class="line">  Note : Although tile may be used for broadcasting, it is strongly recommended to use numpy’s broadcasting operations and functions.</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p><code>tile</code> 函数有两个参数 A 和 reps。</p>
-<p>tile这个函数是用来构造一个数组，内容按<code>规则 reps</code> 来重复<code>参数 A</code>。</p>
+<p>tile这个函数是用来构造一个数组，内容按<code>规则 reps (元组)</code> 来重复<code>参数 A (数组)</code>。</p>
 <p>如果 reps 的长度是 d，那么生成结果的维度是 max(d,A.ndim)。A.ndim 表示参数 A 数组的维度。</p>
 <ol>
 <li><p>如果 A.ndim &lt; d，那就在 A 的前面加上新的维度使其达到 d 维。</p>
@@ -204,13 +204,13 @@ var _hmt = _hmt || [];
 </li>
 </ol>
 <blockquote>
-<p>注意！！！这里的执行顺序很重要：元组 reps 数字从右到左，数组 A 维度从最深维度到最低维度。见下面例子分析。</p>
+<p>注意！！！这里的执行顺序很重要：元组 reps 数字从左到右，数组 A 维度从最低（外层）维度到最高（内层）维度。见下面例子分析。</p>
 </blockquote>
 <h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><h5 id="例子-1"><a href="#例子-1" class="headerlink" title="例子 1"></a>例子 1</h5><p>输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">a = np.array([0, 1, 2])</span><br><span class="line">np.tile(a, 2)</span><br></pre></td></tr></table></figure>
 <p>输出：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([0, 1, 2, 0, 1, 2])</span><br></pre></td></tr></table></figure>
-<p><br>分析：</p>
+<p>分析：</p>
 <blockquote>
 <p>这里的参数 A 就是 [0, 1, 2]，维度是 1。参数 reps 是 2，它的长度是1。A.ndim = d，不用改变维度，直接重复 A 两次得到[0, 1, 2, 0, 1, 2]。</p>
 </blockquote>
@@ -220,23 +220,23 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([[0, 1, 2, 0, 1, 2],</span><br><span class="line">       [0, 1, 2, 0, 1, 2]])</span><br></pre></td></tr></table></figure>
 <p>分析：</p>
 <blockquote>
-<p>参数 A 还是 [0,1,2]，维度是 1。参数 reps 是 (2, 2)，它的长度是 2。A.ndim &lt; d， max(d,A.ndim)=2，就表示构造的结果要升维变成 2 维了。那么具体是怎么重复A呢？首先第1个维度（最深的维度）重复 A 两次（reps的后面一个2）变为 [[0,1,2,0,1,2]]；然后再将这个结果在第 2 个维度（低维度）重复两次（reps的前面一个2）变为 [[0,1,2,0,1,2],[0,1,2,0,1,2]]。</p>
+<p>参数 A 还是 [0,1,2]，维度是 1。参数 reps 是 (2, 2)，它的长度是 2。A.ndim &lt; d， max(d,A.ndim)=2，就表示构造的结果要升维变成 2 维了。那么具体是怎么重复A呢？首先第1个维度（最低维度）重复 A 两次（reps的第一个2），同时升为2维，变为 [[0,1,2,0,1,2]]；然后再将这个结果在第 2 个维度（高维度）重复两次（reps的第二个2）变为 [[0,1,2,0,1,2],[0,1,2,0,1,2]]。</p>
 </blockquote>
 <h5 id="例子-3"><a href="#例子-3" class="headerlink" title="例子 3"></a>例子 3</h5><p>输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = np.array([0, 1, 2])</span><br><span class="line">np.tile(a, (2, 1, 2))</span><br></pre></td></tr></table></figure>
 <p>输出：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([[[0, 1, 2, 0, 1, 2]],</span><br><span class="line">       [[0, 1, 2, 0, 1, 2]]])</span><br></pre></td></tr></table></figure>
-<p><br>分析：</p>
+<p>分析：</p>
 <blockquote>
-<p>参数 A 还是 [0,1,2]，维度是 1。参数 reps 是（2，1，2）它的长度是3。A.ndim &lt; d，max(d,A.ndim)=3，所以构造的结果需要升维到 3。首先在第1维度（最深）重复2次且<code>升维</code>得[[[0,1,2,0,1,2]]]；再在第2维度重复1次，也就是它本身得[[[0,1,2,0,1,2]]]；最后在第3维度（最低）重复2次得[[[0,1,2,0,1,2]],[[0,1,2,0,1,2]]]。</p>
+<p>参数 A 还是 [0,1,2]，维度是 1。参数 reps 是（2，1，2）它的长度是3。A.ndim &lt; d，max(d,A.ndim)=3，所以构造的结果需要升维到 3。首先在第1维度（最低维度）重复2次且<code>升维</code>得[[[0,1,2,0,1,2]]]；再在第2维度重复1次，也就是它本身得[[[0,1,2,0,1,2]]]；最后在第3维度（最高）重复2次得[[[0,1,2,0,1,2]],[[0,1,2,0,1,2]]]。</p>
 </blockquote>
 <h5 id="例子-4"><a href="#例子-4" class="headerlink" title="例子 4"></a>例子 4</h5><p>输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b = np.array([[1, 2], [3, 4]])</span><br><span class="line">np.tile(b, 2)</span><br></pre></td></tr></table></figure>
 <p>输出：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([[1, 2, 1, 2],</span><br><span class="line">       [3, 4, 3, 4]])</span><br></pre></td></tr></table></figure>
-<p>分析：</p>
+<p>分析：</p>
 <blockquote>
-<p>参数 A 是 [[1,2], [3,4]]，维度是 2。参数 reps 是 2，长度是1。A.ndim &gt; d，max(d,A.ndim)=2，所以在 reps 前面插入 1得 (1,2)，再对 A 重复。首先第1维（最深维度）重复2次得 [[1,2,1,2],[3,4,3,4]]，再在低维度重复1次也就是它本身[[1,2,1,2],[3,4,3,4]]。</p>
+<p>参数 A 是 [[1,2], [3,4]]，维度是 2。参数 reps 是 2，长度是1。A.ndim &gt; d，max(d,A.ndim)=2，所以在 reps 前面插入 1 得 (1,2)，再对 A 重复。首先第1维（最低维度）重复1次得 [[1, 2], [3, 4]] ，再在高维度重复2次得 [[1,2,1,2],[3,4,3,4]] 。</p>
 </blockquote>
 <h5 id="例子-5"><a href="#例子-5" class="headerlink" title="例子 5"></a>例子 5</h5><p>输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b = np.array([[1, 2], [3, 4]])</span><br><span class="line">np.tile(b, (2, 1))</span><br></pre></td></tr></table></figure>
@@ -244,7 +244,7 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array([[1, 2],</span><br><span class="line">       [3, 4],</span><br><span class="line">       [1, 2],</span><br><span class="line">       [3, 4]])</span><br></pre></td></tr></table></figure>
 <p>分析：</p>
 <blockquote>
-<p>参数 A 是 [[1, 2], [3, 4]]，维度是 2。参数 reps 是(2, 1)，长度是2。A.ndim = d，不用升维。首先重复1次得本身 [[1, 2], [3, 4]]，再在低维度重复两次得 [[1, 2], [3, 4],[1, 2], [3, 4]]</p>
+<p>参数 A 是 [[1, 2], [3, 4]]，维度是 2。参数 reps 是(2, 1)，长度是2。A.ndim = d，不用升维。首先低维度重复2次得 [[1, 2], [3, 4],[1, 2], [3, 4]]，再在高维度重复1次得  [[1, 2], [3, 4],[1, 2], [3, 4]]</p>
 </blockquote>
 <h5 id="例子-6"><a href="#例子-6" class="headerlink" title="例子 6"></a>例子 6</h5><p>输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c = np.array([1,2,3,4])</span><br><span class="line">np.tile(c,(4,1))</span><br></pre></td></tr></table></figure>
@@ -252,7 +252,7 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array([[1, 2, 3, 4],</span><br><span class="line">       [1, 2, 3, 4],</span><br><span class="line">       [1, 2, 3, 4],</span><br><span class="line">       [1, 2, 3, 4]])</span><br></pre></td></tr></table></figure>
 <p>分析：</p>
 <blockquote>
-<p>参数 A 是 [1,2,3,4]，维度是 1。参数 reps 是 (4,1)，长度是 2。A.ndim &lt; d，max(d,A.ndim)=2，结果需要升维到2。首先在深维度重复1次得本身[[1,2,3,4]]，再在浅维度重复4次得[[1,2,3,4],[1,2,3,4],[1,2,3,4],[1,2,3,4]]。</p>
+<p>参数 A 是 [1,2,3,4]，维度是 1。参数 reps 是 (4,1)，长度是 2。A.ndim &lt; d，max(d,A.ndim)=2，结果需要升维到2。首先在低维度重复4次得 [[1,2,3,4],[1,2,3,4],[1,2,3,4],[1,2,3,4]]，再在高维度重复1次得 [[1,2,3,4],[1,2,3,4],[1,2,3,4],[1,2,3,4]]。</p>
 </blockquote>
 <hr>
 <p>THE END.</p>
@@ -311,6 +311,15 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     
         
 <nav id="article-nav">
+    
+        <a href="/2018/09/16/2018-09-16_Perceptron_pratice/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    感知器 实践
+                
+            </div>
+        </a>
     
     
         <a href="/2018/09/14/2018-09-14_KNN_pratice/" id="article-nav-older" class="article-nav-link-wrap">

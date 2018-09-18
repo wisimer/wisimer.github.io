@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>sklearn.model_selection 交叉验证 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言1. 什么是交叉验证法？它的基本思想就是将原始数据（dataset）进行分组，一部分做为训练集来训练模型，另一部分做为测试集来评价模型。 2. 为什么用交叉验证法？交叉验证用于评估模型的预测性能，尤其是训练好的模型在新数据上的表现。交叉验证本身只能用于评估，但是可以对比不同 Model 或者参数对结构准确度的影响。然后可以根据验证得出的数据进行调参，也可以在一定程度上减小过拟合。">
+<meta name="keywords" content="ML,sklearn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sklearn.model_selection 交叉验证">
+<meta property="og:url" content="http://ai.wisim.me/2018/09/17/2018-09-17_sklearn_model_selection/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="前言1. 什么是交叉验证法？它的基本思想就是将原始数据（dataset）进行分组，一部分做为训练集来训练模型，另一部分做为测试集来评价模型。 2. 为什么用交叉验证法？交叉验证用于评估模型的预测性能，尤其是训练好的模型在新数据上的表现。交叉验证本身只能用于评估，但是可以对比不同 Model 或者参数对结构准确度的影响。然后可以根据验证得出的数据进行调参，也可以在一定程度上减小过拟合。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0917_knn_cross_val.png">
+<meta property="og:updated_time" content="2018-09-18T08:52:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sklearn.model_selection 交叉验证">
+<meta name="twitter:description" content="前言1. 什么是交叉验证法？它的基本思想就是将原始数据（dataset）进行分组，一部分做为训练集来训练模型，另一部分做为测试集来评价模型。 2. 为什么用交叉验证法？交叉验证用于评估模型的预测性能，尤其是训练好的模型在新数据上的表现。交叉验证本身只能用于评估，但是可以对比不同 Model 或者参数对结构准确度的影响。然后可以根据验证得出的数据进行调参，也可以在一定程度上减小过拟合。">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1809/0917_knn_cross_val.png">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-09-17_sklearn_model_selection" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            sklearn.model_selection 交叉验证
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/17/2018-09-17_sklearn_model_selection/">
+            <time datetime="2018-09-16T16:00:00.000Z" itemprop="datePublished">2018-09-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/sklearn/">sklearn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ML/">ML</a>, <a class="tag-link" href="/tags/sklearn/">sklearn</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><h5 id="1-什么是交叉验证法？"><a href="#1-什么是交叉验证法？" class="headerlink" title="1. 什么是交叉验证法？"></a>1. 什么是交叉验证法？</h5><p>它的基本思想就是将原始数据（dataset）进行分组，一部分做为训练集来训练模型，另一部分做为测试集来评价模型。</p>
+<h5 id="2-为什么用交叉验证法？"><a href="#2-为什么用交叉验证法？" class="headerlink" title="2. 为什么用交叉验证法？"></a>2. 为什么用交叉验证法？</h5><p><code>交叉验证</code>用于评估模型的<code>预测性能</code>，尤其是训练好的模型在新数据上的表现。交叉验证本身只能用于评估，但是可以对比不同 Model 或者参数对结构准确度的影响。然后可以根据验证得出的数据进行调参，也可以在一定程度上减小过拟合。</p>
+<a id="more"></a>
+<p>Sklearn 中的 Cross Validation (交叉验证)对于我们选择正确的 Model 和 Model 的参数是非常有帮助的， 有了他的帮助，我们能直观的看出不同 Model 或者参数对结构准确度的影响。</p>
+<h4 id="一、基础验证"><a href="#一、基础验证" class="headerlink" title="一、基础验证"></a>一、基础验证</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.datasets import load_iris # iris数据集</span><br><span class="line">from sklearn.model_selection import train_test_split # 分割数据模块</span><br><span class="line">from sklearn.neighbors import KNeighborsClassifier # K最近邻(kNN，k-NearestNeighbor)分类算法</span><br><span class="line"></span><br><span class="line">#加载iris数据集</span><br><span class="line">iris = load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line">#分割数据并</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=4)</span><br><span class="line"></span><br><span class="line">#建立模型</span><br><span class="line">knn = KNeighborsClassifier()</span><br><span class="line"></span><br><span class="line">#训练模型</span><br><span class="line">knn.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">#将准确率打印出</span><br><span class="line">print(knn.score(X_test, y_test))</span><br><span class="line"># 0.973684210526</span><br></pre></td></tr></table></figure>
+<p>可以看到这里我们先使用 KNN 分类训练数据之后，再用测试集测试，最后直接调用 <code>knn.score</code>，通过 KNN 自带的基础验证的准确率为0.973684210526。</p>
+<h4 id="二、Model-交叉验证法-Cross-Validation"><a href="#二、Model-交叉验证法-Cross-Validation" class="headerlink" title="二、Model 交叉验证法(Cross Validation)"></a>二、Model 交叉验证法(Cross Validation)</h4><p>主要就是使用 <code>sklearn.cross_validation</code> 这个模块</p>
+<h5 id="1-sklearn-model-selection-cross-val-score"><a href="#1-sklearn-model-selection-cross-val-score" class="headerlink" title="1. sklearn.model_selection.cross_val_score"></a>1. sklearn.model_selection.cross_val_score</h5><p>文档：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sklearn.model_selection.cross_val_score(estimator, X, y=None, groups=None, scoring=None, cv=None, n_jobs=1, verbose=0, fit_params=None, pre_dispatch=&apos;2*n_jobs&apos;)</span><br><span class="line"></span><br><span class="line">Evaluate a score by cross-validation</span><br></pre></td></tr></table></figure>
+<p><code>cross_val_score</code> 是用来进行交叉验证的。它有如下参数：</p>
+<ul>
+<li><code>estimator</code> ： 实现了 <code>fit</code> 接口的预测器，也就是我们的模型</li>
+<li><code>X</code> ： 要拟合的数据</li>
+<li><code>y</code> ： 标签</li>
+<li><code>groups</code> ： 分割后的数据每一组的群组标签</li>
+<li><code>cv</code> ： 交叉验证生成器，决定分割验证的策略。有四个可选值： None（默认使用 3 折叠交叉验证），integer（指定 StratifiedKFold 的k值大小），对象，迭代。</li>
+<li><code>n_jobs</code> ： 用于计算的 CPU 的数量，默认1，如果是 -1 则表示用上所有 CPU</li>
+<li><code>verbose</code> ： The verbosity level.</li>
+<li><code>fit_params</code> ： 从预测器传递给拟合方法的参数</li>
+<li><code>pre_dispatch</code> ： 任务的个数</li>
+</ul>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.cross_validation import cross_val_score # K折交叉验证模块</span><br><span class="line"></span><br><span class="line">#使用K折交叉验证模块，参数 cv 为5，表示直接使用 5 折 StratifiedKFold 交叉验证</span><br><span class="line">scores = cross_val_score(knn, X, y, cv=5, scoring=&apos;accuracy&apos;)</span><br><span class="line"></span><br><span class="line">#将5次的预测准确率打印出</span><br><span class="line">print(scores)</span><br><span class="line"># [ 0.96666667  1.  0.93333333  0.96666667  1. ]</span><br><span class="line"></span><br><span class="line">#将5次的预测准确平均率打印出</span><br><span class="line">print(scores.mean())</span><br><span class="line"># 0.973333333333</span><br></pre></td></tr></table></figure>
+<p>可以看到交叉验证的准确平均率为0.973333333333</p>
+<h5 id="2-class-sklearn-model-selection-KFold"><a href="#2-class-sklearn-model-selection-KFold" class="headerlink" title="2. class sklearn.model_selection.KFold"></a>2. class sklearn.model_selection.KFold</h5><p>此外我们可以使用 <code>KFold</code> 类自己构造一个 K 折交叉验证器。</p>
+<p>文档：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class sklearn.model_selection.KFold(n_splits=3, shuffle=False, random_state=None)</span><br><span class="line"></span><br><span class="line">K-Folds cross-validator</span><br><span class="line"></span><br><span class="line">Provides train/test indices to split data in train/test sets. Split dataset into k consecutive folds (without shuffling by default).</span><br><span class="line"></span><br><span class="line">Each fold is then used once as a validation while the k - 1 remaining folds form the training set.</span><br></pre></td></tr></table></figure>
+<p>很显然，<code>KFold</code>这个类是用来分离数据的。可以讲数据集分割成 k-1 个训练集和 1 个测试集。它有三个参数：</p>
+<ul>
+<li><code>n_splits</code> ： 表示分为几个数据子集</li>
+<li><code>shuffle</code> ： 要不要打乱数据顺序呢，默认为 False</li>
+<li><code>random_state</code> ： 打乱数据顺序所用的种子，默认不使用</li>
+</ul>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 实例化一个 k 折叠分割器</span><br><span class="line">kfold = model_selection.KFold(n_splits=10, random_state=7)</span><br><span class="line">print(kfold)</span><br><span class="line"></span><br><span class="line"># 验证模型</span><br><span class="line">results = model_selection.cross_val_score(knn, X_test, y_test, cv=kfold)</span><br><span class="line">print(results.mean())</span><br><span class="line"># 0.9</span><br></pre></td></tr></table></figure>
+<p>可以看到10折交叉验证的准确平均率为0.9</p>
+<h4 id="三、以准确率-accuracy-判断"><a href="#三、以准确率-accuracy-判断" class="headerlink" title="三、以准确率(accuracy)判断"></a>三、以准确率(accuracy)判断</h4><p><code>上面验证只是得出某种参数情况下的模型的性能，如果想要横向对比不同参数时模型性能的话则需要多次验证再做对比。</code></p>
+<p>这里使用 KNN 分类器来举例，一般来说<code>准确率(accuracy)</code>会用于判断分类模型的好坏。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from sklearn import model_selection</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line">#加载iris数据集</span><br><span class="line">iris = load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line">#建立测试参数集</span><br><span class="line">k_range = range(1, 31)</span><br><span class="line"></span><br><span class="line">k_scores = []</span><br><span class="line"></span><br><span class="line">#通过迭代的方式来计算不同参数对模型的影响，并返回交叉验证后的平均准确率。</span><br><span class="line">for k in k_range:</span><br><span class="line">    knn = KNeighborsClassifier(n_neighbors=k) # 这里通过改变 KNN 的 K 值来测试分类精度</span><br><span class="line">    scores = model_selection.cross_val_score(knn, X, y, cv=10, scoring=&apos;accuracy&apos;)</span><br><span class="line">    k_scores.append(scores.mean())</span><br><span class="line"></span><br><span class="line">#可视化数据</span><br><span class="line">plt.plot(k_range, k_scores)</span><br><span class="line">plt.xlabel(&apos;Value of K for KNN&apos;)</span><br><span class="line">plt.ylabel(&apos;Cross-Validated Accuracy&apos;)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/src/imgs/1809/0917_knn_cross_val.png" alt="KNN cross val"></p>
+<p>从图中可以得知，选择12~20的k值最好。高过20之后，准确率开始下降则是因为过拟合(Over fitting)的问题。</p>
+<p>其实这里就是通过调整不同的 K值来调整 KNN 的分类性能，然后使用交叉验证来直观地显示分类的准确性，也就可以找出一个最佳 K 值使得 KNN 性能最高。</p>
+<p>当然， <code>model_selection.cross_val_score</code> 方法的 <code>scoring</code> 参数也可以使用 <code>mean_squared_error(平均方差)</code>。得到的结果和使用 <code>accuracy</code> 相差不多。</p>
+<hr>
+<p>参考：</p>
+<p>[1]. <a href="https://morvanzhou.github.io/tutorials/machine-learning/sklearn/3-2-cross-validation1/" target="_blank" rel="noopener">交叉验证</a></p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/09/17/2018-09-17_sklearn_model_selection/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/09/17/2018-09-17_sklearn_tricks/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">sklearn 技巧</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

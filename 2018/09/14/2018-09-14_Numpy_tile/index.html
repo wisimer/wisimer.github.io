@@ -3,20 +3,20 @@
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
-    <title>Numpy.tile 的作用 | XP</title>
+    <title>Numpy.tile() 函数的作用 | XP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="文档1234567891011numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;lt; d, A">
-<meta name="keywords" content="Numpy">
+    <meta name="description" content="一、文档1234567891011121314numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;l">
+<meta name="keywords" content="Numpy,ML">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Numpy.tile 的作用">
+<meta property="og:title" content="Numpy.tile() 函数的作用">
 <meta property="og:url" content="http://ai.wisim.me/2018/09/14/2018-09-14_Numpy_tile/index.html">
 <meta property="og:site_name" content="XP">
-<meta property="og:description" content="文档1234567891011numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;lt; d, A">
+<meta property="og:description" content="一、文档1234567891011121314numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;l">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-16T10:28:10.000Z">
+<meta property="og:updated_time" content="2018-09-17T07:58:04.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Numpy.tile 的作用">
-<meta name="twitter:description" content="文档1234567891011numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;lt; d, A">
+<meta name="twitter:title" content="Numpy.tile() 函数的作用">
+<meta name="twitter:description" content="一、文档1234567891011121314numpy.tile(A, reps):  Construct an array by repeating A the number of times given by reps.  If reps has length d, the result will have dimension of max(d, A.ndim).  If A.ndim &amp;l">
     
 
     
@@ -157,7 +157,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 class="article-title" itemprop="name">
-            Numpy.tile 的作用
+            Numpy.tile() 函数的作用
         </h1>
     
 
@@ -175,13 +175,13 @@ var _hmt = _hmt || [];
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/ML/">ML</a>
+        <a class="article-category-link" href="/categories/Numpy/">Numpy</a>
     </div>
 
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Numpy/">Numpy</a>
+        <a class="tag-link" href="/tags/ML/">ML</a>, <a class="tag-link" href="/tags/Numpy/">Numpy</a>
     </div>
 
                     </div>
@@ -192,9 +192,9 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h4 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">numpy.tile(A, reps):</span><br><span class="line"></span><br><span class="line">  Construct an array by repeating A the number of times given by reps.</span><br><span class="line"></span><br><span class="line">  If reps has length d, the result will have dimension of max(d, A.ndim).</span><br><span class="line"></span><br><span class="line">  If A.ndim &lt; d, A is promoted to be d-dimensional by prepending new axes. So a shape (3,) array is promoted to (1, 3) for 2-D replication, or shape (1, 1, 3) for 3-D replication. If this is not the desired behavior, promote A to d-dimensions manually before calling this function.</span><br><span class="line"></span><br><span class="line">  If A.ndim &gt; d, reps is promoted to A.ndim by pre-pending 1’s to it. Thus for an A of shape (2, 3, 4, 5), a reps of (2, 2) is treated as (1, 1, 2, 2).</span><br><span class="line"></span><br><span class="line">  Note : Although tile may be used for broadcasting, it is strongly recommended to use numpy’s broadcasting operations and functions.</span><br></pre></td></tr></table></figure>
+            <h4 id="一、文档"><a href="#一、文档" class="headerlink" title="一、文档"></a>一、文档</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">numpy.tile(A, reps):</span><br><span class="line"></span><br><span class="line">  Construct an array by repeating A the number of times given by reps.</span><br><span class="line"></span><br><span class="line">  If reps has length d, the result will have dimension of max(d, A.ndim).</span><br><span class="line"></span><br><span class="line">  If A.ndim &lt; d, A is promoted to be d-dimensional by prepending new axes. </span><br><span class="line">  So a shape (3,) array is promoted to (1, 3) for 2-D replication, or shape (1, 1, 3) for 3-D replication. </span><br><span class="line">  If this is not the desired behavior, promote A to d-dimensions manually before calling this function.</span><br><span class="line"></span><br><span class="line">  If A.ndim &gt; d, reps is promoted to A.ndim by pre-pending 1’s to it. </span><br><span class="line">  Thus for an A of shape (2, 3, 4, 5), a reps of (2, 2) is treated as (1, 1, 2, 2).</span><br><span class="line"></span><br><span class="line">  Note : Although tile may be used for broadcasting, it is strongly recommended to use numpy’s broadcasting operations and functions.</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p><code>tile</code> 函数有两个参数 A 和 reps。</p>
+<h4 id="二、说明"><a href="#二、说明" class="headerlink" title="二、说明"></a>二、说明</h4><p><code>tile</code> 函数有两个参数 A 和 reps。</p>
 <p>tile这个函数是用来构造一个数组，内容按<code>规则 reps (元组)</code> 来重复<code>参数 A (数组)</code>。</p>
 <p>如果 reps 的长度是 d，那么生成结果的维度是 max(d,A.ndim)。A.ndim 表示参数 A 数组的维度。</p>
 <ol>
@@ -206,7 +206,7 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>注意！！！这里的执行顺序很重要：元组 reps 数字从左到右，数组 A 维度从最低（外层）维度到最高（内层）维度。见下面例子分析。</p>
 </blockquote>
-<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><h5 id="例子-1"><a href="#例子-1" class="headerlink" title="例子 1"></a>例子 1</h5><p>输入：</p>
+<h4 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h4><h5 id="例子-1"><a href="#例子-1" class="headerlink" title="例子 1"></a>例子 1</h5><p>输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">a = np.array([0, 1, 2])</span><br><span class="line">np.tile(a, 2)</span><br></pre></td></tr></table></figure>
 <p>输出：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([0, 1, 2, 0, 1, 2])</span><br></pre></td></tr></table></figure>
@@ -312,19 +312,19 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
 <nav id="article-nav">
     
-        <a href="/2018/09/16/2018-09-16_Perceptron_pratice/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2018/09/14/2018-09-14_KNN_pratice/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    感知器 实践
+                    KNN 实践
                 
             </div>
         </a>
     
     
-        <a href="/2018/09/14/2018-09-14_KNN_pratice/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/09/12/2018-09-12-GMM_EM/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">KNN 实践</div>
+            <div class="article-nav-title">高斯混合模型和EM算法</div>
         </a>
     
 </nav>

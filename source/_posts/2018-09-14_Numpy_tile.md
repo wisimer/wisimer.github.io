@@ -1,11 +1,11 @@
 ---
-title: Numpy.tile 的作用
+title: Numpy.tile() 函数的作用
 date: 2018-09-14
-categories: ML
-tags: [Numpy]
+categories: Numpy
+tags: [Numpy,ML]
 ---
 
-#### 文档
+#### 一、文档
 
 ```
 numpy.tile(A, reps):
@@ -14,16 +14,19 @@ numpy.tile(A, reps):
 
   If reps has length d, the result will have dimension of max(d, A.ndim).
 
-  If A.ndim < d, A is promoted to be d-dimensional by prepending new axes. So a shape (3,) array is promoted to (1, 3) for 2-D replication, or shape (1, 1, 3) for 3-D replication. If this is not the desired behavior, promote A to d-dimensions manually before calling this function.
+  If A.ndim < d, A is promoted to be d-dimensional by prepending new axes. 
+  So a shape (3,) array is promoted to (1, 3) for 2-D replication, or shape (1, 1, 3) for 3-D replication. 
+  If this is not the desired behavior, promote A to d-dimensions manually before calling this function.
 
-  If A.ndim > d, reps is promoted to A.ndim by pre-pending 1’s to it. Thus for an A of shape (2, 3, 4, 5), a reps of (2, 2) is treated as (1, 1, 2, 2).
+  If A.ndim > d, reps is promoted to A.ndim by pre-pending 1’s to it. 
+  Thus for an A of shape (2, 3, 4, 5), a reps of (2, 2) is treated as (1, 1, 2, 2).
 
   Note : Although tile may be used for broadcasting, it is strongly recommended to use numpy’s broadcasting operations and functions.
 ```
 
 <!--more-->
 
-#### 说明
+#### 二、说明
 
 `tile` 函数有两个参数 A 和 reps。
 
@@ -38,7 +41,7 @@ tile这个函数是用来构造一个数组，内容按`规则 reps (元组)` �
 > 注意！！！这里的执行顺序很重要：元组 reps 数字从左到右，数组 A 维度从最低（外层）维度到最高（内层）维度。见下面例子分析。
 
 
-#### 例子
+#### 三、例子
 
 ##### 例子 1
 

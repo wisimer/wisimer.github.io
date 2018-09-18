@@ -111,7 +111,7 @@ extra trees是RF的一个变种, 原理几乎和RF一模一样，仅有区别有
 
 从第二点可以看出，由于随机选择了特征值的划分点位，而不是最优点位，这样会导致生成的决策树的规模一般会大于RF所生成的决策树。也就是说，`模型的方差相对于RF进一步减少，但是偏差相对于RF进一步增大`。在某些时候，extra trees的泛化能力比RF更好。
 
-#### 2. Totally Random Trees Embedding
+##### 2. Totally Random Trees Embedding
 
 Totally Random Trees Embedding(以下简称 TRTE)是一种非监督学习的数据转化方法。它将`低维的数据集映射到高维`，从而让映射到高维的数据更好的运用于分类回归模型。我们知道，在支持向量机中运用了核方法来将低维的数据集映射到高维，此处TRTE提供了另外一种方法。
 

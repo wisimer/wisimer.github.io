@@ -148,7 +148,7 @@ var _hmt = _hmt || [];
         <div class="outer">
             
             <section id="main">
-    <article id="default-2014-08-15-AndroidWidgetPreview" class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2014-08-08-AndroidBroadcastReceiverPreview" class="article article-type-default" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -156,7 +156,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 itemprop="name">
-            <a class="article-title" href="/2014/08/15/2014-08-15-AndroidWidgetPreview/">桌面插件AppWidget初探</a>
+            <a class="article-title" href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/">BroadcastReceiver 的简单使用</a>
         </h1>
     
 
@@ -165,8 +165,8 @@ var _hmt = _hmt || [];
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2014/08/15/2014-08-15-AndroidWidgetPreview/">
-            <time datetime="2014-08-14T16:00:00.000Z" itemprop="datePublished">2014-08-15</time>
+        <a href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/">
+            <time datetime="2014-08-07T16:00:00.000Z" itemprop="datePublished">2014-08-08</time>
         </a>
     </div>
 
@@ -185,10 +185,11 @@ var _hmt = _hmt || [];
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><p>解析一个最基本的桌面插件的构成</p>
-<h4 id="1-Widget的配置文件，在-res-xml-目录下新建music-provider-xml文件"><a href="#1-Widget的配置文件，在-res-xml-目录下新建music-provider-xml文件" class="headerlink" title="1.Widget的配置文件，在/res/xml/目录下新建music_provider.xml文件"></a>1.Widget的配置文件，在/res/xml/目录下新建music_provider.xml文件</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line">&lt;appwidget-provider xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    android:minWidth=<span class="string">"260dip"</span></span><br><span class="line">    android:minHeight=<span class="string">"40dip"</span></span><br><span class="line">    android:initialLayout=<span class="string">"@layout/music_layout"</span>&gt;</span><br><span class="line">&lt;/appwidget-provider&gt;</span><br></pre></td></tr></table></figure></p>
+            <p><p>和 Activity 以及 Service 一样，BroadcastReceiver同属Android的四大组件。</p>
+<p>有时候用 BroadcastReceiver 可以轻易解决很纠结的问题。</p>
+<h4 id="1-继承BroadcastReceiver实现一个广播接受者MyReceiver"><a href="#1-继承BroadcastReceiver实现一个广播接受者MyReceiver" class="headerlink" title="1.继承BroadcastReceiver实现一个广播接受者MyReceiver"></a>1.继承BroadcastReceiver实现一个广播接受者MyReceiver</h4><p>可以重写onReceive(Context context,Intent intent)方法,在方法里面通过intent.getExtras()方法获取intenet中传递过来的数据</p></p>
             <p class="article-more-link">
-                <a href="/2014/08/15/2014-08-15-AndroidWidgetPreview/#more">查看更多</a>
+                <a href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/#more">查看更多</a>
             </p>
         
         </div>
@@ -236,7 +237,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://ai.wisim.me/2014/08/15/2014-08-15-AndroidWidgetPreview/#comments" class="article-comment-link">评论</a>
+        <a href="http://ai.wisim.me/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -336,105 +337,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
             
     
         <a href="http://ai.wisim.me/2014/08/08/2014-08-08-AndroidActivityLauncherMode/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="default-2014-08-08-AndroidBroadcastReceiverPreview" class="article article-type-default" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/">BroadcastReceiver 的简单使用</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/">
-            <time datetime="2014-08-07T16:00:00.000Z" itemprop="datePublished">2014-08-08</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
-    </div>
-
-                        
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p>和 Activity 以及 Service 一样，BroadcastReceiver同属Android的四大组件。</p>
-<p>有时候用 BroadcastReceiver 可以轻易解决很纠结的问题。</p>
-<h4 id="1-继承BroadcastReceiver实现一个广播接受者MyReceiver"><a href="#1-继承BroadcastReceiver实现一个广播接受者MyReceiver" class="headerlink" title="1.继承BroadcastReceiver实现一个广播接受者MyReceiver"></a>1.继承BroadcastReceiver实现一个广播接受者MyReceiver</h4><p>可以重写onReceive(Context context,Intent intent)方法,在方法里面通过intent.getExtras()方法获取intenet中传递过来的数据</p></p>
-            <p class="article-more-link">
-                <a href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://ai.wisim.me/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/#comments" class="article-comment-link">评论</a>
     
 
         </footer>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>感知机 简介 | XP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="一、感知机模型感知机（perceptron）是一种二分类的线性分类模型，它是一种监督式学习算法。感知机的输入为实例的特征向量，输出为实例的类别（取+1和-1）。感知机对应于输入空间中将实例划分为两类的分离超平面 S。感知机旨在求出该超平面 S，为求得超平面导入了基于误分类的损失函数，利用梯度下降法对损失函数进行最优化（最优化）。 感知机也是 Neural Networks（神经网络） 和 SV">
+<meta name="keywords" content="Perceptron">
+<meta property="og:type" content="article">
+<meta property="og:title" content="感知机 简介">
+<meta property="og:url" content="http://ai.wisim.me/2018/02/19/2018-02-19_introduce_to_perceptron/index.html">
+<meta property="og:site_name" content="XP">
+<meta property="og:description" content="一、感知机模型感知机（perceptron）是一种二分类的线性分类模型，它是一种监督式学习算法。感知机的输入为实例的特征向量，输出为实例的类别（取+1和-1）。感知机对应于输入空间中将实例划分为两类的分离超平面 S。感知机旨在求出该超平面 S，为求得超平面导入了基于误分类的损失函数，利用梯度下降法对损失函数进行最优化（最优化）。 感知机也是 Neural Networks（神经网络） 和 SV">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-19T09:18:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="感知机 简介">
+<meta name="twitter:description" content="一、感知机模型感知机（perceptron）是一种二分类的线性分类模型，它是一种监督式学习算法。感知机的输入为实例的特征向量，输出为实例的类别（取+1和-1）。感知机对应于输入空间中将实例划分为两类的分离超平面 S。感知机旨在求出该超平面 S，为求得超平面导入了基于误分类的损失函数，利用梯度下降法对损失函数进行最优化（最优化）。 感知机也是 Neural Networks（神经网络） 和 SV">
+    
+
+    
+        <link rel="alternate" href="/" title="XP" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="https://github.com/wisimer/wisimer.github.io/blob/master/css/images/logo.png?raw=true" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?c87f7ac22d7007b78c0d4fa544da6c44";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">XP</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">HOME</a>
+                
+                    <a class="main-nav-link" href="/archives">ARCHIVE</a>
+                
+                    <a class="main-nav-link" href="/categories/ARTS">ARTS</a>
+                
+                    <a class="main-nav-link" href="/categories">CATEGOTY</a>
+                
+                    <a class="main-nav-link" href="/about">ABOUT</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">HOME</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">ARCHIVE</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories/ARTS">ARTS</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">CATEGOTY</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">ABOUT</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-2018-02-19_introduce_to_perceptron" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            感知机 简介
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/02/19/2018-02-19_introduce_to_perceptron/">
+            <time datetime="2018-02-18T16:00:00.000Z" itemprop="datePublished">2018-02-19</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Perceptron/">Perceptron</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="一、感知机模型"><a href="#一、感知机模型" class="headerlink" title="一、感知机模型"></a>一、感知机模型</h4><p>感知机（perceptron）是一种<code>二分类的线性分类模型</code>，它是一种监督式学习算法。感知机的输入为实例的特征向量，输出为实例的类别（取+1和-1）。感知机对应于输入空间中将实例划分为两类的分离超平面 S。感知机旨在求出该超平面 S，为求得超平面导入了基于误分类的损失函数，利用梯度下降法对损失函数进行最优化（最优化）。</p>
+<p>感知机也是 <code>Neural Networks（神经网络）</code> 和 <code>SVM（支持向量机）</code> 的基础，它是一个单层神经网络。</p>
+<p><code>感知机的模型</code>如下：</p>
+<script type="math/tex; mode=display">f(x)=sign(w \cdot x+b)</script><p>其中 w 叫做权值（weight）或权值向量（weight vector），b 叫做偏置（bias），sign 是<code>符号函数</code>，即：</p>
+<script type="math/tex; mode=display">\operatorname{sign}(x) = \begin{cases} +1 & x \geq 0 \\ -1 & x < 0 \end{cases}.</script><p>而分割超平面则为：</p>
+<script type="math/tex; mode=display">w \cdot x+b = 0</script><a id="more"></a>
+<h4 id="二、感知机的损失函数"><a href="#二、感知机的损失函数" class="headerlink" title="二、感知机的损失函数"></a>二、感知机的损失函数</h4><h5 id="1-这个损失函数怎么得到呢？"><a href="#1-这个损失函数怎么得到呢？" class="headerlink" title="1.这个损失函数怎么得到呢？"></a>1.这个损失函数怎么得到呢？</h5><p>我们先考虑一下，正常最直接的想法就是损失函数嘛，直接用误分类的点的个数来表示不就好了吗，这样误分类的点越少，损失函数的值不就越小嘛。但是这样的函数显然是离散的，不是参数w和b的可导函数，不易优化。</p>
+<p>然后再考虑一下所有误分类的点到分割超平面的距离之和作为损失函数，这样的函数貌似是连续可导的。那可行吗？实际上，确实感知机也是采用的这种损失函数。</p>
+<p>（1）为此，我们先考察任意某一点到超平面的距离：</p>
+<script type="math/tex; mode=display">\frac{1}{||w||}|w \cdot x_0+b| \tag{2.1}</script><p>这里的 $||w||$ 是 w 的 $L_2$ 范式，$|w \cdot x_0+b|$表示绝对值。</p>
+<p>（2）其次，对于任意一个误分类的点 $(x_i,y_i)$ 来说，</p>
+<script type="math/tex; mode=display">-y_i(w \cdot x_i+b) < 0</script><p>（3）因此，误分类的点 $x_i$ 到超平面的距离可以写作：</p>
+<script type="math/tex; mode=display">-\frac{1}{||w||}y_i(w \cdot x_i+b)</script><p>这样就把公式2.1的绝对值去掉了，而 $y_i$ 的取值只有 +1 或 -1，也不影响最终结果大小。</p>
+<p>（4）最终，设误分类点得集合为 M ，则所有误分类的点到超平面的距离之和为：</p>
+<script type="math/tex; mode=display">-\frac{1}{||w||} \sum_{x_i \in M}{y_i(w \cdot x_i+b)}</script><p>不考虑 $-\frac{1}{||w||} $ ，就可以得到感知机的损失函数了：</p>
+<script type="math/tex; mode=display">L(w,b)=-\sum_{i=1}^{M} {y_i(w*x_i+b)}</script><p>显然，损失函数L(w,b)是非负的。如果没有误分类点，那么L(w,b)为0，误分类点数越少，L(w,b)值越小。一个特定的损失函数：在误分类时是参数w,b的线性函数，在正确分类时，是0。</p>
+<h5 id="2-感知机学习算法"><a href="#2-感知机学习算法" class="headerlink" title="2. 感知机学习算法"></a>2. 感知机学习算法</h5><p>感知机学习的过程也就是它的损失函数不断优化达到最小值的过程。具体就是采用<code>随机梯度下降法(SGD)</code>。损失函数L(w,b)的梯度为：</p>
+<p>$\nabla_w L(w,b)=-\sum_{i=1}^{M}y_i\:x_i$</p>
+<p>$\nabla_b L(w,b)=-\sum_{i=1}^{M}y_i$</p>
+<p>随机选出一个误分类点 $(x_i,y_i)$，对参数 w，b进行更新：</p>
+<script type="math/tex; mode=display">w+ \eta y_i x_i \rightarrow w</script><script type="math/tex; mode=display">b+ \eta y_i \rightarrow b</script><p>式中η（0≤η≤1）是步长，在统计学是中成为学习速率。步长越大，梯度下降的速度越快，更能接近极小点。如果步长过大，有可能导致跨过极小点，导致函数发散；如果步长过小，有可能会耗很长时间才能达到极小点。</p>
+<p>具体算法过程如下：</p>
+<p>输入训练集 T，学习率 $\eta$。输出 w,b 和 感知机模型 $f(x)=sign(w \cdot x+b)$。</p>
+<p>（1）首先任选一个超平面，参数分别为 $w_0,b_0$；</p>
+<p>（2）在训练集中任选一条数据 $(x_i,y_i)$；</p>
+<p>（3）如果 $y_i(w \cdot x_i+b) \leq 0$，则执行：</p>
+<script type="math/tex; mode=display">w+ \eta y_i x_i \rightarrow w</script><script type="math/tex; mode=display">b+ \eta y_i \rightarrow b</script><p>（4）转至（2），直至训练集中没有误分类的点。</p>
+<p>这种方法直观地解释就是：不断调整参数 w,b ，将超平面向当前选择的误分类点得方向移动（<code>一个点可能会更新多次，最终使得误分类点分类正确为止</code>），以减少误分类点，最终所有误分类点都被正确分类。</p>
+<p>此外，感知机学习算法是可能有很多解的，为了得到唯一的超平面，就要对超平面增加约束条件，也就是 SVM 的想法。</p>
+<h4 id="三、实现代码"><a href="#三、实现代码" class="headerlink" title="三、实现代码"></a>三、实现代码</h4><p>从输入参数得到训练文件和模型文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">n = float(sys.argv[<span class="number">1</span>])</span><br><span class="line">trainFile = open(sys.argv[<span class="number">2</span>])</span><br><span class="line">modelFile= open(sys.argv[<span class="number">3</span>], <span class="string">'w'</span>)</span><br></pre></td></tr></table></figure>
+<p>从训练文件中读取训练数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> trainFile:</span><br><span class="line">  chunk = line.strip().split(<span class="string">' '</span>) <span class="comment">#每行的数据</span></span><br><span class="line">  lens = len(chunk) - <span class="number">1</span> <span class="comment">#最后一行是训练输出</span></span><br><span class="line">  tmp_all = []</span><br><span class="line">  tmp = []</span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, lens+<span class="number">1</span>):</span><br><span class="line">    tmp.append(int(chunk[i]))</span><br><span class="line">  tmp_all.append(tmp)</span><br><span class="line">  tmp_all.append(int(chunk[<span class="number">0</span>]))</span><br><span class="line">  training_set.append(tmp_all)</span><br><span class="line"></span><br><span class="line">trainFile.close()</span><br></pre></td></tr></table></figure>
+<p>训练数据：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 3 3</span><br><span class="line">1 4 3</span><br><span class="line">-1 1 1</span><br></pre></td></tr></table></figure></p>
+<p>计算点到超平面的距离：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cal</span><span class="params">(item)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> w, b</span><br><span class="line">    res = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(item[<span class="number">0</span>])):</span><br><span class="line">        res += item[<span class="number">0</span>][i] * w[i] <span class="comment">#w和xi的内积</span></span><br><span class="line">    res += b</span><br><span class="line">    res *= item[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure></p>
+<p>判断是否是误分类点，如果是误分类点则更新参数:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> training_set:</span><br><span class="line">  <span class="keyword">if</span> cal(item) &lt;= <span class="number">0</span>:</span><br><span class="line">    flag = <span class="keyword">True</span></span><br><span class="line">    update(item)</span><br></pre></td></tr></table></figure></p>
+<p>使用随机梯度下降法更新参数：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(item)</span>:</span></span><br><span class="line">	<span class="keyword">global</span> w, b, lens, n <span class="comment">#n就是学习速率η</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(lens):</span><br><span class="line">		w[i] = w[i] + n * item[<span class="number">1</span>] * item[<span class="number">0</span>][i]</span><br><span class="line">	b = b + n * item[<span class="number">1</span>]</span><br></pre></td></tr></table></figure></p>
+<h4 id="四、感知机学习算法的对偶形式"><a href="#四、感知机学习算法的对偶形式" class="headerlink" title="四、感知机学习算法的对偶形式"></a>四、感知机学习算法的对偶形式</h4><p>感知机学习算法的对偶形式的基本思想就是将参数 w 和偏置 b用实例 $x_i$ 和标签 $y_i$ 的<code>线性组合</code>来表示。通过求解这个<code>线性组合的系数</code>来求得 w 和 b。这里还是设初值 $w_0,b_0$ 均为0。对误分类的点也还是按如下规则更新：</p>
+<script type="math/tex; mode=display">w+ \eta y_i x_i \rightarrow w</script><script type="math/tex; mode=display">b+ \eta y_i \rightarrow b</script><p>如果对于某个误分类点 $(x_i,y_i)$ ，我们通过上面这个规则更新了 $n_i$ 次参数 w 和 b。那么 w 和 b 关于 $(x_i,y_i)$ 的增量为：$a_iy_ix_i$ 和 $a_iy_i$，由于每个点更新了 $n_i$ 次，且学习率为 $\eta$，所以 $a_i=n_i \eta$ （<code>这里也就解释了下面具体算法过程中 a 每次只增加 η</code>）。通过这个学习过程，最终 w 和 b 为：</p>
+<script type="math/tex; mode=display">w=\sum_{i=1}^{N} a_iy_ix_i</script><script type="math/tex; mode=display">b=\sum_{i=1}^{N} a_iy_i</script><p>由于 $a_i &gt; 0,i=1,2,…,N$，所以当 $\eta=1$ 时，$a_i=n_i$ 实际上就是第 i 个误分类点更新到正确之后所用的次数。<code>某个误分类点更新次数越多，意味着它离超平面距离越近,也就越难分类正确</code>。这样的点对感知机学习算法影响最大。</p>
+<p>具体算法过程如下：</p>
+<p>输入训练集 T，学习率 $\eta$。输出 a，b 和感知机模型 $f(x)=sign(\sum_{j=1}^{N} a_jy_jx_j \cdot x+b)$。</p>
+<p>（1） $a \leftarrow 0,b \leftarrow 0$</p>
+<p>（2） 任选误分类点 $(x_i,y_i)$</p>
+<p>（3） 如果 $y_i(\sum_{j=1}^{N} a_jy_jx_j \cdot x+b) \leq 0$，则更新：</p>
+<script type="math/tex; mode=display">a_i \leftarrow a_i+\eta</script><script type="math/tex; mode=display">b_i \leftarrow b_i+\eta y_i</script><p>（4）转至（2），直至训练集中没有误分类的点。</p>
+<p>另外，可以看第三步的判断条件，说明每次都要判断实例的内积 $(x_j \cdot x_i)$，所以可以预先将训练集的实例之间的内积算出来并以矩阵形式表示，这就是所谓的 Gram 矩阵:</p>
+<script type="math/tex; mode=display">G = [x_i \cdot x_j]_{N \times N}</script><hr>
+<p>注：</p>
+<p>[1]. 线性可分：存在超平面能够将<code>所有</code>的数据点<code>完全划分</code>到两侧。</p>
+<p>[2]. <a href="https://blog.csdn.net/SmartDazhi/article/details/75745893" target="_blank" rel="noopener">验证单层感知机不能表示异或逻辑</a></p>
+<p>[3]. 异或运算（XOR）：a⊕b = (¬a ∧ b) ∨ (a ∧¬b)，如果a、b两个值不相同，则异或结果为1。如果a、b两个值相同，异或结果为0。</p>
+<hr>
+<p>参考：</p>
+<p>[1]. <a href="http://www.cnblogs.com/kaituorensheng/p/3561091.html" target="_blank" rel="noopener">感知机（python实现）</a></p>
+<p>[2]. 《统计学习方法（李航）》：感知机</p>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/02/19/2018-02-19_introduce_to_perceptron/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/02/23/2018-02-23_knn/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    KNN
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/12/25/2017-12-25/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">线性代数陌生公式</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zNDc5NS8xMTMzMg==></div>
+</section>
+    
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 Wisimer<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

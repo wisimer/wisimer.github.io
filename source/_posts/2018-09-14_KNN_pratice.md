@@ -10,16 +10,16 @@ tags: [KNN]
 
 <!--more-->
 
-#### 二、实践
+#### 二、实践
 
 ##### 1. 导入数据
 
-sklearn 的 datasets 里面自带了一个关于手写数字的数据集，直接导入：
+sklearn 的 datasets 里面自带了一个关于手写数字的数据集，直接导入：
 
 ```
 from sklearn import datasets
 data = datasets.load_digits()
-# 看一下里面有哪些信息
+# 看一下里面有哪些信息
 print(data.keys())
 # dict_keys(['data', 'target', 'target_names', 'images', 'DESCR'])
 ```
@@ -30,11 +30,11 @@ print(data.keys())
 - `images` ： 每个标签对应的手写图像
 - `DESCR` ： 数据集描述
 
-##### 2. 使用分类 KNeighborsClassifier
+##### 2. 使用 KNeighborsClassifier 分类 
 
 ```
 from sklearn.neighbors import KNeighborsClassifier
-knn = KNeighborsClassifier() #也可以加一个int参数来设置 k 值
+knn = KNeighborsClassifier() #也可以加一个int参数来设置 k 值
 
 # 从0-1000的数据作为训练数据
 knn.fit(data['data'][0:1000],data['target'][0:1000])
@@ -43,16 +43,16 @@ knn.fit(data['data'][0:1000],data['target'][0:1000])
 print(knn.predict(data['data'][1001].reshape(1,-1)))
 # [1]
 
-# 看看第1001个实例实际的标签
+# 看看第1001个实例实际的标签
 print(data['target'][1000])
 # 1
 
-# 也可以直接看一下测试集的分类准确率
+# 也可以直接看一下测试集的分类准确率
 print(knn.score(data['data'][1001:],data['target'][1001:]))
 # 0.9560301507537688
 ```
 
-##### 3. 当然也可以使用交叉验证来看看 knn 的分类效果，并选择合适的 k 值
+##### 3. 当然也可以使用交叉验证来看看 knn 的分类效果，并选择合适的 k 值
 
 ```
 # 交叉验证
@@ -82,7 +82,7 @@ print(scores)
  0.97765363 0.96629213 0.93785311 0.96022727]
 ```
 
-看一下打印出来的各个k值的验证结果，和图中缺失吻合。
+看一下打印出来的各个k值的验证结果，和图中显示效果吻合。
 
 - - -
 

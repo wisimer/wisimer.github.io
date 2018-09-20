@@ -3,20 +3,22 @@
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
-    <title>KNN 实践 | XP</title>
+    <title>KNN 实践：识别手写数字 | XP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
+    <meta name="description" content="一、前言先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
 <meta name="keywords" content="KNN">
 <meta property="og:type" content="article">
-<meta property="og:title" content="KNN 实践">
+<meta property="og:title" content="KNN 实践：识别手写数字">
 <meta property="og:url" content="http://ai.wisim.me/2018/09/14/2018-09-14_KNN_pratice/index.html">
 <meta property="og:site_name" content="XP">
-<meta property="og:description" content="先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
+<meta property="og:description" content="一、前言先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-16T11:03:51.000Z">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0914_knn_practice_cross.png">
+<meta property="og:updated_time" content="2018-09-20T10:29:50.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="KNN 实践">
-<meta name="twitter:description" content="先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
+<meta name="twitter:title" content="KNN 实践：识别手写数字">
+<meta name="twitter:description" content="一、前言先简单回顾一下 KNN 的原理：用距离目标最近的 k 个样本数据的分类来代表目标的分类。">
+<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1809/0914_knn_practice_cross.png">
     
 
     
@@ -157,7 +159,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 class="article-title" itemprop="name">
-            KNN 实践
+            KNN 实践：识别手写数字
         </h1>
     
 
@@ -192,8 +194,26 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>先简单回顾一下 KNN 的原理：用<code>距离目标最近的 k 个样本数据的分类</code>来代表目标的分类。</p>
+            <h4 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h4><p>先简单回顾一下 KNN 的原理：用<code>距离目标最近的 k 个样本数据的分类</code>来代表目标的分类。</p>
 <a id="more"></a>
+<h4 id="二、实践"><a href="#二、实践" class="headerlink" title="二、实践"></a>二、实践</h4><h5 id="1-导入数据"><a href="#1-导入数据" class="headerlink" title="1. 导入数据"></a>1. 导入数据</h5><p>sklearn 的 datasets 里面自带了一个关于手写数字的数据集，直接导入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from sklearn import datasets</span><br><span class="line">data = datasets.load_digits()</span><br><span class="line"># 看一下里面有哪些信息</span><br><span class="line">print(data.keys())</span><br><span class="line"># dict_keys([&apos;data&apos;, &apos;target&apos;, &apos;target_names&apos;, &apos;images&apos;, &apos;DESCR&apos;])</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>data</code> ： 数据集</li>
+<li><code>target</code> ： 数据集对应的标签</li>
+<li><code>target_names</code> ： 所有标签的名字集合</li>
+<li><code>images</code> ： 每个标签对应的手写图像</li>
+<li><code>DESCR</code> ： 数据集描述</li>
+</ul>
+<h5 id="2-使用分类-KNeighborsClassifier"><a href="#2-使用分类-KNeighborsClassifier" class="headerlink" title="2. 使用分类 KNeighborsClassifier"></a>2. 使用分类 KNeighborsClassifier</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.neighbors import KNeighborsClassifier</span><br><span class="line">knn = KNeighborsClassifier() #也可以加一个int参数来设置 k 值</span><br><span class="line"></span><br><span class="line"># 从0-1000的数据作为训练数据</span><br><span class="line">knn.fit(data[&apos;data&apos;][0:1000],data[&apos;target&apos;][0:1000])</span><br><span class="line"></span><br><span class="line"># 预测单个实例，这里主要要reshape一下</span><br><span class="line">print(knn.predict(data[&apos;data&apos;][1001].reshape(1,-1)))</span><br><span class="line"># [1]</span><br><span class="line"></span><br><span class="line"># 看看第1001个实例实际的标签</span><br><span class="line">print(data[&apos;target&apos;][1000])</span><br><span class="line"># 1</span><br><span class="line"></span><br><span class="line"># 也可以直接看一下测试集的分类准确率</span><br><span class="line">print(knn.score(data[&apos;data&apos;][1001:],data[&apos;target&apos;][1001:]))</span><br><span class="line"># 0.9560301507537688</span><br></pre></td></tr></table></figure>
+<h5 id="3-当然也可以使用交叉验证来看看-knn-的分类效果，并选择合适的-k-值"><a href="#3-当然也可以使用交叉验证来看看-knn-的分类效果，并选择合适的-k-值" class="headerlink" title="3. 当然也可以使用交叉验证来看看 knn 的分类效果，并选择合适的 k 值"></a>3. 当然也可以使用交叉验证来看看 knn 的分类效果，并选择合适的 k 值</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 交叉验证</span><br><span class="line">from sklearn.cross_validation import cross_val_score</span><br><span class="line">k_range = range(1, 31)</span><br><span class="line">k_scores = []</span><br><span class="line"></span><br><span class="line">for k in k_range:</span><br><span class="line">    knn = KNeighborsClassifier(n_neighbors=k) # 这里通过改变 KNN 的 K 值来测试分类精度</span><br><span class="line">    scores = cross_val_score(knn, data[&apos;data&apos;], data[&apos;target&apos;], cv=10, scoring=&apos;accuracy&apos;)</span><br><span class="line">    k_scores.append(scores.mean())</span><br><span class="line"></span><br><span class="line">#可视化数据</span><br><span class="line">plot.plot(k_range, k_scores)</span><br><span class="line">plot.xlabel(&apos;Value of K for KNN&apos;)</span><br><span class="line">plot.ylabel(&apos;Cross-Validated Accuracy&apos;)</span><br><span class="line">plot.show()</span><br></pre></td></tr></table></figure>
+<p>看一下效果：</p>
+<p><img src="/src/imgs/1809/0914_knn_practice_cross.png" alt="knn cross val"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(scores)</span><br><span class="line"># [0.90810811 0.96174863 0.97790055 0.92777778 0.96089385 0.96648045</span><br><span class="line"> 0.97765363 0.96629213 0.93785311 0.96022727]</span><br></pre></td></tr></table></figure>
+<p>看一下打印出来的各个k值的验证结果，和图中缺失吻合。</p>
+<hr>
+<p>附：</p>
+<p>[1]. <a href="/src/raw/code/knn/knn_handwriting.ipynb">KNN Pratice Code</a></p>
 <hr>
 <p>THE END.</p>
 

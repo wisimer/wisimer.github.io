@@ -148,112 +148,6 @@ var _hmt = _hmt || [];
         <div class="outer">
             
             <section id="main">
-    <article id="post-2018-09-17_sklearn_tricks" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/09/17/2018-09-17_sklearn_tricks/">sklearn 技巧</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/09/17/2018-09-17_sklearn_tricks/">
-            <time datetime="2018-09-16T16:00:00.000Z" itemprop="datePublished">2018-09-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/sklearn/">sklearn</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/ML/">ML</a>, <a class="tag-link" href="/tags/sklearn/">sklearn</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><h5 id="1-模型的保存和读取"><a href="#1-模型的保存和读取" class="headerlink" title="1. 模型的保存和读取"></a>1. 模型的保存和读取</h5><p>使用 <code>joblib</code> 模块。</p>
-<p>保存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.datasets import load_iris # iris数据集</span><br><span class="line">from sklearn.model_selection import train_test_split # 分割数据模块</span><br><span class="line">from sklearn.neighbors import KNeighborsClassifier # K最近邻(kNN，k-NearestNeighbor)分类算法</span><br><span class="line">from sklearn.externals import joblib #jbolib模块</span><br><span class="line"></span><br><span class="line">iris = load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line"># 分割数据并</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=4)</span><br><span class="line"></span><br><span class="line"># 建立模型</span><br><span class="line">knn = KNeighborsClassifier()</span><br><span class="line"></span><br><span class="line"># 训练模型</span><br><span class="line">knn.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"># 保存模型(注:保存模型所在的文件夹要预先建立，否则会报错)</span><br><span class="line">joblib.dump(knn, &apos;/Users/mac/Downloads/knn.pkl&apos;)</span><br></pre></td></tr></table></figure>
-<p>读取和使用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">knn = joblib.load(&apos;/Users/mac/Downloads/knn.pkl&apos;)</span><br><span class="line">print(knn.predict(X_test[0:1]))</span><br><span class="line"># [2]</span><br></pre></td></tr></table></figure></p>
-            <p class="article-more-link">
-                <a href="/2018/09/17/2018-09-17_sklearn_tricks/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://ai.wisim.me/2018/09/17/2018-09-17_sklearn_tricks/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <article id="post-2018-09-17_sklearn_model_selection" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1619,223 +1513,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="default-2018-07-06-ARTS_ISSUE_001_t" class="article article-type-default" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">Git Commit Message Format</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">
-            <time datetime="2018-07-05T16:00:00.000Z" itemprop="datePublished">2018-07-06</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/FAQ/">FAQ</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/GIT/">GIT</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><blockquote>
-<p>Never leave todays’s work tomorrow.</p>
-</blockquote></p>
-            <p class="article-more-link">
-                <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="default-2018-07-06-ARTS_ISSUE_001_r" class="article article-type-default" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/">Want to Improve Your Memory?</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/">
-            <time datetime="2018-07-05T16:00:00.000Z" itemprop="datePublished">2018-07-06</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/READING/">READING</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/Medium/">Medium</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p>来源 : <a href="https://medium.com/swlh/want-to-improve-your-memory-science-tells-us-the-key-and-it-can-actually-be-fun-99a9c9b95d5b" target="_blank" rel="noopener">Want to Improve Your Memory? Science Tells Us the Key (and It Can Actually Be Fun)</a></p>
-<p>The key to improving your memory is surprise.</p>
-<blockquote>
-<p> Somehow, the novelty of surprise creates a halo of better memory for all the otherwise trivial events of one’s day that we ordinarily forget.”</p>
-</blockquote>
-<ul>
-<li>Distract yourself.</li>
-<li>Celebrate quick wins.</li>
-<li>Take regular body breaks.</li>
-<li>Take the opportunity to try something new.</li>
-</ul>
-<hr>
-<p>THE END.</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <article id="default-2018-07-06-ARTS_ISSUE_001_a" class="article article-type-default" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -2048,6 +1725,223 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
+    <article id="default-2018-07-06-ARTS_ISSUE_001_r" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/">Want to Improve Your Memory?</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/">
+            <time datetime="2018-07-05T16:00:00.000Z" itemprop="datePublished">2018-07-06</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/READING/">READING</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/Medium/">Medium</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>来源 : <a href="https://medium.com/swlh/want-to-improve-your-memory-science-tells-us-the-key-and-it-can-actually-be-fun-99a9c9b95d5b" target="_blank" rel="noopener">Want to Improve Your Memory? Science Tells Us the Key (and It Can Actually Be Fun)</a></p>
+<p>The key to improving your memory is surprise.</p>
+<blockquote>
+<p> Somehow, the novelty of surprise creates a halo of better memory for all the otherwise trivial events of one’s day that we ordinarily forget.”</p>
+</blockquote>
+<ul>
+<li>Distract yourself.</li>
+<li>Celebrate quick wins.</li>
+<li>Take regular body breaks.</li>
+<li>Take the opportunity to try something new.</li>
+</ul>
+<hr>
+<p>THE END.</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_r/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="default-2018-07-06-ARTS_ISSUE_001_t" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">Git Commit Message Format</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/">
+            <time datetime="2018-07-05T16:00:00.000Z" itemprop="datePublished">2018-07-06</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/FAQ/">FAQ</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ARTS/">ARTS</a>, <a class="tag-link" href="/tags/GIT/">GIT</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><blockquote>
+<p>Never leave todays’s work tomorrow.</p>
+</blockquote></p>
+            <p class="article-more-link">
+                <a href="/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/07/06/2018-07-06-ARTS_ISSUE_001_t/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-2018-05-29_SVM_part1" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -2251,6 +2145,117 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
             
     
         <a href="http://ai.wisim.me/2018/05/18/2018-05-18_LogisticRegression/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-2018-05-14_BayesPraticeEmail" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/14/2018-05-14_BayesPraticeEmail/">朴素贝叶斯分类算法实践-垃圾邮件过滤器</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/14/2018-05-14_BayesPraticeEmail/">
+            <time datetime="2018-05-13T16:00:00.000Z" itemprop="datePublished">2018-05-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/ML/">ML</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/NaiveBayes/">NaiveBayes</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><h4 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h4><p>这个例子中，我们将了解朴素贝叶斯的一个最著名的应用：电子邮件垃圾过滤。</p>
+<p>首先看一下使用朴素贝叶斯对电子邮件进行分类的步骤：</p>
+<ol>
+<li>收集数据：提供文本文件。</li>
+<li>准备数据：将文本文件解析成词条向量。</li>
+<li>分析数据：检查词条确保解析的正确性。</li>
+<li>训练算法：使用我们之前建立的trainNB0()函数。</li>
+<li>测试算法：使用classifyNB()，并构建一个新的测试函数来计算文档集的错误率。</li>
+<li>使用算法：构建一个完整的程序对一组文档进行分类，将错分的文档输出到屏幕上。</li>
+</ol></p>
+            <p class="article-more-link">
+                <a href="/2018/05/14/2018-05-14_BayesPraticeEmail/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2018/05/14/2018-05-14_BayesPraticeEmail/#comments" class="article-comment-link">评论</a>
     
 
         </footer>

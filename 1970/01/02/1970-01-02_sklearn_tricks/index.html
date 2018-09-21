@@ -3,22 +3,20 @@
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
-    <title>Android打包应用lint error | XP</title>
+    <title>sklearn 技巧 | XP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Eclipse打包apk时出现的一个小错误…有时候最终打包应用时会显示如下错误  解决方法如下：">
+    <meta name="description" content="1. 模型的保存和读取使用 joblib 模块。 保存： 1234567891011121314151617181920from sklearn.datasets import load_iris # iris数据集from sklearn.model_selection import train_test_split # 分割数据模块from sklearn.neighbors import K">
+<meta name="keywords" content="sklearn,ML">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android打包应用lint error">
-<meta property="og:url" content="http://ai.wisim.me/2014/04/06/2014-06-06-AndroidLintError/index.html">
+<meta property="og:title" content="sklearn 技巧">
+<meta property="og:url" content="http://ai.wisim.me/1970/01/02/1970-01-02_sklearn_tricks/index.html">
 <meta property="og:site_name" content="XP">
-<meta property="og:description" content="Eclipse打包apk时出现的一个小错误…有时候最终打包应用时会显示如下错误  解决方法如下：">
+<meta property="og:description" content="1. 模型的保存和读取使用 joblib 模块。 保存： 1234567891011121314151617181920from sklearn.datasets import load_iris # iris数据集from sklearn.model_selection import train_test_split # 分割数据模块from sklearn.neighbors import K">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ai.wisim.me/src/imgs/1406/06_linterror.png">
-<meta property="og:image" content="http://ai.wisim.me/src/imgs/1406/06_linterror_solve.png">
-<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta property="og:updated_time" content="2018-09-21T01:29:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android打包应用lint error">
-<meta name="twitter:description" content="Eclipse打包apk时出现的一个小错误…有时候最终打包应用时会显示如下错误  解决方法如下：">
-<meta name="twitter:image" content="http://ai.wisim.me/src/imgs/1406/06_linterror.png">
+<meta name="twitter:title" content="sklearn 技巧">
+<meta name="twitter:description" content="1. 模型的保存和读取使用 joblib 模块。 保存： 1234567891011121314151617181920from sklearn.datasets import load_iris # iris数据集from sklearn.model_selection import train_test_split # 分割数据模块from sklearn.neighbors import K">
     
 
     
@@ -151,7 +149,7 @@ var _hmt = _hmt || [];
 
         <div class="outer">
             
-            <section id="main"><article id="default-2014-06-06-AndroidLintError" class="article article-type-default" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-1970-01-02_sklearn_tricks" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -159,7 +157,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 class="article-title" itemprop="name">
-            Android打包应用lint error
+            sklearn 技巧
         </h1>
     
 
@@ -168,8 +166,8 @@ var _hmt = _hmt || [];
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2014/04/06/2014-06-06-AndroidLintError/">
-            <time datetime="2014-04-05T16:00:00.000Z" itemprop="datePublished">2014-04-06</time>
+        <a href="/1970/01/02/1970-01-02_sklearn_tricks/">
+            <time datetime="1970-01-01T16:00:00.000Z" itemprop="datePublished">1970-01-02</time>
         </a>
     </div>
 
@@ -177,10 +175,15 @@ var _hmt = _hmt || [];
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
+        <a class="article-category-link" href="/categories/sklearn/">sklearn</a>
     </div>
 
                         
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ML/">ML</a>, <a class="tag-link" href="/tags/sklearn/">sklearn</a>
+    </div>
+
                     </div>
                 
             </header>
@@ -189,18 +192,12 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>Eclipse打包apk时出现的一个小错误…<br>有时候最终打包应用时会显示如下错误</p>
-<p><img src="/src/imgs/1406/06_linterror.png" alt="打包应用错误"></p>
-<p>解决方法如下：</p>
+            <h5 id="1-模型的保存和读取"><a href="#1-模型的保存和读取" class="headerlink" title="1. 模型的保存和读取"></a>1. 模型的保存和读取</h5><p>使用 <code>joblib</code> 模块。</p>
+<p>保存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.datasets import load_iris # iris数据集</span><br><span class="line">from sklearn.model_selection import train_test_split # 分割数据模块</span><br><span class="line">from sklearn.neighbors import KNeighborsClassifier # K最近邻(kNN，k-NearestNeighbor)分类算法</span><br><span class="line">from sklearn.externals import joblib #jbolib模块</span><br><span class="line"></span><br><span class="line">iris = load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line"># 分割数据并</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=4)</span><br><span class="line"></span><br><span class="line"># 建立模型</span><br><span class="line">knn = KNeighborsClassifier()</span><br><span class="line"></span><br><span class="line"># 训练模型</span><br><span class="line">knn.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"># 保存模型(注:保存模型所在的文件夹要预先建立，否则会报错)</span><br><span class="line">joblib.dump(knn, &apos;/Users/mac/Downloads/knn.pkl&apos;)</span><br></pre></td></tr></table></figure>
+<p>读取和使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">knn = joblib.load(&apos;/Users/mac/Downloads/knn.pkl&apos;)</span><br><span class="line">print(knn.predict(X_test[0:1]))</span><br><span class="line"># [2]</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<p><strong>Step 1：</strong></p>
-<p>Eclipse顶部菜单栏<code>Windows-&gt;Preferences-&gt;Android-&gt;Lint Error Checking</code></p>
-<p>原本Run full error check…前面是有勾的。把勾取消。</p>
-<p><img src="/src/imgs/1406/06_linterror_solve.png" alt="错误解决"></p>
-<p><strong>Step 2：</strong></p>
-<p>右击<code>工程-&gt;Android Tools-&gt;Clear Lint Markers</code></p>
-<p><strong>Step 3：</strong></p>
-<p>接着再按正常步骤打包应用</p>
 <hr>
 <p>THE END.</p>
 
@@ -250,7 +247,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://ai.wisim.me/2014/04/06/2014-06-06-AndroidLintError/#comments" class="article-comment-link">评论</a>
+        <a href="http://ai.wisim.me/1970/01/02/1970-01-02_sklearn_tricks/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -259,19 +256,19 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
 <nav id="article-nav">
     
-        <a href="/2014/04/12/2014-04-20-UbuntuBashNote/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/1970/01/04/1970-01-04_BaseConcept/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    bash note
+                    基本概念
                 
             </div>
         </a>
     
     
-        <a href="/1970/01/04/1970-01-04_BaseConcept/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/1970/01/01/1970-01-01-01/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">基本概念</div>
+            <div class="article-nav-title">常用的Latex公式</div>
         </a>
     
 </nav>

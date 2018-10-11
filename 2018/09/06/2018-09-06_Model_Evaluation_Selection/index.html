@@ -14,7 +14,8 @@
 <meta property="og:description" content="一、经验误差与过拟合 错误率(error rate)：分类错误的样本数占样本总数的比例,E = a/m 精度(accuracy)：精度 = 1 一 错误率 误差(error)：学习器的实际预测输出与样本的真实输出之间的差异 经验误差(empirical error)：学习器在训练集上的误差，也叫训练误差(training error) 泛化误差(generalization error)：学习器在">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0906_confusionmatrix.png">
-<meta property="og:updated_time" content="2018-09-10T06:01:43.000Z">
+<meta property="og:image" content="http://ai.wisim.me/src/imgs/1809/0906_bias_variance.jpg">
+<meta property="og:updated_time" content="2018-09-25T05:22:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="模型评估与选择">
 <meta name="twitter:description" content="一、经验误差与过拟合 错误率(error rate)：分类错误的样本数占样本总数的比例,E = a/m 精度(accuracy)：精度 = 1 一 错误率 误差(error)：学习器的实际预测输出与样本的真实输出之间的差异 经验误差(empirical error)：学习器在训练集上的误差，也叫训练误差(training error) 泛化误差(generalization error)：学习器在">
@@ -242,11 +243,17 @@ var _hmt = _hmt || [];
 <p>对于二分类问题，可将样例根据其<code>真实类别以及机器学习分类器预测类别</code>的组合划分为真正例（true positive）、假正例子（false positive）、真反例（true negative）以及假反例（false negative）四种情形。令TP、FP、TN、FN分别表示其对应的<code>样例数</code>。显然有 TP+FP+TN+FN=总样例数。分类结果的“混淆矩阵”（confusion matrix）如下：</p>
 <p><img src="/src/imgs/1809/0906_confusionmatrix.png" alt="混淆矩阵"></p>
 <ul>
-<li><p>查准率 $P=\frac{TP}{TP+FP}$</p>
-</li>
-<li><p>查全率 $R=\frac{TP}{TP+FN}$</p>
-</li>
+<li>查准率 $P=\frac{TP}{TP+FP}$</li>
 </ul>
+<blockquote>
+<p>查准率的意思就是在所有预测为正(包括真正和假正两种)的样本中，<code>实际分类是正</code>的样本所占的比例是多少。真正（TP）的意思就是实际分类是正，假正（FP）的意思是实际分类是负，但是预测分类是正。顾名思义，也就是说查准率反映的是所有预测为正的样本中有多少样本实际为正。</p>
+</blockquote>
+<ul>
+<li>查全率 $R=\frac{TP}{TP+FN}$</li>
+</ul>
+<blockquote>
+<p>查全率的意思就是<code>预测为正</code>的样本占所有实际分类为正的样本的比例。假正（FN）的意思是实际分类是正，但是被预测为负。查全率反映的是所有实际为正的样本中有多少被正确预测出来了。</p>
+</blockquote>
 <p>另外，人们设计了一些综合考虑查准率和查全率的性能度量。</p>
 <p><code>平衡点</code>（Break-Event Point,BEP）是这其中的一个度量，它是“查准率=查全率”时的取值。</p>
 <p>BEP过于简化，更常用的是<code>F1度量</code>：</p>
@@ -267,7 +274,11 @@ var _hmt = _hmt || [];
 </ol>
 <h4 id="五、偏差与方差"><a href="#五、偏差与方差" class="headerlink" title="五、偏差与方差"></a>五、偏差与方差</h4><p>“偏差-方差分解”（bias-variance decomposition）是解释机器学习算法泛化性能的一种重要工具。偏差-方差分解试图对学习算法的期望泛化错误率进行拆解。</p>
 <p>泛化误差可以分解为偏差、方差与噪声之和：</p>
-<script type="math/tex; mode=display">E(f;D)=bias^2(x)+var(x)+\epsilon^2</script><hr>
+<script type="math/tex; mode=display">E(f;D)=bias^2(x)+var(x)+\epsilon^2</script><blockquote>
+<p>偏差反映的是预测值和实际值之间的差距。方差反映的是样本的离散程度，是随机变量在期望值（均值）附近的波动程度。</p>
+</blockquote>
+<p><img src="/src/imgs/1809/0906_bias_variance.jpg" alt="bias and variance"></p>
+<hr>
 <p>THE END.</p>
 
         

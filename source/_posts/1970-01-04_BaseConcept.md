@@ -178,7 +178,7 @@ $\min_{f\in\mathcal{F}}\frac{1}{N}L(y_i,f(x_i))+\lambda J(f)$
 
 -  代价函数 ：
 
-> $$J(\theta)=\frac{1}{2m}\sum_{i=1}^m{({h_\theta }({x^{(i)}})-{y^{(i)}})^{2}}$$
+$$J(\theta)=\frac{1}{2m}\sum_{i=1}^m{({h_\theta }({x^{(i)}})-{y^{(i)}})^{2}}$$
 
 - 向量化实现 : 
 
@@ -186,7 +186,7 @@ $$J(\theta)=\frac{1}{2m}(X*\theta-\vec{y})^{T} (X*\theta-\vec{y})$$
 
 -  归一化 :
 
-> $$y_{i}=\frac{x_{i}-\overline{x}}{s(x)}$$
+$$y_{i}=\frac{x_{i}-\overline{x}}{s(x)}$$
 
 -  梯度下降算法 :
 

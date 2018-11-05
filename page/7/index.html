@@ -148,7 +148,7 @@ var _hmt = _hmt || [];
         <div class="outer">
             
             <section id="main">
-    <article id="default-2014-08-08-AndroidBroadcastReceiverPreview" class="article article-type-default" itemscope itemprop="blogPost">
+    <article id="default-2014-08-08-AndroidActivityLauncherMode" class="article article-type-default" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -156,7 +156,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 itemprop="name">
-            <a class="article-title" href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/">BroadcastReceiver 的简单使用</a>
+            <a class="article-title" href="/2014/08/08/2014-08-08-AndroidActivityLauncherMode/">Activity任务栈以及启动方式</a>
         </h1>
     
 
@@ -165,7 +165,7 @@ var _hmt = _hmt || [];
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/">
+        <a href="/2014/08/08/2014-08-08-AndroidActivityLauncherMode/">
             <time datetime="2014-08-07T16:00:00.000Z" itemprop="datePublished">2014-08-08</time>
         </a>
     </div>
@@ -185,11 +185,11 @@ var _hmt = _hmt || [];
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><p>和 Activity 以及 Service 一样，BroadcastReceiver同属Android的四大组件。</p>
-<p>有时候用 BroadcastReceiver 可以轻易解决很纠结的问题。</p>
-<h4 id="1-继承BroadcastReceiver实现一个广播接受者MyReceiver"><a href="#1-继承BroadcastReceiver实现一个广播接受者MyReceiver" class="headerlink" title="1.继承BroadcastReceiver实现一个广播接受者MyReceiver"></a>1.继承BroadcastReceiver实现一个广播接受者MyReceiver</h4><p>可以重写onReceive(Context context,Intent intent)方法,在方法里面通过intent.getExtras()方法获取intenet中传递过来的数据</p></p>
+            <p><p>简单介绍一下Task:Task是一个具有栈结构的对象，一个Task可以管理多个Activity，启动一个应用也就创建了一个与之对应的task。</p>
+<p>首先假设在当前Activity中启动自身</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent=<span class="keyword">new</span> Intent();</span><br><span class="line">intent.setClass(MainActivity.<span class="keyword">this</span>,MainAcicity.class);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure></p>
             <p class="article-more-link">
-                <a href="/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/#more">查看更多</a>
+                <a href="/2014/08/08/2014-08-08-AndroidActivityLauncherMode/#more">查看更多</a>
             </p>
         
         </div>
@@ -237,7 +237,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://ai.wisim.me/2014/08/08/2014-08-08-AndroidBroadcastReceiverPreview/#comments" class="article-comment-link">评论</a>
+        <a href="http://ai.wisim.me/2014/08/08/2014-08-08-AndroidActivityLauncherMode/#comments" class="article-comment-link">评论</a>
     
 
         </footer>

@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="XP">
 <meta property="og:description" content="一、朴素贝叶斯分类简介朴素贝叶斯（Naive Bayesian）是基于贝叶斯定理和特征条件独立假设的分类方法，它通过特征计算分类的概率，选取概率大的情况进行分类，因此它是基于概率论的一种机器学习分类方法。因为分类的目标是确定的，所以也是属于监督学习。 朴素贝叶斯有如下几种：  离散型朴素贝叶斯: MultinomialNB 连续型朴素贝叶斯: GaussianNB 混合型朴素贝叶斯: Merged">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-07-24T06:24:34.000Z">
+<meta property="og:updated_time" content="2018-11-19T01:31:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="朴素贝叶斯分类算法原理">
 <meta name="twitter:description" content="一、朴素贝叶斯分类简介朴素贝叶斯（Naive Bayesian）是基于贝叶斯定理和特征条件独立假设的分类方法，它通过特征计算分类的概率，选取概率大的情况进行分类，因此它是基于概率论的一种机器学习分类方法。因为分类的目标是确定的，所以也是属于监督学习。 朴素贝叶斯有如下几种：  离散型朴素贝叶斯: MultinomialNB 连续型朴素贝叶斯: GaussianNB 混合型朴素贝叶斯: Merged">
@@ -209,7 +209,7 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果p(c1|x,y)&gt;p(c2|x,y)，那么分类应当属于c1；</span><br><span class="line">如果p(c1|x,y)&lt;p(c2|x,y)，那么分类应当属于c2</span><br></pre></td></tr></table></figure>
 <p><code>贝叶斯定理最大的好处是可以用已知的三个概率去计算未知的概率，而如果仅仅是为了比较p(ci|x,y)和p(cj|x,y)的大小，只需要已知两个概率即可，分母相同，比较p(x,y|ci)p(ci)和p(x,y|cj)p(cj)即可。</code></p>
 <p>(3) 特征条件独立假设原则</p>
-<p>见FAQ4.</p>
+<p>见QA4.</p>
 <h4 id="三、朴素贝叶斯分类的流程"><a href="#三、朴素贝叶斯分类的流程" class="headerlink" title="三、朴素贝叶斯分类的流程"></a>三、朴素贝叶斯分类的流程</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(1). 数据准备：收集数据，并将数据预处理为数值型或者布尔型，如对文本分类，需要将文本解析为词向量</span><br><span class="line">(2). 训练数据：根据训练样本集计算词项出现的概率，训练数据后得到各类下词汇出现概率的向量</span><br><span class="line">(3). 测试数据：用测试样本集去测试分类的准确性</span><br></pre></td></tr></table></figure>
 <h4 id="四、优缺点"><a href="#四、优缺点" class="headerlink" title="四、优缺点"></a>四、优缺点</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 监督学习，需要确定分类的目标</span><br><span class="line">2. 对缺失数据不敏感，在数据较少的情况下依然可以使用该方法</span><br><span class="line">3. 可以处理多个类别 的分类问题</span><br><span class="line">4. 适用于标称型数据</span><br><span class="line">5. 对输入数据的形势比较敏感</span><br><span class="line">6. 由于用先验数据去预测分类，因此存在误差</span><br></pre></td></tr></table></figure>
 <h4 id="五、平滑处理"><a href="#五、平滑处理" class="headerlink" title="五、平滑处理"></a>五、平滑处理</h4><p>有时候样本量较少的时候，无论该样本的其他属性是什么，计算出来的分类结果始终是一种分类，这样的情况不合理。为了避免上述弊端的出现，我们在计算概率值时要进行平滑处理，常用 <a href="https://www.cnblogs.com/bqtang/p/3693827.html" target="_blank" rel="noopener">拉普拉斯平滑处理</a></p>
@@ -224,7 +224,7 @@ var _hmt = _hmt || [];
 <li><a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E6%9C%9F%E6%9C%9B%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">EM(最大期望)算法</a></li>
 </ol>
 <hr>
-<p>FAQ：</p>
+<p>QA：</p>
 <ol>
 <li>基于概率论的方法和基于统计学的方法：</li>
 </ol>

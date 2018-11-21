@@ -1,7 +1,7 @@
 ---
 date: 2014-04-21
 title: hp pavilion 15 notebook笔记本 解决RTL8188EE无线网卡问题
-category: FAQ
+category: QA
 layout: default
 tags: Ubuntu
 ---

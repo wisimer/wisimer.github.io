@@ -2,7 +2,7 @@
 title: 基本概念
 date: 1970-01-04
 categories: ML
-tags: [FAQ]
+tags: [QA]
 ---
 
 #### 环境相关

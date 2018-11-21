@@ -2,7 +2,7 @@
 date: 2014-09-22
 layout: default
 title: Markdown Priview
-category: FAQ
+category: QA
 tags: Markdown
 ---
 

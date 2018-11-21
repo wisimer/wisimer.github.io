@@ -2,7 +2,7 @@
 date: 2014-05-24
 title: SAE笔记
 layout: default
-category: FAQ
+category: QA
 tags: SAE
 ---
 

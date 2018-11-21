@@ -1,7 +1,7 @@
 ---
 layout: default
 date: 2014-11-26
-category: FAQ
+category: QA
 title: 翻墙教程[失效]
 ---
 

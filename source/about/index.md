@@ -8,7 +8,7 @@ title: "Hello AI."
 
 这是我的个人站点，用来记录和分享平时的一些AI技术学习上的发现，以及生活上的感悟和思想。
 
-### 关于ARTS
+<!-- ### 关于ARTS
 
 每周至少一个 `ARTS`
 
@@ -24,7 +24,7 @@ ARTS Rules:
 - ARTS汇总文章的tags : ARTS
 - 单个ARTS类别文件名 : 0000-00-00-ARTS_ISSUE_000_a/r/t/s.md
 - 单个ARTS类别文章的category : 根据文章自定，不得使用ARTS，保证 `ARTS` 分类下面是所有ISSUE
-- 单个ARTS类别文章的tags : 根据文章自定，同时加入 `ARTS` 标签
+- 单个ARTS类别文章的tags : 根据文章自定，同时加入 `ARTS` 标签 -->
 
 ### 主要分类
 
@@ -32,8 +32,6 @@ ARTS Rules:
 - ALGORITHM
 - MATH
 - JAVA
-- SOFTWARE ENGINEERING (SE)
-- ANDROID (@deprecated)
 
 ### 规则
 

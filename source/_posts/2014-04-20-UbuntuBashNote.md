@@ -2,7 +2,7 @@
 date: 2014-04-12
 layout: default
 title: bash note
-category: FAQ
+category: QA
 tags: Ubuntu
 ---
 

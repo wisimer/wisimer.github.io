@@ -148,6 +148,112 @@ var _hmt = _hmt || [];
         <div class="outer">
             
             <section id="main">
+    <article id="post-1970-01-02_sklearn_tricks" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/1970/01/02/1970-01-02_sklearn_tricks/">sklearn 技巧</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/1970/01/02/1970-01-02_sklearn_tricks/">
+            <time datetime="1970-01-01T16:00:00.000Z" itemprop="datePublished">1970-01-02</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/sklearn/">sklearn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ML/">ML</a>, <a class="tag-link" href="/tags/sklearn/">sklearn</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><h5 id="1-模型的保存和读取"><a href="#1-模型的保存和读取" class="headerlink" title="1. 模型的保存和读取"></a>1. 模型的保存和读取</h5><p>使用 <code>joblib</code> 模块。</p>
+<p>保存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.datasets import load_iris # iris数据集</span><br><span class="line">from sklearn.model_selection import train_test_split # 分割数据模块</span><br><span class="line">from sklearn.neighbors import KNeighborsClassifier # K最近邻(kNN，k-NearestNeighbor)分类算法</span><br><span class="line">from sklearn.externals import joblib #jbolib模块</span><br><span class="line"></span><br><span class="line">iris = load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line"># 分割数据并</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=4)</span><br><span class="line"></span><br><span class="line"># 建立模型</span><br><span class="line">knn = KNeighborsClassifier()</span><br><span class="line"></span><br><span class="line"># 训练模型</span><br><span class="line">knn.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"># 保存模型(注:保存模型所在的文件夹要预先建立，否则会报错)</span><br><span class="line">joblib.dump(knn, &apos;/Users/mac/Downloads/knn.pkl&apos;)</span><br></pre></td></tr></table></figure>
+<p>读取和使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">knn = joblib.load(&apos;/Users/mac/Downloads/knn.pkl&apos;)</span><br><span class="line">print(knn.predict(X_test[0:1]))</span><br><span class="line"># [2]</span><br></pre></td></tr></table></figure></p>
+            <p class="article-more-link">
+                <a href="/1970/01/02/1970-01-02_sklearn_tricks/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/1970/01/02/1970-01-02_sklearn_tricks/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-1970-01-01-01" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         

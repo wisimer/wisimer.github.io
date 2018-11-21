@@ -148,6 +148,114 @@ var _hmt = _hmt || [];
         <div class="outer">
             
             <section id="main">
+    <article id="default-2015-03-14-PythonDjangpViewUrl" class="article article-type-default" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2015/03/14/2015-03-14-PythonDjangpViewUrl/">Django 视图Views和URL配置</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/03/14/2015-03-14-PythonDjangpViewUrl/">
+            <time datetime="2015-03-13T16:00:00.000Z" itemprop="datePublished">2015-03-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/PYTHON/">PYTHON</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Django/">Django</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><blockquote>
+<p>Django 中 views 里面的代码就是一个一个函数逻辑，处理客户端(浏览器)发送的 HTTPRequest，然后返回 HTTPResponse。</p>
+</blockquote>
+<h3 id="编写第一个视图"><a href="#编写第一个视图" class="headerlink" title="编写第一个视图"></a>编写第一个视图</h3><p><strong> 首先在/DjangoApp/LV/views.py中导入HttpResponse模块，再创建一个函数并返回HTTPResponse。： </strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render</span><br><span class="line"><span class="keyword">from</span> django.http <span class="keyword">import</span> HttpResponse</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">"Hello World, Django"</span>)</span><br></pre></td></tr></table></figure>
+<p><strong> 接着在/DjangoApp/DjangoApp/urls.py中设置这个视图对应的url： </strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = patterns(<span class="string">''</span>,</span><br><span class="line">    url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),</span><br><span class="line">    url(<span class="string">r'^$'</span>, <span class="string">'LV.views.hello'</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+            <p class="article-more-link">
+                <a href="/2015/03/14/2015-03-14-PythonDjangpViewUrl/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://ai.wisim.me/2015/03/14/2015-03-14-PythonDjangpViewUrl/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="default-2015-03-10-OtherUMLClassPoints" class="article article-type-default" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -2111,107 +2219,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
             
     
         <a href="http://ai.wisim.me/2014/09/22/2014-09-22-OtherMarkdown/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="default-2014-08-24-AndroidWidgetDeep" class="article article-type-default" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2014/08/24/2014-08-24-AndroidWidgetDeep/">桌面插件AppWidget深入理解-基于系统音乐播放器的桌面音乐插件</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2014/08/24/2014-08-24-AndroidWidgetDeep/">
-            <time datetime="2014-08-23T16:00:00.000Z" itemprop="datePublished">2014-08-24</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/ANDROID/">ANDROID</a>
-    </div>
-
-                        
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p>光有一个空壳不行，桌面插件必须要有后台的应用程序为它提供内容和服务，这样才能真正让桌面插件发挥它的优势。</p>
-<h4 id="1-首先来分析AppWidgetProvider中关于插件生命周期的几个方法"><a href="#1-首先来分析AppWidgetProvider中关于插件生命周期的几个方法" class="headerlink" title="1.首先来分析AppWidgetProvider中关于插件生命周期的几个方法"></a>1.首先来分析AppWidgetProvider中关于插件生命周期的几个方法</h4><blockquote>
-<p>值得注意的是只有在onReceive(Context context, Intent intent)使用父类的onReceive方法：</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context,Intent intent)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">super</span>.onReceive(context,intent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-            <p class="article-more-link">
-                <a href="/2014/08/24/2014-08-24-AndroidWidgetDeep/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://ai.wisim.me/2014/08/24/2014-08-24-AndroidWidgetDeep/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
